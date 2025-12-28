@@ -1,4 +1,5 @@
 {
+  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
@@ -34,6 +35,7 @@
     "resolveJsonModule": true,
     "useDefineForClassFields": true,
     "noErrorTruncation": true,
+    "types": ["@league-of-foundry-developers/foundry-vtt-types", "svelte"],
     "paths": {
       "@actor": [
         "./src/module/actor/index.ts"
@@ -47,48 +49,10 @@
       "@item/*": [
         "./src/module/item/*"
       ],
-      "@scene": [
-        "./src/module/scene/index.ts"
-      ],
-      "@scene/*": [
-        "./src/module/scene/*"
-      ],
-      "@system/*": [
-        "./src/module/system/*"
-      ],
-      "@module/*": [
-        "./src/module/*"
-      ],
       "@scripts/*": [
         "./src/scripts/*"
-      ],
-      "@util": [
-        "./src/util/index.ts"
-      ],
-      "@util/*": [
-        "./src/util/*"
       ]
-    },
-    "types": [
-      "node",
-    ],
-    "typeRoots": [
-      "./node_modules/@league-of-foundry-developers",
-      "./node_modules/@types"
-    ]
+    }
   },
-  "include": [
-    "./build/**/*",
-    "./src/**/*",
-    "./tests/**/*.ts",
-    "./vite.config.ts"
-  ],
-  "watchOptions": {
-    "fallbackPolling": "dynamicpriority",
-    "excludeDirectories": [
-      "dist",
-      "packs",
-      "static"
-    ]
-  }
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }
