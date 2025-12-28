@@ -1,0 +1,32 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "isolatedModules": false,
+    "sourceMap": true,
+    "lib": ["DOM", "ESNext"],
+    "types": ["@league-of-foundry-developers/foundry-vtt-types", "svelte"],
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": true,
+    "useDefineForClassFields": false,
+    "importsNotUsedAsValues": "remove",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "paths": {
+      "@actor": [
+        "./src/module/actor/index.ts"
+      ],
+      "@item": [
+        "./src/module/item/index.ts"
+      ]
+    }
+  },
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
+}

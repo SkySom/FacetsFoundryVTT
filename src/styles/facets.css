@@ -1,0 +1,8 @@
+/**
+ * only required in dev
+ * in prod, foundry loads style.css, as compiled by vite/rollup,
+ * mostly from the `import facets.scss` line at the top of facets.ts
+ *
+ * in dev, foundry loads style.css, this file, which is a no-op
+ * in dev, facets.ts imports facets.scss directly
+ */

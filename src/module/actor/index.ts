@@ -1,0 +1,1 @@
+export { FacetsActor } from "./facets-actor.ts"

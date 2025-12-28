@@ -1,0 +1,27 @@
+{
+    "id": "facets",
+    "title": "Facets System",
+    "description": "Support for the Facets System",
+    "version": "1.0.0",
+    "compatibility": {
+        "minimum": 13,
+        "verified": 13
+    },
+    "authors": [
+        {
+            "name": "SkySom",
+            "url": "https://github.com/SkySom",
+            "discord": "skysom"
+        }
+    ],
+    "esmodules": ["scripts/facets.mjs"],
+    "styles": ["styles/facets.css"],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "language/en.json"
+        }
+    ],
+    "socket": false
+}
