@@ -69,6 +69,18 @@
       "path": "lang/en.json"
     }
   ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "_chatcommands",
+        "type": "module",
+        "manifest": "https://gitlab.com/woodentavern/foundryvtt-chat-command-lib/-/raw/master/src/module.json",
+        "compatibility": {
+          "verified": "2.0.1"
+        }
+      }
+    ]
+  },
   "packs": [],
   "packFolders": [],
   "socket": false,

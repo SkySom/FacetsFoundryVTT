@@ -1,0 +1,1 @@
+export {CommandRegister} from "./register.ts"

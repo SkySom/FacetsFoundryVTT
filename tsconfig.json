@@ -36,13 +36,16 @@
     "useDefineForClassFields": true,
     "noErrorTruncation": true,
     "allowJs": true,
-    "types": ["@league-of-foundry-developers/foundry-vtt-types", "svelte"],
+    "types": ["@league-of-foundry-developers/foundry-vtt-types", "svelte", "chat-commander"],
     "paths": {
       "@actor": [
         "./src/module/actor/index.ts"
       ],
       "@actor/*": [
         "./src/module/actor/*"
+      ],
+      "@command": [
+        "./src/module/command/index.ts"
       ],
       "@item": [
         "./src/module/item/index.ts"
