@@ -1,12 +1,12 @@
 {
   "FACETS": {
     "Ability": {
-      "Str": { "long": "Strength", "abbr": "str" },
-      "Con": { "long": "Constitution", "abbr": "con" },
-      "Dex": { "long": "Dexterity", "abbr": "dex" },
-      "Int": { "long": "Intelligence", "abbr": "int" },
-      "Wis": { "long": "Wisdom", "abbr": "wis" },
-      "Cha": { "long": "Charisma", "abbr": "cha" }
+      "Ins": { "long": "Intensity", "abbr": "ins" },
+      "Wit": { "long": "Wits", "abbr": "wit" },
+      "Dis": { "long": "Discipline", "abbr": "dis" },
+      "Rea": { "long": "Reason", "abbr": "int" },
+      "Ing": { "long": "Integrity", "abbr": "ing" },
+      "Vis": { "long": "Vis", "abbr": "vis" }
     },
     "SheetLabels": {
       "Actor": "Facets Actor Sheet",
@@ -22,70 +22,22 @@
       },
       "base": {
         "FIELDS": {
-          "biography": {"label": "Biography"},
-          "health": {
-            "value": {"label": "Health"},
-            "max": {"label": "Maximum Health"}
-          },
-          "power": {
-            "value": {"label": "Power"},
-            "max": {"label": "Maximum Power"}
-          }
+          "biography": {"label": "Biography"}
         }
-      },
-      "Character": {
-        "FIELDS": {
-          "attributes.level.value": {"label": "Level"}
-        }
-      },
-      "NPC": {
-        "FIELDS": {
-          "cr": {"label": "CR"}
-        },
-        "xp": {"label": "XP"}
       }
     },
     "Item": {
-      "Tabs": {
-        "Attributes": "Attributes",
-        "Description": "Description",
-        "Effects": "Effects"
-      },
-      "Gear": {
-        "FIELDS": {
-          "rollFormula": {"label": "Roll Formula"},
-          "numDice": {"label": "Number of Dice"},
-          "dieSize": {"label": "Die Size"},
-          "rollMod": {"label": "Roll Modifier"},
-          "quantity": {"label": "Quantity"},
-          "weight": {"label": "Weight"}
-        }
-      },
-      "Spell": {
-        "FIELDS": {
-          "level": {"label": "Spell Level"}
-        },
-        "SpellLVL": "Level {level} Spells",
-        "AddLVL": "Add LVL {level}"
-      }
-    },
-    "Effect": {
-      "Source": "Source",
-      "Toggle": "Toggle Effect",
-      "Temporary": "Temporary Effects",
-      "Passive": "Passive Effects",
-      "Inactive": "Inactive Effects"
     }
   },
   "TYPES": {
     "Actor": {
-      "character": "Character",
-      "npc": "NPC"
+      "playerCharacter": "Player Character",
+      "foregroundCharacter": "Foreground Character",
+      "backgroundCharacter": "Background Character",
+      "spotlightCharacter": "Spotlight Character"
     },
     "Item": {
-      "gear": "Gear",
-      "feature": "Feature",
-      "spell": "Spell"
+      "affinity": "Affinity"
     }
   }
 }

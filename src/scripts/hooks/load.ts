@@ -1,11 +1,11 @@
+import {ActorFacets} from "@actor";
 
-
-
-export class Load {
+class Load {
     static listen(): void {
+        console.log("Facets | Running Load")
 
-        //CONFIG.FACETS = FACETS;
+        CONFIG.Actor.documentClass = ActorFacets;
     }
 }
 
-export default Load
+export {Load}

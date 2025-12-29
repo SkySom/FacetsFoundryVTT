@@ -35,6 +35,7 @@
     "resolveJsonModule": true,
     "useDefineForClassFields": true,
     "noErrorTruncation": true,
+    "allowJs": true,
     "types": ["@league-of-foundry-developers/foundry-vtt-types", "svelte"],
     "paths": {
       "@actor": [
@@ -51,6 +52,12 @@
       ],
       "@scripts/*": [
         "./src/scripts/*"
+      ],
+      "@setup": [
+        "./src/module/setup/index.ts"
+      ],
+      "@setup/*": [
+        "./src/module/setup/*"
       ]
     }
   },

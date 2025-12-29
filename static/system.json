@@ -10,29 +10,33 @@
   ],
   "documentTypes": {
     "Actor": {
-        "character": {
-            "htmlFields": ["biography"]
-        },
-        "npc": {
-            "htmlFields": ["biography"]
-        }
+      "backgroundCharacter": {
+      },
+      "foregroundCharacter": {
+      },
+      "playerCharacter": {
+      },
+      "spotlightCharacter": {
+      }
     },
     "Item": {
-        "feature": {
-            "htmlFields": ["description"]
-        },
-        "gear": {
-            "htmlFields": ["description"]
-        },
-        "spell": {
-            "htmlFields": ["description"]
-        }
+      "affinity": {
+      }
     }
   },
   "flags": {
     "hotReload": {
-      "extensions": ["css", "html", "hbs", "json"],
-      "paths": ["css", "lang", "templates"]
+      "extensions": [
+        "css",
+        "html",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "styles",
+        "lang",
+        "templates"
+      ]
     }
   },
   "url": "Replace this with a link to your public repository",
@@ -52,8 +56,12 @@
     "minimum": "12.328",
     "verified": "12.328"
   },
-  "esmodules": ["facets.mjs"],
-  "styles": ["styles/facets.css"],
+  "esmodules": [
+    "facets.mjs"
+  ],
+  "styles": [
+    "styles/facets.css"
+  ],
   "languages": [
     {
       "lang": "en",
@@ -65,12 +73,6 @@
   "packFolders": [],
   "socket": false,
   "background": "systems/facets/assets/anvil-impact.png",
-  "grid": {
-    "type": 1,
-    "distance": 5,
-    "units": "ft",
-    "diagonals": 0
-  },
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "power"
 }
