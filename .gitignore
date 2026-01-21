@@ -85,3 +85,6 @@ typings/
 .dynamodb/
 
 dist/
+
+foundry-config.yaml
+foundry

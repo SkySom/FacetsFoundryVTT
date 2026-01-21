@@ -1,20 +1,9 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "lib": [
-      "ES2023",
-      "ESNext.Array",
-      "ESNext.AsyncIterable",
-      "ESNext.Collection",
-      "ESNext.Object",
-      "ESNext.Promise",
-      "DOM",
-      "DOM.Iterable",
-      "DOM.AsyncIterable"
-    ],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
@@ -36,7 +25,10 @@
     "useDefineForClassFields": true,
     "noErrorTruncation": true,
     "allowJs": true,
-    "types": ["@league-of-foundry-developers/foundry-vtt-types", "svelte", "chat-commander"],
+    "types": [
+      "@types/fvtt-types",
+      "svelte"
+    ],
     "paths": {
       "@actor": [
         "./src/module/actor/index.ts"
@@ -46,6 +38,12 @@
       ],
       "@command": [
         "./src/module/command/index.ts"
+      ],
+      "@command/*": [
+        "./src/module/command/*"
+      ],
+      "@interfaces": [
+        "./src/interfaces/*"
       ],
       "@item": [
         "./src/module/item/index.ts"
@@ -64,5 +62,10 @@
       ]
     }
   },
-  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte"
+  ]
 }

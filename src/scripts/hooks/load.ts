@@ -1,11 +1,10 @@
-import {ActorFacets} from "@actor";
+import {FacetsActor} from "@actor";
+import type { Listener } from "./hooks.interface";
 
-class Load {
-    static listen(): void {
+export class Load implements Listener {
+    listen(): void {
         console.log("Facets | Running Load")
 
-        CONFIG.Actor.documentClass = ActorFacets;
+        CONFIG.Actor.documentClass = FacetsActor;
     }
 }
-
-export {Load}

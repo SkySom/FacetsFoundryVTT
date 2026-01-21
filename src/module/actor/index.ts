@@ -1,1 +1,1 @@
-export {ActorFacets} from "./actor-facets.ts";
+export {FacetsActor} from "./base.ts";

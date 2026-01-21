@@ -1,12 +1,11 @@
-import type {ChatCommands} from "chat-commander"
+import type {ChatCommands} from "commander"
 import {CommandRegister} from "@command";
+import type {Listener} from "./hooks.interface";
 
-const Command = {
-    listen: (): void => {
-        Hooks.on("chatCommandsReady", (commands: ChatCommands): void => {
+export class Command implements Listener {
+    listen(): void {
+        Hooks.on("chatCommandsReady", (commands: ChatCommands) => {
             CommandRegister.register(commands);
         })
     }
 }
-
-export {Command}

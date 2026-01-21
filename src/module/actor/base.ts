@@ -1,6 +1,6 @@
-import type {AnyObject} from "@league-of-foundry-developers/foundry-vtt-types/utils";
+import type {AnyObject} from "fvtt-types/utils";
 
-class ActorFacets extends Actor {
+export class FacetsActor extends Actor {
 
     override prepareData(): void {
         console.log("Facets | Actor Prepare Data")
@@ -10,5 +10,3 @@ class ActorFacets extends Actor {
         return super.getRollData();
     }
 }
-
-export {ActorFacets};

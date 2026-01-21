@@ -1,14 +1,15 @@
 import {Load} from "@scripts/hooks/load.ts";
 import {Init} from "@scripts/hooks/init.ts";
 import {Command} from "@scripts/hooks/command.ts";
+import type {Listener} from "./hooks.interface";
 
-export const HooksFacets = {
+export class HooksFacets implements Listener {
     listen(): void {
         console.log("Facets | Loading Hooks");
-        const listeners: { listen(): void }[] = [
-            Load,
-            Init,
-            Command
+        const listeners: Listener[] = [
+            new Load,
+            new Init,
+            new Command
         ]
 
         for (let listener of listeners) {

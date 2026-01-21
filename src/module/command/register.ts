@@ -1,4 +1,4 @@
-import type {ChatCommand, ChatCommands} from "chat-commander";
+import type {ChatCommand, ChatCommands} from "commander";
 
 class CommandRegister {
     static register(commands: ChatCommands): void {

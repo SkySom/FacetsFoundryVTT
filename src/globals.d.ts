@@ -1,5 +1,6 @@
 import {ActorFacets} from "@actor";
 import {ItemFacets} from "@item";
+import type {ChatCommands} from "commander";
 
 declare global {
     interface CONFIG {
@@ -11,25 +12,23 @@ declare global {
         Item: typeof ItemFacets;
     }
 
-
-
     interface MessageData {
         user: string;
         speaker: SpeakerData
     }
 }
 
-declare namespace Hooks {
-    import type {ChatCommands} from 'chat-commander'
+declare module "fvtt-types/configuration" {
+  namespace Hooks {
+    import type { ChatCommands } from "commander";
 
-    interface StaticCallbacks {
-        chatCommandsReady: (chatCommands: ChatCommands) => void;
-
-
+    interface HookConfig {
+      chatCommandsReady(chatCommands: ChatCommands): void;
     }
+  }
 }
 
-declare module 'chat-commander' {
+declare module 'commander' {
     interface ChatCommands {
         register(command: ChatCommand, override: boolean = false): void
     }
