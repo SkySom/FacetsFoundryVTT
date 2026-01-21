@@ -8,6 +8,9 @@
       "Ing": { "long": "Integrity", "abbr": "ing" },
       "Vis": { "long": "Vis", "abbr": "vis" }
     },
+    "Die": {
+      "Plot": "Plot Die"
+    },
     "SheetLabels": {
       "Actor": "Facets Actor Sheet",
       "Item": "Facets Item Sheet"

@@ -88,3 +88,4 @@ dist/
 
 foundry-config.yaml
 foundry
+*.code-workspace
