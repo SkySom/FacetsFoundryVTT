@@ -1,7 +1,8 @@
 import { ActorFacets } from "@actor";
 import { ItemFacets } from "@item";
 import type { ChatCommands } from "commander";
-import type { FacetsRoll } from "./module/dice/FacetsRoll";
+import type { FacetsRoll } from "./module/roll/FacetsRoll";
+import type { Quench } from "@ethaks/fvtt-quench";
 
 declare global {
     namespace CONFIG {
@@ -19,6 +20,12 @@ declare global {
         user: string;
         speaker: SpeakerData;
     }
+
+    namespace Chai {
+        interface AssertStatic {
+            equal(actual: any, expected: any, message?: string)
+        }
+    }
 }
 
 declare module "fvtt-types/configuration" {
@@ -27,6 +34,7 @@ declare module "fvtt-types/configuration" {
 
         interface HookConfig {
             chatCommandsReady(chatCommands: ChatCommands): void;
+            quenchReady(quench: Quench): void;
         }
     }
 }
@@ -43,6 +51,11 @@ declare module "commander" {
         description?: string;
         icon?: string;
         requiredRoles?: string;
+        autocompleteCallback?: (
+            menu: AutocompleteMenu,
+            alias: string,
+            parameters: string,
+        ) => string[] | HTMLElement[];
         callback: (
             chatLog: ChatLog,
             parameters: string,
@@ -50,4 +63,6 @@ declare module "commander" {
         ) => object | Promise | null;
         closeOnComplete?: boolean;
     }
+
+    interface AutocompleteMenu {}
 }

@@ -26,6 +26,7 @@
     "noErrorTruncation": true,
     "allowJs": true,
     "types": [
+      "@ethaks/fvtt-quench",
       "@types/fvtt-types",
       "svelte"
     ],

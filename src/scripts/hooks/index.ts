@@ -2,6 +2,7 @@ import {Load} from "@scripts/hooks/load.ts";
 import {Init} from "@scripts/hooks/init.ts";
 import {Command} from "@scripts/hooks/command.ts";
 import type {Listener} from "./hooks.interface";
+import { Quench } from "./quench";
 
 export class HooksFacets implements Listener {
     listen(): void {
@@ -9,7 +10,8 @@ export class HooksFacets implements Listener {
         const listeners: Listener[] = [
             new Load,
             new Init,
-            new Command
+            new Command,
+            new Quench
         ]
 
         for (let listener of listeners) {
