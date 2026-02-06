@@ -1,7 +1,11 @@
 import type { RollValueCategory } from "./roll_value_category";
 
-export interface RollValue {
-    category(): RollValueCategory;
+export abstract class RollValue {
+    abstract category(): RollValueCategory;
 
-    value(): number;
+    abstract value(): number;
+
+    async evaluate(): Promise<void> {
+        return Promise.resolve()
+    }
 }

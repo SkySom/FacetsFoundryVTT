@@ -31,9 +31,9 @@ export class FlatModifierTokenProvider
         token: string,
         suggest: boolean,
         _data: object,
-    ): Array<FlatModifierToken> | SuggestionToken | ErrorToken {
+    ): FlatModifierToken | SuggestionToken | ErrorToken | null {
         if (this.fullPattern.test(token)) {
-            return [new FlatModifierToken(parseInt(token))];
+            return new FlatModifierToken(parseInt(token));
         } else if (suggest && (token == "+" || token == "-")) {
             let suggestions: Set<string> = new Set();
             for (let i = 1; i < 6; i++) {
@@ -44,6 +44,6 @@ export class FlatModifierTokenProvider
             return new ErrorToken(token + " is not a valid flat modifier");
         }
 
-        return [];
+        return null;
     }
 }

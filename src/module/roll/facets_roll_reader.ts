@@ -3,7 +3,7 @@ import {
     ErrorToken,
     type RollToken,
     RollTokenProviderRegistry,
-    SuggestionToken
+    SuggestionToken,
 } from "./token/roll_token.ts";
 
 export class FacetsRollReader {
@@ -23,20 +23,22 @@ export class FacetsRollReader {
         this.checkDepth();
         for (let position = 0; position < length; position++) {
             let currentToken = formulaTokens[position];
-            suggest = suggest && position == length - 1;
+            let suggestToken = suggest && position == length - 1;
             if (currentToken.length > 0) {
-                let generatedToken = this.convertToken(currentToken, suggest);
+                let generatedToken = this.convertToken(
+                    currentToken,
+                    suggestToken,
+                );
                 if (generatedToken instanceof ErrorToken) {
                     return new RollReadFail(generatedToken.error);
                 } else if (generatedToken instanceof SuggestionToken) {
-                    if (suggest) {
+                    if (suggestToken) {
                         return new RollReadSuggest(generatedToken.suggestions);
+                    } else {
+                        return new ErrorToken("Tried to suggest for evaluation without suggestion")
                     }
-                } else if (generatedToken instanceof Array) {
-                    //Necessary for isRollToken type check
-                    for (let value of generatedToken) {
-                        rollTokens.push(value);
-                    }
+                } else {
+                    rollTokens.push(generatedToken);
                 }
             }
         }
@@ -51,7 +53,7 @@ export class FacetsRollReader {
     private convertToken(
         token: string,
         suggest: boolean,
-    ): Array<RollToken> | SuggestionToken | ErrorToken {
+    ): RollToken | SuggestionToken | ErrorToken {
         for (let provider of RollTokenProviderRegistry.getProviders()) {
             let provided = provider.provide(token, suggest, this.data);
             if (
@@ -59,7 +61,7 @@ export class FacetsRollReader {
                 provided instanceof ErrorToken
             ) {
                 return provided;
-            } else if (provided instanceof Array && provided.length > 0) {
+            } else if (provided != null) {
                 return provided;
             }
         }

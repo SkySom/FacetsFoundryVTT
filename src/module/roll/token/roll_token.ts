@@ -16,7 +16,7 @@ export interface RollTokenProvider<T extends RollToken> {
         token: string,
         suggest: boolean,
         data: FacetsRollData<string>,
-    ): Array<T> | SuggestionToken | ErrorToken;
+    ): T | SuggestionToken | ErrorToken | null;
 }
 
 export class RollTokenProviderRegistry {

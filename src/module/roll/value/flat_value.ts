@@ -1,27 +1,25 @@
-import type { RollValue } from "./roll_value";
+import { RollValue } from "./roll_value";
 import type { RollValueCategory } from "./roll_value_category";
 
-
-export class FlatRollValue implements RollValue {
-    readonly modifier: number;
-
-    constructor(modifier: number) {
-        this.modifier = modifier;
+export class FlatRollValue extends RollValue {
+    constructor(readonly modifier: number) {
+        super();
     }
 
-    category(): RollValueCategory {
+    override category(): RollValueCategory {
         return FlatRollValueCategory.INSTANCE;
-    } 
+    }
 
-    value(): number {
+    override value(): number {
         return this.modifier;
     }
 }
 
 export class FlatRollValueCategory implements RollValueCategory {
-    static readonly INSTANCE: FlatRollValueCategory = new FlatRollValueCategory();
+    static readonly INSTANCE: FlatRollValueCategory =
+        new FlatRollValueCategory();
 
-    name: string = "Flat bonuses";
+    name: string = "flat_modifiers";
 
     pickValues(categoryValues: Array<RollValue>): Array<RollValue> {
         return categoryValues;

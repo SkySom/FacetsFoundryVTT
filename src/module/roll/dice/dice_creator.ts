@@ -1,21 +1,23 @@
-import type { FacetsDice } from "./facets_dice";
+import type { InexactPartial } from "fvtt-types/utils";
+import type { RollValueCategory } from "../value/roll_value_category";
+import { FacetsDice } from "./facets_dice";
 
-export class DiceCreatorRegistry {
-    private static readonly DICE_CREATORS: Map<string, DiceCreator> = new Map(
-        [],
-    );
+export class DiceCreator {
+    constructor(
+        public readonly category: RollValueCategory,
+        public readonly additionalTerms: InexactPartial<foundry.dice.terms.Die.TermData> = {},
+        public readonly evaluationOptions: InexactPartial<foundry.dice.terms.RollTerm.EvaluationOptions> = {},
+    ) {}
 
-    static getDiceCreator(type: string): DiceCreator | null {
-        return this.DICE_CREATORS.get(type) ?? null;
+    create(facets: number): FacetsDice {
+        return new FacetsDice(
+            this.category,
+            new foundry.dice.terms.Die({
+                faces: facets,
+                number: 1,
+                ...this.additionalTerms,
+            }),
+            this.evaluationOptions,
+        );
     }
-
-    static getDiceCreators(): Map<string, DiceCreator> {
-        return this.DICE_CREATORS;
-    }
-}
-
-interface DiceCreator {
-    name: string;
-
-    create(facets: number): FacetsDice;
 }
