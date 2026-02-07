@@ -1,29 +1,28 @@
+import type { RollOptions } from "../../roll_options";
 import { RollValue } from "../../value/roll_value";
 import type { RollValueCategory } from "../../value/roll_value_category";
-import { DiceCreator } from "../dice_creator";
+import { BasicDiceCreator } from "../dice_creator";
 
 export class RegularDiceValueCategory implements RollValueCategory {
     static readonly INSTANCE: RegularDiceValueCategory =
         new RegularDiceValueCategory();
 
-    static readonly REGULAR_DICE_CREATOR = new DiceCreator(this.INSTANCE);
-    static readonly ASSURED_DICE_CREATOR = new DiceCreator(
-        this.INSTANCE,
-        {},
-        { maximize: true },
-    );
+    static readonly REGULAR_DICE_CREATOR = new BasicDiceCreator(this.INSTANCE);
 
     name: string = "regular_dice";
 
-    pickValues(categoryDice: Array<RollValue>): Array<RollValue> {
+    pickValues(
+        categoryDice: Array<RollValue>,
+        rollOptions?: RollOptions,
+    ): Array<RollValue> {
         let positive = categoryDice
             .filter((val) => val.value() > 0)
-            .sort((a, b) => a.value() - b.value())
-            .slice(0, 2);
+            .sort((a, b) => b.value() - a.value())
+            .slice(0, rollOptions?.kept ?? 2);
 
         let negative = categoryDice
             .filter((val) => val.value() < 0)
-            .sort((a, b) => Math.abs(a.value()) - Math.abs(b.value()))
+            .sort((a, b) =>  Math.abs(b.value()) - Math.abs(a.value()))
             .slice(0, 2);
 
         return [...positive, ...negative];

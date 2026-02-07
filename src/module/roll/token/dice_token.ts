@@ -14,10 +14,10 @@ export class DiceRollTokenProvider implements RollTokenProvider<DiceRollToken> {
         new DiceRollTokenProvider();
 
     readonly fullPattern: RegExp =
-        /^(?<amount>\d+)?(?<dice>\w?d)(?<facets>\d+)$/;
+        /^(?<amount>\d+)?(?<dice>\w{0,2}d)(?<facets>\d+)$/;
 
     readonly partialPattern: RegExp =
-        /^(?<amount>\d+)?(?<dice>\wd?)?(?<facets>\d+)?$/;
+        /^(?<amount>\d+)?(?<dice>\w\w?d?)?(?<facets>\d+)?$/;
 
     provide(
         token: string,

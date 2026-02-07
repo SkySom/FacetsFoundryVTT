@@ -12,6 +12,8 @@ import {
     ErrorToken,
     SuggestionToken,
 } from "../../module/roll/token/roll_token";
+import { DiceCreatorRegistry } from "../../module/roll/dice/dice_creator_registry";
+import type { DiceCreator } from "../../module/roll/dice/dice_creator";
 
 export function registerRollTokenSuite(context: QuenchBatchContext) {
     flatModifierToken(context);
@@ -81,7 +83,7 @@ function flatModifierToken(context: QuenchBatchContext): void {
 }
 
 function diceToken(context: QuenchBatchContext): void {
-    const { describe, it, expect } = context;
+    const { describe, it, expect, assert } = context;
 
     describe("Dice Token", function () {
         it("d6 should return a single Regular d6", function () {
@@ -107,11 +109,18 @@ function diceToken(context: QuenchBatchContext): void {
             );
 
             expect(provided).to.eqls(
-                new DiceRollToken(
-                    RegularDiceValueCategory.ASSURED_DICE_CREATOR,
-                    12,
-                    3,
-                ),
+                createAssuredDiceToken("d", 12, 3, assert),
+            );
+        });
+        it("3acd12 should return 3 Assured cd12", function () {
+            let provided = DiceRollTokenProvider.INSTANCE.provide(
+                "3acd12",
+                false,
+                {},
+            );
+
+            expect(provided).to.eqls(
+                createAssuredDiceToken("cd", 12, 3, assert),
             );
         });
         it("aaaa should return nothing", function () {
@@ -208,4 +217,24 @@ function diceToken(context: QuenchBatchContext): void {
             );
         });
     });
+}
+
+function createAssuredDiceToken(
+    type: string,
+    facets: number,
+    amount: number,
+    assert: Chai.AssertStatic,
+): DiceRollToken {
+    let assuredDiceCreator: DiceCreator | undefined =
+        DiceCreatorRegistry.ASSURED_DICE_CREATORS.get("a" + type);
+
+    assert(
+        assuredDiceCreator,
+        "a" +
+            type +
+            " does not exist in " +
+            JSON.stringify(DiceCreatorRegistry.ASSURED_DICE_CREATORS.keys()),
+    );
+
+    return new DiceRollToken(assuredDiceCreator, facets, amount);
 }

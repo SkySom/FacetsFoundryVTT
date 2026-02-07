@@ -8,7 +8,7 @@ export class DiceValue extends RollValue {
     }
 
     override category(): RollValueCategory {
-        return this.dice.category;
+        return this.dice.category();
     }
 
     override async evaluate(): Promise<void> {

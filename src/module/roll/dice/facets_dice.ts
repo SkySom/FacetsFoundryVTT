@@ -1,20 +1,41 @@
-import type { InexactPartial } from "fvtt-types/utils";
 import type { RollValueCategory } from "../value/roll_value_category";
 
-export class FacetsDice {
-    constructor(
-        public readonly category: RollValueCategory,
-        public readonly die: foundry.dice.terms.Die,
-        public readonly evaluationOptions: InexactPartial<foundry.dice.terms.RollTerm.EvaluationOptions> = {},
-    ) {}
+/**
+ * The Default Facets Dice used by all basic dice
+ *
+ * If you add methods you may need to update the composite dice
+ */
+export abstract class FacetsDice {
+    abstract category(): RollValueCategory;
 
-    evaluate(): Promise<void> {
-        return Promise.resolve(
-            this.die.evaluate(this.evaluationOptions),
-        ).then();
+    abstract evaluate(): Promise<void>;
+
+    abstract die(): foundry.dice.terms.Die;
+
+    abstract total(): number;
+}
+
+export class BasicFacetsDice extends FacetsDice {
+    constructor(
+        public readonly internalCategory: RollValueCategory,
+        public readonly internalDie: foundry.dice.terms.Die,
+    ) {
+        super();
     }
 
-    total(): number {
-        return this.die.total ?? 0;
+    override category(): RollValueCategory {
+        return this.internalCategory;
+    }
+
+    override die(): foundry.dice.terms.Die {
+        return this.internalDie;
+    }
+
+    override evaluate(): Promise<void> {
+        return Promise.resolve(this.die().evaluate()).then();
+    }
+
+    override total(): number {
+        return this.die().total ?? 0;
     }
 }
