@@ -1,10 +1,5 @@
 import type { FacetsRollData } from "./facets_roll_data.ts";
-import {
-    ErrorToken,
-    type RollToken,
-    RollTokenProviderRegistry,
-    SuggestionToken,
-} from "./token/roll_token.ts";
+import { ErrorToken, type RollToken, RollTokenProviderRegistry, SuggestionToken } from "./token/roll_token.ts";
 
 export class FacetsRollReader {
     private fomula: string;
@@ -25,17 +20,24 @@ export class FacetsRollReader {
             const currentToken = formulaTokens[position];
             const suggestToken = suggest && position == length - 1;
             if (currentToken.length > 0) {
-                const generatedToken = this.convertToken(
-                    currentToken,
-                    suggestToken,
-                );
+                const generatedToken = this.convertToken(currentToken, suggestToken);
                 if (generatedToken instanceof ErrorToken) {
                     return new RollReadFail(generatedToken.error);
                 } else if (generatedToken instanceof SuggestionToken) {
                     if (suggestToken) {
-                        return new RollReadSuggest(generatedToken.suggestions);
+                        const suggestions: string[] = [];
+                        console.log(JSON.stringify(generatedToken.suggestions));
+                        for (const suggestion of generatedToken.suggestions) {
+                            const lastSpace = this.fomula.lastIndexOf(" ");
+                            if (lastSpace < 0) {
+                                suggestions.push(suggestion);
+                            } else {
+                                suggestions.push(this.fomula.slice(0, lastSpace) + " " + suggestion);
+                            }
+                        }
+                        return new RollReadSuggest(new Set(suggestions));
                     } else {
-                        return new ErrorToken("Tried to suggest for evaluation without suggestion")
+                        return new ErrorToken("Tried to suggest for evaluation without suggestion");
                     }
                 } else {
                     rollTokens.push(generatedToken);
@@ -50,25 +52,17 @@ export class FacetsRollReader {
         return new RollReadSuccess(rollTokens);
     }
 
-    private convertToken(
-        token: string,
-        suggest: boolean,
-    ): RollToken | SuggestionToken | ErrorToken {
+    private convertToken(token: string, suggest: boolean): RollToken | SuggestionToken | ErrorToken {
         for (const provider of RollTokenProviderRegistry.getProviders()) {
             const provided = provider.provide(token, suggest, this.data);
-            if (
-                provided instanceof SuggestionToken ||
-                provided instanceof ErrorToken
-            ) {
+            if (provided instanceof SuggestionToken || provided instanceof ErrorToken) {
                 return provided;
             } else if (provided != null) {
                 return provided;
             }
         }
 
-        return new ErrorToken(
-            "Could not convert " + token + " into valid roll token",
-        );
+        return new ErrorToken("Could not convert " + token + " into valid roll token");
     }
 
     private checkDepth(): void {
@@ -87,7 +81,7 @@ export class FacetsRollReader {
     }
 }
 
-type FacetsRollReadResult = RollReadSuccess | RollReadSuggest | RollReadFail;
+export type FacetsRollReadResult = RollReadSuccess | RollReadSuggest | RollReadFail;
 
 export class RollReadSuccess {
     readonly rollTokens: Array<RollToken>;

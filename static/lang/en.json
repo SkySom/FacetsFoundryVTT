@@ -1,9 +1,18 @@
 {
     "FACETS": {
         "Commands": {
+            "RollInfo": {
+                "Recent": "Recently used",
+                "Basic": "Basic syntax: <span class='parameter'>Roll</span>d<span class='parameter'>Faces</span> +/-<span class='parameter'>Modifier</span>",
+                "DiceTypes": "Dice Types include: d, ad, cd, ed, pd, kd, sd",
+                "Suggestion": "Suggested Values"
+            },
             "Roll2": {
-                "Description": "Roll Dice and take 2 Highest"
+                "Description": "Roll Dice and keep 2"
             }
+        },
+        "Settings": {
+            "RecentRolls": "Recent Rolls for Suggestions"
         },
         "Test": {
             "Message": "A Message"

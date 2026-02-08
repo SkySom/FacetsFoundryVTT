@@ -72,6 +72,9 @@
       ],
       "@setup/*": [
         "./src/module/setup/*"
+      ],
+      "@util": [
+        "./src/module/util/index.ts"
       ]
     }
   },

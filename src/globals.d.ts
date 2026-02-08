@@ -4,10 +4,12 @@ import { ItemFacets } from "@item";
 import type { Quench } from "@ethaks/fvtt-quench";
 
 declare global {
-    namespace CONFIG {
-        interface Dice {
-            FacetsRoll: Document.ImplementationClassFor<"FacetsRoll">;
-        }
+    interface Game {
+        chatCommands: ChatCommands
+    }
+    
+    interface SettingConfig {
+        "facets.recentRolls": string[];
     }
 
     interface DocumentClassConfig {
@@ -41,6 +43,10 @@ declare module "fvtt-types/configuration" {
 declare module "commander" {
     interface ChatCommands {
         register(command: ChatCommand, override: boolean = false): void;
+
+        createCommandElement(command: string, content: string): HTMLElement;
+
+        createInfoElement(content: string): HTMLElement;
     }
 
     interface ChatCommand {
