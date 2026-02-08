@@ -8,8 +8,6 @@ import {viteStaticCopy} from "vite-plugin-static-copy";
 import tsconfigPaths from "vite-tsconfig-paths";
 //import packageJSON from "./package.json" with {type: "json"}
 
-const EN_JSON = JSON.parse(fs.readFileSync("./static/lang/en.json", {encoding: "utf-8"}));
-
 const config = Vite.defineConfig(({command, mode}): Vite.UserConfig => {
     const buildMode = mode === "production" ? "production" : "development";
     const outDir = `dist/facets`;
@@ -72,7 +70,7 @@ const config = Vite.defineConfig(({command, mode}): Vite.UserConfig => {
                 apply: "serve",
                 handleHotUpdate(context) {
                     if (context.file.startsWith(outDir)) return;
-                    if (context.file.endsWith("en.json")) {
+                    if (context.file.endsWith("en.yaml")) {
                         const basePath = context.file.slice(context.file.indexOf("lang/"));
                         console.debug(`Updating lang file at ${basePath}`);
                         fs.promises.copyFile(context.file, `${outDir}/${basePath}`).then(() => {
@@ -130,7 +128,6 @@ const config = Vite.defineConfig(({command, mode}): Vite.UserConfig => {
         define: {
             SYSTEM_ID: JSON.stringify("facets"),
             BUILD_MODE: JSON.stringify(buildMode),
-            EN_JSON: JSON.stringify(EN_JSON),
             fa: "foundry.applications",
             fav1: "foundry.appv1",
             fc: "foundry.canvas",

@@ -1,46 +1,15 @@
 {
   "FACETS": {
-    "Ability": {
-      "Ins": { "long": "Intensity", "abbr": "ins" },
-      "Wit": { "long": "Wits", "abbr": "wit" },
-      "Dis": { "long": "Discipline", "abbr": "dis" },
-      "Rea": { "long": "Reason", "abbr": "int" },
-      "Ing": { "long": "Integrity", "abbr": "ing" },
-      "Vis": { "long": "Vis", "abbr": "vis" }
-    },
-    "Die": {
-      "Plot": "Plot Die"
-    },
-    "SheetLabels": {
-      "Actor": "Facets Actor Sheet",
-      "Item": "Facets Item Sheet"
-    },
-    "Actor": {
-      "Tabs": {
-        "Biography": "Biography",
-        "Features": "Features",
-        "Gear": "Gear",
-        "Spells": "Spells",
-        "Effects": "Effects"
+    "Commands": {
+      "Roll2": {
+        "Description": "Roll Dice and take 2 Highest"
       },
-      "base": {
-        "FIELDS": {
-          "biography": {"label": "Biography"}
-        }
+      "Roll3": {
+        "Description": "Roll Dice and take 3 Highest"
       }
     },
-    "Item": {
-    }
-  },
-  "TYPES": {
-    "Actor": {
-      "playerCharacter": "Player Character",
-      "foregroundCharacter": "Foreground Character",
-      "backgroundCharacter": "Background Character",
-      "spotlightCharacter": "Spotlight Character"
-    },
-    "Item": {
-      "affinity": "Affinity"
+    "Test": {
+      "Message": "A Message"
     }
   }
 }

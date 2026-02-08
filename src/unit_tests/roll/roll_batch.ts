@@ -21,7 +21,7 @@ export function registerRollBatch(quench: Quench) {
             registerRollValueCategorySuite(context);
         },
         {
-            displayName: "Facets Rolling Tests"
+            displayName: "Facets: Rolling Tests"
         }
     )
 }
