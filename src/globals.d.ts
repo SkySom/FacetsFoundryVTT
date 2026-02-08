@@ -1,7 +1,6 @@
 import { ActorFacets } from "@actor";
 import { ItemFacets } from "@item";
-import type { ChatCommands } from "commander";
-import type { FacetsRoll } from "./module/roll/FacetsRoll";
+
 import type { Quench } from "@ethaks/fvtt-quench";
 
 declare global {
@@ -23,7 +22,7 @@ declare global {
 
     namespace Chai {
         interface AssertStatic {
-            equal(actual: any, expected: any, message?: string)
+            equal(actual: unknown, expected: unknown, message?: string);
         }
     }
 }
@@ -46,23 +45,23 @@ declare module "commander" {
 
     interface ChatCommand {
         name: string;
-        module: String;
+        module: string;
         aliases: string[];
         description?: string;
         icon?: string;
         requiredRoles?: string;
-        autocompleteCallback?: (
-            menu: AutocompleteMenu,
-            alias: string,
-            parameters: string,
-        ) => string[] | HTMLElement[];
-        callback: (
-            chatLog: ChatLog,
-            parameters: string,
-            messageData: MessageData,
-        ) => object | Promise | null;
+        autocompleteCallback?: (menu: AutocompleteMenu, alias: string, parameters: string) => string[] | HTMLElement[];
+        callback: (chatLog: ChatLog, parameters: string, messageData: MessageData) => object | Promise | null;
         closeOnComplete?: boolean;
     }
 
-    interface AutocompleteMenu {}
+    interface AutocompleteMenu {
+        visible: boolean;
+        container: HTMLElement;
+        chatInput: HTMLTextAreaElement;
+        suggestionArea: HTMLTextAreaElement;
+        maxEntries: number;
+        showFooter: boolean;
+        currentCommand?: ChatCommand;
+    }
 }

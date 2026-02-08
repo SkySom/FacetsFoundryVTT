@@ -13,6 +13,10 @@ export class FlatRollValue extends RollValue {
     override value(): number {
         return this.modifier;
     }
+
+    override maxValue(): number {
+        return this.value();
+    }
 }
 
 export class FlatRollValueCategory implements RollValueCategory {

@@ -5,6 +5,8 @@ export abstract class RollValue {
 
     abstract value(): number;
 
+    abstract maxValue(): number;
+
     async evaluate(): Promise<void> {
         return Promise.resolve()
     }

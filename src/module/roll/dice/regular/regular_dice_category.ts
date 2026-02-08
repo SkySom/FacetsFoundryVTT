@@ -15,12 +15,12 @@ export class RegularDiceValueCategory implements RollValueCategory {
         categoryDice: Array<RollValue>,
         rollOptions?: RollOptions,
     ): Array<RollValue> {
-        let positive = categoryDice
+        const positive = categoryDice
             .filter((val) => val.value() > 0)
             .sort((a, b) => b.value() - a.value())
             .slice(0, rollOptions?.kept ?? 2);
 
-        let negative = categoryDice
+        const negative = categoryDice
             .filter((val) => val.value() < 0)
             .sort((a, b) =>  Math.abs(b.value()) - Math.abs(a.value()))
             .slice(0, 2);

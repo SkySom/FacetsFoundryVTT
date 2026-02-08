@@ -2,16 +2,16 @@ import type { RollValueCategory } from "../../value/roll_value_category";
 import { DiceCreator } from "../dice_creator";
 import { FacetsDice } from "../facets_dice";
 
-export function createAssuredDiceCreators(basicDiceCreators: Map<string, DiceCreator>): Map<string, DiceCreator> {
-    const assuredDiceCreators: Map<string, DiceCreator> = new Map();
+export function createReducedDiceCreators(basicDiceCreators: Map<string, DiceCreator>): Map<string, DiceCreator> {
+    const reducedDiceCreators: Map<string, DiceCreator> = new Map();
 
     for (const entry of basicDiceCreators) {
-        assuredDiceCreators.set("a" + entry[0], new AssuredDiceCreator(entry[1]));
+        reducedDiceCreators.set("r" + entry[0], new ReducedDiceCreator(entry[1]));
     }
-    return assuredDiceCreators;
+    return reducedDiceCreators;
 }
 
-class AssuredDiceCreator extends DiceCreator {
+class ReducedDiceCreator extends DiceCreator {
     constructor(readonly internalDiceCreator: DiceCreator) {
         super();
     }
@@ -22,11 +22,11 @@ class AssuredDiceCreator extends DiceCreator {
     override create(facets: number): FacetsDice {
         const internalFacetsDice = this.internalDiceCreator.create(facets);
 
-        return new AssuredFacetsDice(internalFacetsDice);
+        return new ReducedFacetsDice(internalFacetsDice);
     }
 }
 
-class AssuredFacetsDice extends FacetsDice {
+class ReducedFacetsDice extends FacetsDice {
     constructor(readonly internalFacetsDice: FacetsDice) {
         super();
     }
@@ -36,7 +36,7 @@ class AssuredFacetsDice extends FacetsDice {
     }
 
     override evaluate(): Promise<void> {
-        return Promise.resolve(this.die().evaluate({ maximize: true })).then();
+        return Promise.resolve(this.die().evaluate({ minimize: true })).then();
     }
 
     override die(): foundry.dice.terms.Die {

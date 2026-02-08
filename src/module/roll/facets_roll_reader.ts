@@ -16,16 +16,16 @@ export class FacetsRollReader {
     }
 
     evaluate(suggest: boolean = false): FacetsRollReadResult {
-        let formulaTokens = this.fomula.split(" ");
-        let length = formulaTokens.length;
-        let rollTokens: Array<RollToken> = [];
+        const formulaTokens = this.fomula.split(" ");
+        const length = formulaTokens.length;
+        const rollTokens: Array<RollToken> = [];
 
         this.checkDepth();
         for (let position = 0; position < length; position++) {
-            let currentToken = formulaTokens[position];
-            let suggestToken = suggest && position == length - 1;
+            const currentToken = formulaTokens[position];
+            const suggestToken = suggest && position == length - 1;
             if (currentToken.length > 0) {
-                let generatedToken = this.convertToken(
+                const generatedToken = this.convertToken(
                     currentToken,
                     suggestToken,
                 );
@@ -54,8 +54,8 @@ export class FacetsRollReader {
         token: string,
         suggest: boolean,
     ): RollToken | SuggestionToken | ErrorToken {
-        for (let provider of RollTokenProviderRegistry.getProviders()) {
-            let provided = provider.provide(token, suggest, this.data);
+        for (const provider of RollTokenProviderRegistry.getProviders()) {
+            const provided = provider.provide(token, suggest, this.data);
             if (
                 provided instanceof SuggestionToken ||
                 provided instanceof ErrorToken

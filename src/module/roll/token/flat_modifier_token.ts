@@ -25,17 +25,16 @@ export class FlatModifierTokenProvider
     static readonly INSTANCE: FlatModifierTokenProvider =
         new FlatModifierTokenProvider();
 
-    readonly fullPattern: RegExp = /^[\+-]\d+$/;
+    readonly fullPattern: RegExp = /^[+-]\d+$/;
 
     provide(
         token: string,
-        suggest: boolean,
-        _data: object,
+        suggest: boolean
     ): FlatModifierToken | SuggestionToken | ErrorToken | null {
         if (this.fullPattern.test(token)) {
             return new FlatModifierToken(parseInt(token));
         } else if (suggest && (token == "+" || token == "-")) {
-            let suggestions: Set<string> = new Set();
+            const suggestions: Set<string> = new Set();
             for (let i = 1; i < 6; i++) {
                 suggestions.add(token + i);
             }

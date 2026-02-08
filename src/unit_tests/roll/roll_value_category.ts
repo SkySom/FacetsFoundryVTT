@@ -13,47 +13,47 @@ function regularRollCategory(context: QuenchBatchContext) {
 
     describe("Regular Roll Value Category", function () {
         it("It should keep all values if less than default kept value of 2", async function () {
-            let rolled = await roll(["ad6"], assert);
+            const rolled = await roll(["ad6"], assert);
 
-            let picked = RegularDiceValueCategory.INSTANCE.pickValues(rolled);
+            const picked = RegularDiceValueCategory.INSTANCE.pickValues(rolled);
 
             expect(picked).to.have.lengthOf(1);
         });
 
         it("It should keep only keep the two highest 2 positive values even there are more", async function () {
-            let rolled = await roll(["ad6", "ad8", "ad10"], assert);
+            const rolled = await roll(["ad6", "ad8", "ad10"], assert);
 
-            let picked = RegularDiceValueCategory.INSTANCE.pickValues(rolled);
+            const picked = RegularDiceValueCategory.INSTANCE.pickValues(rolled);
 
             expect(picked).to.have.lengthOf(2);
 
-            let pickedValues = picked.map((pick) => pick.value());
+            const pickedValues = picked.map((pick) => pick.value());
             expect(pickedValues).to.eqls([10, 8]);
 
-                        let total = pickedValues.reduce((sum, pickedValue) => sum + pickedValue, 0);
+                        const total = pickedValues.reduce((sum, pickedValue) => sum + pickedValue, 0);
                         expect(total).to.eq(18);
         });
 
         it("It should keep the two highest positive and two highest negative", async function () {
-            let rolled = await roll(["ad6", "ad8", "ad10", "ad12", "acd6", "acd8", "acd10"], assert);
+            const rolled = await roll(["ad6", "ad8", "ad10", "ad12", "acd6", "acd8", "acd10"], assert);
 
-            let picked = RegularDiceValueCategory.INSTANCE.pickValues(rolled);
+            const picked = RegularDiceValueCategory.INSTANCE.pickValues(rolled);
 
             expect(picked).to.have.lengthOf(4);
 
-            let pickedValues = picked.map((pick) => pick.value());
+            const pickedValues = picked.map((pick) => pick.value());
             expect(pickedValues).to.eqls([12, 10, -10, -8]);
 
-            let total = pickedValues.reduce((sum, pickedValue) => sum + pickedValue, 0)
+            const total = pickedValues.reduce((sum, pickedValue) => sum + pickedValue, 0)
             expect(total).to.eq(4)
         });
     });
 }
 
 async function roll(dice: Array<string>, assert: Chai.AssertStatic): Promise<Array<RollValue>> {
-    let rollValues: Array<RollValue> = dice
+    const rollValues: Array<RollValue> = dice
         .map((dice) => {
-            let token = DiceRollTokenProvider.INSTANCE.provide(dice, false, {});
+            const token = DiceRollTokenProvider.INSTANCE.provide(dice, false);
             if (token instanceof ErrorToken) {
                 assert.fail("Found Error Token: " + token.error);
             } else if (token instanceof SuggestionToken) {
@@ -67,6 +67,6 @@ async function roll(dice: Array<string>, assert: Chai.AssertStatic): Promise<Arr
             return token.provide();
         });
 
-    let promises = rollValues.map((rollValue) => rollValue.evaluate());
-    return Promise.all(promises).then((_) => rollValues);
+    const promises = rollValues.map((rollValue) => rollValue.evaluate());
+    return Promise.all(promises).then(() => rollValues);
 }

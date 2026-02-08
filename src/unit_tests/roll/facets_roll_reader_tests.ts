@@ -12,9 +12,9 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
 
     describe("Roll Reader", function () {
         it("Should parse a valid fomula", function () {
-            let rollReader = new FacetsRollReader("+3", {});
+            const rollReader = new FacetsRollReader("+3", {});
 
-            let result = rollReader.evaluate();
+            const result = rollReader.evaluate();
 
             expect(result).to.eqls(
                 new RollReadSuccess([new FlatModifierToken(3)]),
@@ -22,9 +22,9 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
         });
 
         it("1d6 3d8 + d8 should error", function () {
-            let rollReader = new FacetsRollReader("1d6 3d8 + d8", {});
+            const rollReader = new FacetsRollReader("1d6 3d8 + d8", {});
 
-            let result = rollReader.evaluate();
+            const result = rollReader.evaluate();
 
             expect(result).to.eqls(
                 new RollReadFail("+ is not a valid flat modifier"),
@@ -32,9 +32,9 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
         });
 
         it("6d6 +3 3a should suggest", function () {
-            let rollReader = new FacetsRollReader("6d6 +3 3a", {});
+            const rollReader = new FacetsRollReader("6d6 +3 3a", {});
 
-            let result = rollReader.evaluate(true);
+            const result = rollReader.evaluate(true);
 
             expect(result).to.eqls(
                 new RollReadSuggest(
@@ -44,9 +44,9 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
         });
 
         it("6d6 3ad12 - should suggest", function () {
-            let rollReader = new FacetsRollReader("6d6 3ad12 -", {});
+            const rollReader = new FacetsRollReader("6d6 3ad12 -", {});
 
-            let result = rollReader.evaluate(true);
+            const result = rollReader.evaluate(true);
 
             expect(result).to.eqls(
                 new RollReadSuggest(new Set(["-1", "-2", "-3", "-4", "-5"])),
@@ -54,9 +54,9 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
         });
 
         it("6d6 3ad12 - d6 should error even if suggest", function () {
-            let rollReader = new FacetsRollReader("6d6 3ad12 - d6", {});
+            const rollReader = new FacetsRollReader("6d6 3ad12 - d6", {});
 
-            let result = rollReader.evaluate(true);
+            const result = rollReader.evaluate(true);
 
             expect(result).to.eqls(
                 new RollReadFail("- is not a valid flat modifier"),

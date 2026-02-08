@@ -15,6 +15,10 @@ export class DiceValue extends RollValue {
         return await this.dice.evaluate();
     }
 
+    override maxValue(): number {
+        return this.dice.die().faces ?? 0;
+    }
+
     override value(): number {
         return this.dice.total();
     }

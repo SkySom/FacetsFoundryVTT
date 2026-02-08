@@ -7,6 +7,7 @@ export interface RollToken {
     provide(): Array<RollValue>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isRollToken(object: any): object is RollToken {
     return object !== null && typeof object.provide === "function";
 }
@@ -24,7 +25,7 @@ export class RollTokenProviderRegistry {
         RollTokenProvider<RollToken>
     > = [DiceRollTokenProvider.INSTANCE, FlatModifierTokenProvider.INSTANCE];
 
-    static getProviders(): Array<RollTokenProvider<any>> {
+    static getProviders(): Array<RollTokenProvider<RollToken>> {
         return this.ROLL_TOKEN_PROVIDERS;
     }
 }

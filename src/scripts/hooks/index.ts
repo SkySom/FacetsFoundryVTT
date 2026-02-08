@@ -14,7 +14,7 @@ export class HooksFacets implements Listener {
             new Quench
         ]
 
-        for (let listener of listeners) {
+        for (const listener of listeners) {
             listener.listen()
         }
     }

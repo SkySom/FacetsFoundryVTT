@@ -6,7 +6,7 @@ import * as Vite from "vite";
 import checker from "vite-plugin-checker";
 import {viteStaticCopy} from "vite-plugin-static-copy";
 import tsconfigPaths from "vite-tsconfig-paths";
-import packageJSON from "./package.json" with {type: "json"}
+//import packageJSON from "./package.json" with {type: "json"}
 
 const EN_JSON = JSON.parse(fs.readFileSync("./static/lang/en.json", {encoding: "utf-8"}));
 
@@ -155,7 +155,7 @@ const config = Vite.defineConfig(({command, mode}): Vite.UserConfig => {
                     [
                         "(?:",
                         reEscape("../icons/"),
-                        "[a-z]+\/[-a-z/]+\.webp",
+                        "[a-z]+/[-a-z/]+.webp",
                         "|",
                         reEscape("ui/parchment.jpg"),
                         ")$",
@@ -166,7 +166,8 @@ const config = Vite.defineConfig(({command, mode}): Vite.UserConfig => {
                     chunkFileNames: "[name].mjs",
                     entryFileNames: `facets.mjs`,
                     manualChunks: {
-                        vendor: buildMode === "production" ? Object.keys(packageJSON.dependencies) : [],
+                        //Not needed until Dependencies has anything
+                        //vendor: buildMode === "production" ? Object.keys(packageJSON.dependencies) : [],
                     },
                 },
                 watch: {buildDelay: 100},

@@ -43,6 +43,12 @@
       "@command/*": [
         "./src/module/command/*"
       ],
+      "@dice": [
+        "./src/module/roll/dice/index.ts"
+      ],
+      "@dice/*": [
+        "./src/module/dice/roll/*"
+      ],
       "@interfaces": [
         "./src/interfaces/*"
       ],
@@ -51,6 +57,12 @@
       ],
       "@item/*": [
         "./src/module/item/*"
+      ],
+      "@roll": [
+        "./src/module/roll/index.ts"
+      ],
+      "@roll/*": [
+        "./src/module/roll/*"
       ],
       "@scripts/*": [
         "./src/scripts/*"
