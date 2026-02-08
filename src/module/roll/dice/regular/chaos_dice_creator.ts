@@ -1,13 +1,13 @@
 import type { RollValueCategory } from "../../value/roll_value_category";
 import { BasicDiceCreator } from "../dice_creator";
 import { FacetsDice } from "../facets_dice";
-import { RegularDiceValueCategory } from "./regular_dice_category";
+import { RegularRollValueCategory } from "./regular_dice_category";
 
 export class ChaosDiceCreator extends BasicDiceCreator {
     static readonly INSTANCE: ChaosDiceCreator = new ChaosDiceCreator();
 
     constructor() {
-        super(RegularDiceValueCategory.INSTANCE);
+        super(RegularRollValueCategory.INSTANCE);
     }
 
     override create(facets: number): FacetsDice {
@@ -15,8 +15,8 @@ export class ChaosDiceCreator extends BasicDiceCreator {
             this.diceCategory,
             new foundry.dice.terms.Die({
                 faces: facets,
-                number: 1,
-            }),
+                number: 1
+            })
         );
     }
 }
@@ -24,7 +24,7 @@ export class ChaosDiceCreator extends BasicDiceCreator {
 export class ChaosFacetsDice extends FacetsDice {
     constructor(
         public readonly internalCategory: RollValueCategory,
-        public readonly internalDie: foundry.dice.terms.Die,
+        public readonly internalDie: foundry.dice.terms.Die
     ) {
         super();
     }

@@ -1,7 +1,7 @@
 import type { QuenchBatchContext } from "@ethaks/fvtt-quench";
 import type { DiceCreator } from "../../module/roll/dice/dice_creator";
 import { DiceCreatorRegistry } from "../../module/roll/dice/dice_creator_registry";
-import { RegularDiceValueCategory } from "../../module/roll/dice/regular/regular_dice_category";
+import { RegularRollValueCategory } from "../../module/roll/dice/regular/regular_dice_category";
 import { DiceRollToken, DiceRollTokenProvider } from "../../module/roll/token/dice_token";
 import { FlatModifierToken, FlatModifierTokenProvider } from "../../module/roll/token/flat_modifier_token";
 import { ErrorToken, SuggestionToken } from "../../module/roll/token/roll_token";
@@ -20,7 +20,7 @@ function flatModifierToken(context: QuenchBatchContext): void {
 
             expect(provided).to.eqls(new FlatModifierToken(3));
         });
-        
+
         it("-3 should return a valid token", function () {
             const provided = FlatModifierTokenProvider.INSTANCE.provide("-3", false);
             expect(provided).to.eqls(new FlatModifierToken(-3));
@@ -55,7 +55,7 @@ function diceToken(context: QuenchBatchContext): void {
         it("d6 should return a single Regular d6", function () {
             const provided = DiceRollTokenProvider.INSTANCE.provide("d6", false);
 
-            expect(provided).to.eqls(new DiceRollToken(RegularDiceValueCategory.REGULAR_DICE_CREATOR, 6, 1));
+            expect(provided).to.eqls(new DiceRollToken(RegularRollValueCategory.REGULAR_DICE_CREATOR, 6, 1));
         });
 
         it("3ad12 should return 3 Assured d12", function () {
