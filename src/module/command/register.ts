@@ -1,9 +1,10 @@
 import { gameSettings } from "@util";
-import type { ChatCommand, ChatCommands } from "commander";
+import type { AutocompleteMenu, ChatCommand, ChatCommands } from "commander";
 import { localize } from "../util/localize";
 import { log } from "../util/logger";
-import { getRollAutocomplete } from "./roll_autocomplete";
+import { getRollAutocomplete } from "./autocomplete/roll_autocomplete";
 import { FacetsRollReader, RollReadSuccess, type FacetsRollReadResult } from "@roll/facets_roll_reader";
+import { Autocomplete } from "./autocomplete/autocomplete_types";
 
 class CommandRegister {
     static register(commands: ChatCommands): void {
@@ -40,14 +41,42 @@ function roll2(): ChatCommand {
                     recentRolls.unshift(parameters);
                     gameSettings().set("facets", "recentRolls", recentRolls);
                 } else {
-                    gameSettings().set("facets", "recentRolls", new Array<string>(parameters))
+                    gameSettings().set("facets", "recentRolls", new Array<string>(parameters));
                 }
             }
             return null;
         },
-        autocompleteCallback: getRollAutocomplete
+        autocompleteCallback: rollAutocompleteCallback()
+    };
+}
+
+function rollAutocompleteCallback(): (
+    autocompleteMenu: AutocompleteMenu,
+    alias: string,
+    parameters: string
+) => string[] | HTMLElement[] {
+    return convertCallback((alias: string, parameters: string, maxEntries: number) => {
+        return getRollAutocomplete(alias, parameters, maxEntries, () => gameSettings().get("facets", "recentRolls"));
+    });
+}
+
+function convertCallback(
+    callback: (alias: string, parameters: string, maxEntries: number) => Autocomplete[]
+): (autocompleteMenu: AutocompleteMenu, alias: string, parameters: string) => string[] | HTMLElement[] {
+    return (menu, alias, parameters) => {
+        const chatCommands = game.chatCommands;
+        if (chatCommands == null) {
+            return [];
+        }
+        const autoCompleteArray = callback(alias, parameters, menu.maxEntries);
+        const elementArray: HTMLElement[] = [];
+
+        for (const autoComplete of autoCompleteArray) {
+            elementArray.push(autoComplete.toHTMLElement(chatCommands));
+        }
+
+        return elementArray;
     };
 }
 
 export { CommandRegister };
-

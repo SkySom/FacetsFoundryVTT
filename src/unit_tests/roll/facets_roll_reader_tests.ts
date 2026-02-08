@@ -1,10 +1,5 @@
 import type { QuenchBatchContext } from "@ethaks/fvtt-quench";
-import {
-    FacetsRollReader,
-    RollReadFail,
-    RollReadSuccess,
-    RollReadSuggest,
-} from "../../module/roll/facets_roll_reader";
+import { FacetsRollReader, RollReadFail, RollReadSuccess, RollReadSuggest } from "../../module/roll/facets_roll_reader";
 import { FlatModifierToken } from "../../module/roll/token/flat_modifier_token";
 
 export function registerRollReaderSuite(context: QuenchBatchContext) {
@@ -16,9 +11,7 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
 
             const result = rollReader.evaluate();
 
-            expect(result).to.eqls(
-                new RollReadSuccess([new FlatModifierToken(3)]),
-            );
+            expect(result).to.eqls(new RollReadSuccess([new FlatModifierToken(3)]));
         });
 
         it("1d6 3d8 + d8 should error", function () {
@@ -26,9 +19,7 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
 
             const result = rollReader.evaluate();
 
-            expect(result).to.eqls(
-                new RollReadFail("+ is not a valid flat modifier"),
-            );
+            expect(result).to.eqls(new RollReadFail("+ is not a valid flat modifier"));
         });
 
         it("6d6 +3 3a should suggest", function () {
@@ -38,8 +29,8 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
 
             expect(result).to.eqls(
                 new RollReadSuggest(
-                    new Set(["3ad12", "3ad10", "3ad8", "3ad6", "3ad4"]),
-                ),
+                    new Set(["6d6 +3 3ad12", "6d6 +3 3ad10", "6d6 +3 3ad8", "6d6 +3 3ad6", "6d6 +3 3ad4"])
+                )
             );
         });
 
@@ -49,7 +40,9 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
             const result = rollReader.evaluate(true);
 
             expect(result).to.eqls(
-                new RollReadSuggest(new Set(["-1", "-2", "-3", "-4", "-5"])),
+                new RollReadSuggest(
+                    new Set(["6d6 3ad12 -1", "6d6 3ad12 -2", "6d6 3ad12 -3", "6d6 3ad12 -4", "6d6 3ad12 -5"])
+                )
             );
         });
 
@@ -58,9 +51,7 @@ export function registerRollReaderSuite(context: QuenchBatchContext) {
 
             const result = rollReader.evaluate(true);
 
-            expect(result).to.eqls(
-                new RollReadFail("- is not a valid flat modifier"),
-            );
+            expect(result).to.eqls(new RollReadFail("- is not a valid flat modifier"));
         });
     });
 }
