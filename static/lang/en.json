@@ -1,15 +1,23 @@
 {
-  "FACETS": {
-    "Commands": {
-      "Roll2": {
-        "Description": "Roll Dice and take 2 Highest"
-      },
-      "Roll3": {
-        "Description": "Roll Dice and take 3 Highest"
-      }
+    "FACETS": {
+        "Commands": {
+            "Roll2": {
+                "Description": "Roll Dice and take 2 Highest"
+            }
+        },
+        "Test": {
+            "Message": "A Message"
+        }
     },
-    "Test": {
-      "Message": "A Message"
+    "TYPES": {
+        "Actor": {
+            "backgroundCharacter": "Background Character",
+            "foregroundCharacter": "Foreground Character",
+            "playerCharacter": "Player Character",
+            "spotlightCharacter": "Spotlight Character"
+        },
+        "Item": {
+            "affinity": "Affinity"
+        }
     }
-  }
 }

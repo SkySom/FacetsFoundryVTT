@@ -1,6 +1,7 @@
 
 import { HooksFacets } from "@scripts/hooks/index.ts";
 import "./styles/facets.scss";
+import { log } from "./module/util/logger";
 
-console.log("Facets | Starting System.")
+log("Starting System.")
 new HooksFacets().listen();
