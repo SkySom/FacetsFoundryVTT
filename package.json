@@ -4,8 +4,9 @@
   "description": "Foundry VTT System for Facets",
   "type": "module",
   "scripts": {
-    "watch": "npx vite build --watch --mode development",
-    "watch:static": "npx copy-and-watch --watch static/** dist/facets/"
+    "watch:build": "npx vite build --watch --mode development",
+    "watch:static": "npx copy-and-watch --watch static/** dist/facets/",
+    "watch:all": "npx concurrently --kill-others \"npm:watch:build\" \"npm:watch:static\""
   },
   "author": "SkySom",
   "license": "MIT",
@@ -23,6 +24,7 @@
     "@types/fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
     "@types/node": "^25.0.3",
     "@types/prompts": "^2.4.9",
+    "concurrently": "^9.2.1",
     "copy-and-watch": "^0.1.8",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
