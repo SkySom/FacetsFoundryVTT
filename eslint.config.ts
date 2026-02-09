@@ -32,5 +32,5 @@ export default defineConfig([
         }
     },
     mochaPlugin.configs.recommended,
-    globalIgnores(["dist/*"])
+    globalIgnores(["dist/*", "**/Foundry Virtual Tabletop/resources/app"])
 ]);

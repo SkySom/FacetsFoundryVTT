@@ -1,4 +1,4 @@
-import { gameSettings } from "@util";
+import { gameSettings, renderHandlebarsTemplate } from "@util";
 import type { AutocompleteMenu, ChatCommand, ChatCommands } from "commander";
 import { localize } from "../util/localize";
 import { log } from "../util/logger";
@@ -44,9 +44,20 @@ function roll2(): ChatCommand {
                     gameSettings().set("facets", "recentRolls", new Array<string>(parameters));
                 }
             }
-            return null;
+            return rollResultMessage(parameters);
         },
         autocompleteCallback: rollAutocompleteCallback()
+    };
+}
+
+async function rollResultMessage(formula: string) {
+    const content: string = await renderHandlebarsTemplate("roll_result", {
+        quote: "A Quote be here",
+        formula: formula
+    });
+
+    return {
+        content: content
     };
 }
 
