@@ -1,17 +1,19 @@
-//Basic CSS to force file to generate
-.facets {
-    .sheet-header {
-        flex: 0 auto;
-    }
+.facets-roll {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    justify-content: space-around;
 }
 
-.facets-roll .quote {
-    line-height: 0.5;
+.facets-roll .dice-quote,
+.facets-roll .dice-header {
+    flex: 0 0 100%;
+    position: relative;
+    text-align: left;
+    margin: 5px 0 5px 0;
 }
-.facets-roll .quote div::after {
-    bottom: 0;
-    width: 10%;
-}
+
 .facets-roll .dice-formula,
 .facets-roll .dice-total {
     flex: 0 0 100%;

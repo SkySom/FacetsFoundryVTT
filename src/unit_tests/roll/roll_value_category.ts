@@ -1,11 +1,9 @@
 import type { QuenchBatchContext } from "@ethaks/fvtt-quench";
+import { AssistanceRollValueCategory } from "@roll/dice/assistance/assistance_dice_category";
+import { KeptRollValueCategory } from "@roll/dice/kept/kept_dice_category";
 import { PlotRollValueCategory } from "@roll/dice/plot/plot_dice_category";
 import { RegularRollValueCategory } from "../../module/roll/dice/regular/regular_dice_category";
-import { DiceRollTokenProvider } from "../../module/roll/token/dice_token";
-import { ErrorToken, SuggestionToken } from "../../module/roll/token/roll_token";
-import { RollValue } from "../../module/roll/value/roll_value";
-import { KeptRollValueCategory } from "@roll/dice/kept/kept_dice_category";
-import { AssistanceRollValueCategory } from "@roll/dice/assistance/assistance_dice_category";
+import { roll } from "./_roll_test_util";
 
 export function registerRollValueCategorySuite(context: QuenchBatchContext) {
     regularRollCategory(context);
@@ -126,7 +124,6 @@ function keptRollCategory(context: QuenchBatchContext) {
     });
 }
 
-
 function assistanceRollCategory(context: QuenchBatchContext) {
     const { describe, it, expect, assert } = context;
 
@@ -142,25 +139,4 @@ function assistanceRollCategory(context: QuenchBatchContext) {
             expect(pickedValues).to.eqls([12]);
         });
     });
-}
-
-async function roll(dice: Array<string>, assert: Chai.AssertStatic): Promise<Array<RollValue>> {
-    const rollValues: Array<RollValue> = dice
-        .map((dice) => {
-            const token = DiceRollTokenProvider.INSTANCE.provide(dice, false);
-            if (token instanceof ErrorToken) {
-                assert.fail("Found Error Token: " + token.error);
-            } else if (token instanceof SuggestionToken) {
-                assert.fail("Found Suggestion Token: " + JSON.stringify(token.suggestions));
-            } else if (token == null) {
-                assert.fail("Failed to find token");
-            }
-            return token;
-        })
-        .flatMap((token) => {
-            return token.provide();
-        });
-
-    const promises = rollValues.map((rollValue) => rollValue.evaluate());
-    return Promise.all(promises).then(() => rollValues);
 }
