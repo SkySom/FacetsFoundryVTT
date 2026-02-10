@@ -1,6 +1,9 @@
 import type { AnyObject } from "fvtt-types/utils";
 
 const templatePaths: Record<string, string> = {
+    "facets.roll_result_flat": "systems/facets/templates/chat/roll_result_flat.hbs",
+    "facets.roll_result_dice": "systems/facets/templates/chat/roll_result_dice.hbs",
+    "facets.roll_result_pools": "systems/facets/templates/chat/roll_result_pools.hbs",
     "facets.roll_result": "systems/facets/templates/chat/roll_result.hbs"
 };
 
@@ -9,14 +12,16 @@ export function preloadHandlebarsTemplates() {
 }
 
 export async function renderHandlebarsTemplate(key: string, data: AnyObject) {
-    const template = templatePaths[`facets.${key}`]
+    const template = templatePaths[`facets.${key}`];
 
+    if (template == null) {
+        return `<div>No template for facets.${key}</div>`;
+    }
     try {
-        const content = renderTemplate(template, data)
+        const content = await foundry.applications.handlebars.renderTemplate(template, data);
         return content;
     } catch (error) {
         console.log(error);
+        return `<div>${error}</div>`;
     }
-
-    return "";
 }

@@ -1,6 +1,8 @@
-<div class="facets-roll">
-    <div class="dice-quote">{{quote}}</div>
-    <div class="dice-formula">{{formula}}</div>
-    <div class="dice-header" id="total">Total/Tier Hit</div>
-    <div class="dice-total">{{result.total}} - {{result.tiers.localized}}</div>
+<div class="dice-roll" data-action="expandRoll">
+    <div class="dice-result">
+        <div class="dice-formula">{{formula}}</div>
+        {{> facets.roll_result_pools }}
+        <h4 class="facets-dice-total">{{result.total}} - {{result.tiers.localized}}</h4>
+    </div>
 </div>
+

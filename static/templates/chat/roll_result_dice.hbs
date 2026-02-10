@@ -1,0 +1,16 @@
+{{#if this}}
+<section class="tooltip-part">
+    <div class="dice">
+        <header class="part-header flexrow">
+            <span class="part-formula">{{this.formula}}</span>
+            <span class="part-flavor">{{this.name}}</span>
+            <span class="part-total">{{this.total}}</span>
+        </header>
+        <ol class="dice-rolls">
+            {{#each this.diceResult}}
+                <li class="roll d{{this.facets}} {{#unless this.picked}}discarded{{/unless}}">{{{this.value}}}</li>
+            {{/each}}
+        </ol>
+    </div>
+</section>
+{{/if}}

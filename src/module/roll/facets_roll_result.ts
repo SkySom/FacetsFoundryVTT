@@ -3,6 +3,7 @@ import { getRollTiers, type TierResult } from "./tier";
 import { RollValue } from "./value/roll_value";
 import type { RollValueCategory } from "./value/roll_value_category";
 import type { RollOptions } from "./roll_options";
+import { localize } from "../util/localize";
 
 export class FacetsRollResults {
     constructor(
@@ -37,11 +38,16 @@ export class FacetsRollResults {
 }
 
 export class FacetsRollCategoryResult {
+    readonly name: string
+
     constructor(
         readonly category: RollValueCategory,
         readonly total: number,
+        readonly formula: string,
         readonly diceResult: DiceResult[]
-    ) {}
+    ) {
+        this.name = localize(`Roll.Pools.${this.category.name}`)
+    }
 
     static fromRollValues(
         category: RollValueCategory,
@@ -55,16 +61,19 @@ export class FacetsRollCategoryResult {
         const total = pickedValues.reduce((a, b) => a + b.value(), 0);
 
         const diceResults: DiceResult[] = [];
-
+        const formula: string[] = [];
         for (const rollValue of categoryRollValues) {
-            diceResults.push(new DiceResult(
-                rollValue.value(),
-                rollValue.maxValue(),
-                pickedValues.some(pickedValue => pickedValue == rollValue)
-            ));
+            formula.push(rollValue.toFormula());
+            diceResults.push(
+                new DiceResult(
+                    rollValue.value(),
+                    rollValue.maxValue(),
+                    pickedValues.some((pickedValue) => pickedValue == rollValue)
+                )
+            );
         }
 
-        return new FacetsRollCategoryResult(category, total, diceResults);
+        return new FacetsRollCategoryResult(category, total, formula.join(" "), diceResults);
     }
 }
 

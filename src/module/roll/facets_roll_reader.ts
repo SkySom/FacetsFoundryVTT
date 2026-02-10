@@ -26,7 +26,6 @@ export class FacetsRollReader {
                 } else if (generatedToken instanceof SuggestionToken) {
                     if (suggestToken) {
                         const suggestions: string[] = [];
-                        console.log(JSON.stringify(generatedToken.suggestions));
                         for (const suggestion of generatedToken.suggestions) {
                             const lastSpace = this.fomula.lastIndexOf(" ");
                             if (lastSpace < 0) {

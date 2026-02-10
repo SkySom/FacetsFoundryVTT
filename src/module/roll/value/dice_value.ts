@@ -3,7 +3,7 @@ import { RollValue } from "./roll_value";
 import type { RollValueCategory } from "./roll_value_category";
 
 export class DiceValue extends RollValue {
-    constructor(readonly dice: FacetsDice) {
+    constructor(readonly dice: FacetsDice, readonly type: string) {
         super();
     }
 
@@ -21,5 +21,9 @@ export class DiceValue extends RollValue {
 
     override value(): number {
         return this.dice.total();
+    }
+
+    override toFormula(): string {
+        return `${this.type}${this.maxValue()}`
     }
 }

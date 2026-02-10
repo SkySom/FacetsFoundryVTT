@@ -1,0 +1,21 @@
+<div class="dice-tooltip">
+    <div class="wrapper">
+        {{#with result.categories}}
+            {{#with regular_dice}}
+                {{> facets.roll_result_dice }}
+            {{/with}}
+            {{#with plot_dice}}
+                {{> facets.roll_result_dice }}
+            {{/with}}
+            {{#with kept_dice}}
+                {{> facets.roll_result_dice }}
+            {{/with}}
+            {{#with assistance_dice}}
+                {{> facets.roll_result_dice }}
+            {{/with}}
+            {{#with flat_modifiers}}
+                {{> facets.roll_result_flat }}
+            {{/with}}
+        {{/with}}
+    </div>
+</div>

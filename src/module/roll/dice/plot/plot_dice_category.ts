@@ -35,7 +35,12 @@ class HalfPlotRollValue extends RollValue {
     override value(): number {
         return Math.max(this.rollValue.value(), this.rollValue.maxValue() / 2);
     }
+
     override maxValue(): number {
         return this.rollValue.maxValue();
+    }
+
+    override toFormula(): string {
+        return this.toFormula();
     }
 }

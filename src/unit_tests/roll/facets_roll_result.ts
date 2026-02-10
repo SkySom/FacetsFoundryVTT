@@ -15,7 +15,7 @@ export function registerFacetsRollResultSuite(context: QuenchBatchContext) {
             });
 
             expect(result).to.eqls(
-                new FacetsRollCategoryResult(RegularRollValueCategory.INSTANCE, 18, [
+                new FacetsRollCategoryResult(RegularRollValueCategory.INSTANCE, 18, "ad10 ad8", [
                     new DiceResult(10, 10, true),
                     new DiceResult(8, 8, true)
                 ])
@@ -30,7 +30,7 @@ export function registerFacetsRollResultSuite(context: QuenchBatchContext) {
             });
 
             expect(result).to.eqls(
-                new FacetsRollCategoryResult(RegularRollValueCategory.INSTANCE, 22, [
+                new FacetsRollCategoryResult(RegularRollValueCategory.INSTANCE, 22, "ad10 ad8 ad12 ad4", [
                     new DiceResult(10, 10, true),
                     new DiceResult(8, 8, false),
                     new DiceResult(12, 12, true),

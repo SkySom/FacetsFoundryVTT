@@ -1,3 +1,5 @@
+import { localize, format } from "../util/localize";
+
 export enum RollTier {
     NONE,
     EASY,
@@ -17,11 +19,15 @@ export class TierResult {
         readonly regular: RollTier,
         readonly extraordinary?: RollTier
     ) {
-        RollTier[regular].toLocaleLowerCase();
         if (extraordinary) {
-            this.localized = `${RollTier[regular].toLocaleLowerCase()} / ${RollTier[extraordinary].toLocaleLowerCase()}`;
+            this.localized = format("Roll.ExtraordinaryResult", {
+                regular: localize(`Roll.Tiers.${RollTier[regular]}`),
+                extraordinary: localize(`Roll.Tiers.${RollTier[extraordinary]}`)
+            });
         } else {
-            this.localized = `${RollTier[regular].toLocaleLowerCase()}`;
+            this.localized = format("Roll.Result", {
+                regular: localize(`Roll.Tiers.${RollTier[regular]}`)
+            });
         }
     }
 }

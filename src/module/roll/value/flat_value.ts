@@ -17,6 +17,14 @@ export class FlatRollValue extends RollValue {
     override maxValue(): number {
         return this.value();
     }
+
+    override toFormula(): string {
+        if (this.value() < 0) {
+            return `-${this.value()}`
+        } else {
+            return `+${this.value()}`
+        }
+    }
 }
 
 export class FlatRollValueCategory implements RollValueCategory {

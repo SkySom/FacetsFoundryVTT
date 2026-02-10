@@ -1,29 +1,18 @@
 .facets-roll {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    justify-content: space-around;
+    font-size: 12;
 }
 
-.facets-roll .dice-quote,
-.facets-roll .dice-header {
-    flex: 0 0 100%;
-    position: relative;
-    text-align: left;
-    margin: 5px 0 5px 0;
-}
-
-.facets-roll .dice-formula,
-.facets-roll .dice-total {
+.dice-roll .facets-dice-total {
     flex: 0 0 100%;
     position: relative;
     margin: 0;
     line-height: 24px;
     text-align: center;
     background: rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--color-border-light-2);
+    border: 1px solid #999;
     border-radius: 3px;
     box-shadow: 0 0 2px #fff inset;
-    word-break: break-all;
+    flex: 0;
+    font-size: var(--font-size-14);
+    font-weight: bold;
 }

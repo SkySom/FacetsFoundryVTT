@@ -53,8 +53,8 @@
   ],
   "version": "3.0.0",
   "compatibility": {
-    "minimum": "12.328",
-    "verified": "12.328"
+    "minimum": "13.351",
+    "verified": "13.351"
   },
   "esmodules": [
     "facets.mjs"

@@ -11,6 +11,28 @@
                 "Description": "Roll Dice and keep 2"
             }
         },
+        "Roll": {
+            "Pools": {
+                "regular_dice": "Regular/Chaos Dice",
+                "plot_dice": "Plot Dice",
+                "kept_dice": "Kept Dice",
+                "assistance_dice": "Assistance Dice",
+                "flat_modifiers": "Flat Bonuses"
+            },
+            "Tiers": {
+                "NONE": "None (0)",
+                "EASY": "Easy (1)",
+                "AVERAGE": "Average (2)",
+                "HARD": "Hard (3)",
+                "FORMIDABLE": "Formidable (4)",
+                "HEROIC": "Heroic (5)",
+                "INCREDIBLE": "Incredible (6)",
+                "RIDICULOUS": "Ridiculous (7)",
+                "IMPOSSIBLE": "Impossible (8)"
+            },
+            "Result": "{regular}",
+            "ExtraordinaryResult": "{regular} / Extraordinary {extraordinary}"
+        },
         "Settings": {
             "RecentRolls": "Recent Rolls for Suggestions"
         },

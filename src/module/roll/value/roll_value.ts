@@ -7,6 +7,8 @@ export abstract class RollValue {
 
     abstract maxValue(): number;
 
+    abstract toFormula(): string;
+
     async evaluate(): Promise<void> {
         return Promise.resolve()
     }

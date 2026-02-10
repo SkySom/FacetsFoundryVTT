@@ -30,7 +30,7 @@ export class DiceRollTokenProvider implements RollTokenProvider<DiceRollToken> {
                     ])
                 );
             } else {
-                return new DiceRollToken(diceCreator, facets, amount);
+                return new DiceRollToken(diceCreator, typeString, facets, amount);
             }
         } else {
             console.log("No groups found");
@@ -121,6 +121,7 @@ export class DiceRollTokenProvider implements RollTokenProvider<DiceRollToken> {
 export class DiceRollToken implements RollToken {
     constructor(
         readonly diceCreator: DiceCreator,
+        readonly type: string,
         readonly faces: number,
         readonly count: number
     ) {}
@@ -129,7 +130,7 @@ export class DiceRollToken implements RollToken {
         const rollValues: Array<RollValue> = [];
 
         for (let i = 0; i < this.count; i++) {
-            rollValues.push(new DiceValue(this.diceCreator.create(this.faces)));
+            rollValues.push(new DiceValue(this.diceCreator.create(this.faces), this.type));
         }
         return rollValues;
     }

@@ -55,7 +55,7 @@ function diceToken(context: QuenchBatchContext): void {
         it("d6 should return a single Regular d6", function () {
             const provided = DiceRollTokenProvider.INSTANCE.provide("d6", false);
 
-            expect(provided).to.eqls(new DiceRollToken(RegularRollValueCategory.REGULAR_DICE_CREATOR, 6, 1));
+            expect(provided).to.eqls(new DiceRollToken(RegularRollValueCategory.REGULAR_DICE_CREATOR, "d", 6, 1));
         });
 
         it("3ad12 should return 3 Assured d12", function () {
@@ -133,5 +133,5 @@ function createAssuredDiceToken(
         "a" + type + " does not exist in " + JSON.stringify(DiceCreatorRegistry.ASSURED_DICE_CREATORS.keys())
     );
 
-    return new DiceRollToken(assuredDiceCreator, facets, amount);
+    return new DiceRollToken(assuredDiceCreator, `a${type}`, facets, amount);
 }

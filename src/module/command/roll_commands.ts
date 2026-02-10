@@ -25,8 +25,7 @@ function roll2(): ChatCommand {
         aliases: ["~r", "~r2"],
         icon: "<i class='fas fa-dice-two'></i>",
         description: localize("Commands.Roll2.Description"),
-        callback: (chatLog: ChatLog, parameters: string, messageData: MessageData) => {
-            console.log(`Facets | Roll2 Testing ${parameters}`, chatLog, messageData);
+        callback: (_chatLog: ChatLog, parameters: string) => {
             const rollResult: FacetsRollReadResult = new FacetsRollReader(parameters).evaluate();
             if (rollResult instanceof RollReadSuccess) {
                 const recentRolls: string[] = gameSettings().get("facets", "recentRolls");
@@ -58,11 +57,13 @@ function roll2(): ChatCommand {
 }
 
 async function rollResultMessage(formula: string, result: FacetsRollResults) {
-    const content: string = await renderHandlebarsTemplate("roll_result", {
+    let content: string = await renderHandlebarsTemplate("roll_result", {
         quote: "A Quote be here",
         formula: formula,
-        result: result
+        result: result.toData()
     });
+
+    content = content.replace(/(\n|\r){2,}/g, "").replace(/(\s*<!--)/g, "$1");;
 
     return {
         content: content
