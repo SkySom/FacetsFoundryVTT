@@ -8,12 +8,13 @@ import { Autocomplete } from "./autocomplete/autocomplete_types";
 import { getRollAutocomplete } from "./autocomplete/roll_autocomplete";
 
 export function registerRollCommands(commands: ChatCommands) {
-    gameSettings().register("facets", "recentRolls", {
-        name: localize("Settings.RecentRolls"),
-        scope: "world",
-        config: false,
-        type: Array
-    });
+    gameSettings().register<Array<string>>("facets", "recentRolls", {
+            name: localize("Settings.RecentRolls"),
+            scope: "client",
+            config: false,
+            type: Array<string>,
+            default: []
+        });
 
     commands.register(roll2());
 }
