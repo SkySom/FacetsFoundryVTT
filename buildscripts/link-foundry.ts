@@ -10,7 +10,7 @@ const enteredPath: string =
             type: "text",
             name: "value",
             format: (v: string) => v.replace(/\W*$/, "").trim(),
-            message: `Enter the full path to your Foundry data folder.${windowsInstructions}`,
+            message: `Enter the full path to your Foundry data folder.${windowsInstructions}`
         })
     ).value ?? "";
 if (!enteredPath) {
@@ -19,15 +19,15 @@ if (!enteredPath) {
 }
 
 const dataPath = /\bData$/.test(enteredPath) ? enteredPath : path.join(enteredPath, "Data");
-const dataPathStats = fs.lstatSync(dataPath, {throwIfNoEntry: false});
+const dataPathStats = fs.lstatSync(dataPath, { throwIfNoEntry: false });
 if (!dataPathStats?.isDirectory()) {
     console.error(`No folder found at "${dataPath}"`);
     process.exit(1);
 }
 
-const systemId = "facets"
+const systemId = "facets";
 const symlinkPath = path.resolve(dataPath, "systems", systemId);
-const symlinkStats = fs.lstatSync(symlinkPath, {throwIfNoEntry: false});
+const symlinkStats = fs.lstatSync(symlinkPath, { throwIfNoEntry: false });
 if (symlinkStats) {
     const atPath = symlinkStats.isDirectory() ? "folder" : symlinkStats.isSymbolicLink() ? "symlink" : "file";
     const proceed: boolean = (
@@ -35,7 +35,7 @@ if (symlinkStats) {
             type: "confirm",
             name: "value",
             initial: false,
-            message: `A "${systemId}" ${atPath} already exists in the "systems" subfolder. Replace with new symlink?`,
+            message: `A "${systemId}" ${atPath} already exists in the "systems" subfolder. Replace with new symlink?`
         })
     ).value;
     if (!proceed) {
@@ -46,7 +46,7 @@ if (symlinkStats) {
 
 try {
     if (symlinkStats?.isDirectory()) {
-        fs.rmSync(symlinkPath, {recursive: true, force: true});
+        fs.rmSync(symlinkPath, { recursive: true, force: true });
     } else if (symlinkStats) {
         fs.unlinkSync(symlinkPath);
     }
