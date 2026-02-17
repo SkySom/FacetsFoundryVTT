@@ -11,14 +11,17 @@ export function preloadHandlebarsTemplates() {
     return foundry.applications.handlebars.loadTemplates(templatePaths);
 }
 
-export async function renderHandlebarsTemplate(key: string, data: AnyObject) {
+export async function renderHandlebarsTemplate(key: string, data: AnyObject, replaceSpace: boolean = true) {
     const template = templatePaths[`facets.${key}`];
 
     if (template == null) {
         return `<div>No template for facets.${key}</div>`;
     }
     try {
-        const content = await foundry.applications.handlebars.renderTemplate(template, data);
+        let content = await foundry.applications.handlebars.renderTemplate(template, data);
+        if (replaceSpace) {
+            content = content.replace(/(\n|\r){2,}/g, "").replace(/(\s*<!--)/g, "$1");
+        }
         return content;
     } catch (error) {
         console.log(error);

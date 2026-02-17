@@ -58,13 +58,12 @@ function roll2(): ChatCommand {
 }
 
 async function rollResultMessage(formula: string, result: FacetsRollResults) {
-    let content: string = await renderHandlebarsTemplate("roll_result", {
+    const content: string = await renderHandlebarsTemplate("roll_result", {
         quote: "A Quote be here",
         formula: formula,
         result: result.toData()
     });
 
-    content = content.replace(/(\n|\r){2,}/g, "").replace(/(\s*<!--)/g, "$1");;
 
     return {
         content: content
