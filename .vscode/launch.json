@@ -24,6 +24,18 @@
             "request": "launch",
             "command": "npm run watch:all",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Start FoundryVTT",
+            "request": "launch",
+            "command": "npx fvtt launch --world facets --adminPassword ${env:FVTT_ADMIN_PASSWORD}"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Start Vite and Run Foundry",
+            "configurations": ["Run Script: watch:all", "Start FoundryVTT", "Start ngrok"]
         }
     ]
 }
