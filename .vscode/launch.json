@@ -35,7 +35,7 @@
     "compounds": [
         {
             "name": "Start Vite and Run Foundry",
-            "configurations": ["Run Script: watch:all", "Start FoundryVTT", "Start ngrok"]
+            "configurations": ["Run Script: watch:all", "Start FoundryVTT"]
         }
     ]
 }
