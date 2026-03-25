@@ -1,3 +1,3 @@
-import { FacetsActor } from "@actor";
+import { ActorFacets } from "@actor";
 
-export type ActorRollData = ReturnType<FacetsActor["getRollData"]>
+export type ActorRollData = ReturnType<ActorFacets["getRollData"]>

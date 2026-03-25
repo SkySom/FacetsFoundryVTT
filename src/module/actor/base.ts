@@ -1,7 +1,7 @@
 import type { AnyObject } from "fvtt-types/utils";
 import type { FacetsRollData } from "../roll/facets_roll_data";
 
-export class FacetsActor extends Actor {
+export class ActorFacets extends Actor {
     override prepareData(): void {
         console.log("Facets | Actor Prepare Data");
     }
