@@ -16,3 +16,45 @@
     font-size: var(--font-size-14);
     font-weight: bold;
 }
+
+.application.sheet.facets.actor.party {
+    &.standard-form {
+        gap: 0;
+    }
+    fieldset {
+        padding: 0.5rem;
+        .fieldset-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+    }
+
+    &.locked {
+        .header .name {
+            background: transparent;
+            --input-border-color: transparent;
+        }
+    }
+
+    .header {
+        gap: 1rem;
+        & .profile-img {
+            flex-grow: 0;
+            border: none;
+            height: var(--font-size-80);
+            &:hover,
+            &:focus {
+                filter: drop-shadow(0 0 8px var(--color-shadow-primary));
+            }
+        }
+        .name {
+            height: var(--font-size-80);
+            font-size: var(--font-size-48);
+        }
+        .icon {
+            flex: 0;
+            align-self: self-start;
+        }
+    }
+}

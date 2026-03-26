@@ -5,16 +5,22 @@ import type { Quench } from "@ethaks/fvtt-quench";
 
 declare global {
     interface Game {
-        chatCommands: ChatCommands
+        chatCommands: ChatCommands;
     }
-    
+
     interface SettingConfig {
         "facets.recentRolls": string[];
     }
 
     interface DocumentClassConfig {
-        Actor: typeof ActorFacets;
+        Actor: typeof ActorFacets<Actor.SubType>;
         Item: typeof ItemFacets;
+    }
+
+    interface DataModelConfig {
+        Actor: {
+            character: typeof CharacterData;
+        };
     }
 
     interface MessageData {

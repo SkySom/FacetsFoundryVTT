@@ -17,6 +17,9 @@
       "playerCharacter": {
       },
       "spotlightCharacter": {
+      },
+      "party": {
+        "htmlFields": "Description"
       }
     },
     "Item": {

@@ -7,6 +7,12 @@ const templatePaths: Record<string, string> = {
     "facets.roll_result": "systems/facets/templates/chat/roll_result.hbs"
 };
 
+export function registerCustomHelpers() {
+    Handlebars.registerHelper({
+        readonly: (val) => (val ? "readonly" : "")
+    });
+}
+
 export function preloadHandlebarsTemplates() {
     return foundry.applications.handlebars.loadTemplates(templatePaths);
 }

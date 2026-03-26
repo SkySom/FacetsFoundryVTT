@@ -40,7 +40,7 @@ export function getRollTiers(total: number): TierResult {
 
 function getRollTier(total: number): RollTier | undefined {
     if (total < 3) {
-        return;
+        return RollTier.NONE;
     } else if (total < 7) {
         return RollTier.EASY;
     } else if (total < 11) {

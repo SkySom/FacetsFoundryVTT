@@ -1,0 +1,37 @@
+<section class='tab members {{tab.cssClass}}' data-group='primary' data-tab='members'>
+  <fieldset>
+    <legend>{{localize tabs.members.label}}</legend>
+    <ol class='fieldset-list'>
+      {{#each members}}
+        <li class='item member' data-member-uuid='{{uuid}}'>
+          <a
+            role='button'
+            class='image'
+            data-action='showMemberImage'
+            data-tooltip='SIDEBAR.CharArt'
+            style='background-image:url("{{img}}");'
+          >
+          </a>
+          <div class='name'>
+            <a role='button' data-action='openMember'>{{name}}</a>
+          </div>
+          <div class='identity'>{{profile}}</div>
+          {{#if (and @root.actor.isOwner @root.unlocked)}}
+            <div class='controls'>
+              <button type='button' class='icon' data-action='deleteMember'>
+                <i class='fa-solid fa-trash'></i>
+              </button>
+            </div>
+          {{/if}}
+        </li>
+      {{else}}
+        <li class='hint' style='height: var(--input-height)'>
+          {{localize 'FACETS.Sheet.Actor.Party.Members.Empty'}}
+        </li>
+      {{/each}}
+    </ol>
+  </fieldset>
+  {{#if (and user.isGM unlocked)}}
+    {{!formGroupSimple 'system.members' source=true localize=true}}
+  {{/if}}
+</section>

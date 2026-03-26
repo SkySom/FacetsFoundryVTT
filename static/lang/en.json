@@ -36,6 +36,20 @@
         "Settings": {
             "RecentRolls": "Recent Rolls for Suggestions"
         },
+        "Sheet": {
+            "Actor": {
+                "Party": {
+                    "Description": {
+                        "Header": "Description"
+                    },
+                    "Label": "Party",
+                    "Members": {
+                        "Empty": "No Members",
+                        "Header": "Members"
+                    }
+                }
+            }
+        },
         "Test": {
             "Message": "A Message"
         }
@@ -45,7 +59,8 @@
             "backgroundCharacter": "Background Character",
             "foregroundCharacter": "Foreground Character",
             "playerCharacter": "Player Character",
-            "spotlightCharacter": "Spotlight Character"
+            "spotlightCharacter": "Spotlight Character",
+            "party": "Party"
         },
         "Item": {
             "affinity": "Affinity"
