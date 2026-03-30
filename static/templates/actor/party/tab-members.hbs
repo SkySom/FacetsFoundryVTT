@@ -32,6 +32,6 @@
     </ol>
   </fieldset>
   {{#if (and user.isGM unlocked)}}
-    {{!formGroupSimple 'system.members' source=true localize=true}}
+    {{formInput systemFields.memberList value=actor.system.memberList}}
   {{/if}}
 </section>

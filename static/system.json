@@ -1,93 +1,83 @@
 {
-  "id": "facets",
-  "title": "Facets",
-  "description": "The Facets system for FoundryVTT!",
-  "authors": [
-    {
-      "name": "Sky",
-      "discord": "skysom"
-    }
-  ],
-  "documentTypes": {
-    "Actor": {
-      "backgroundCharacter": {
-      },
-      "foregroundCharacter": {
-      },
-      "playerCharacter": {
-      },
-      "spotlightCharacter": {
-      },
-      "party": {
-        "htmlFields": "Description"
-      }
-    },
-    "Item": {
-      "affinity": {
-      }
-    }
-  },
-  "flags": {
-    "hotReload": {
-      "extensions": [
-        "css",
-        "html",
-        "hbs",
-        "json"
-      ],
-      "paths": [
-        "styles",
-        "lang",
-        "templates"
-      ]
-    }
-  },
-  "url": "Replace this with a link to your public repository",
-  "license": "LICENSE.txt",
-  "readme": "README.md",
-  "bugs": "Replace this with a link to file issues or tickets",
-  "changelog": "CHANGELOG.md",
-  "media": [
-    {
-      "type": "setup",
-      "url": "systems/facets/assets/anvil-impact.png",
-      "thumbnail": "systems/facets/assets/anvil-impact.png"
-    }
-  ],
-  "version": "3.0.0",
-  "compatibility": {
-    "minimum": "13.351",
-    "verified": "13.351"
-  },
-  "esmodules": [
-    "facets.mjs"
-  ],
-  "styles": [
-    "styles/facets.css"
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ],
-  "relationships": {
-    "requires": [
-      {
-        "id": "_chatcommands",
-        "type": "module",
-        "manifest": "https://gitlab.com/woodentavern/foundryvtt-chat-command-lib/-/raw/master/src/module.json",
-        "compatibility": {
-          "verified": "2.0.1"
+    "id": "facets",
+    "title": "Facets",
+    "description": "The Facets system for FoundryVTT!",
+    "authors": [
+        {
+            "name": "Sky",
+            "discord": "skysom"
         }
-      }
-    ]
-  },
-  "packs": [],
-  "packFolders": [],
-  "socket": false,
-  "background": "systems/facets/assets/anvil-impact.png",
-  "primaryTokenAttribute": "health",
-  "secondaryTokenAttribute": "power"
+    ],
+    "documentTypes": {
+        "Actor": {
+            "backgroundCharacter": {
+                "htmlFields": "description"
+            },
+            "foregroundCharacter": {
+                "htmlFields": "description"
+            },
+            "playerCharacter": {
+                "htmlFields": "description"
+            },
+            "spotlightCharacter": {
+                "htmlFields": "description"
+            },
+            "party": {
+                "htmlFields": "description"
+            }
+        },
+        "Item": {
+            "affinity": {}
+        }
+    },
+    "flags": {
+        "hotReload": {
+            "extensions": ["css", "html", "hbs", "json"],
+            "paths": ["styles", "lang", "templates"]
+        }
+    },
+    "url": "Replace this with a link to your public repository",
+    "license": "LICENSE.txt",
+    "readme": "README.md",
+    "bugs": "Replace this with a link to file issues or tickets",
+    "changelog": "CHANGELOG.md",
+    "media": [
+        {
+            "type": "setup",
+            "url": "systems/facets/assets/anvil-impact.png",
+            "thumbnail": "systems/facets/assets/anvil-impact.png"
+        }
+    ],
+    "version": "3.0.0",
+    "compatibility": {
+        "minimum": "13.351",
+        "verified": "13.351"
+    },
+    "esmodules": ["facets.mjs"],
+    "styles": ["styles/facets.css"],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ],
+    "relationships": {
+        "requires": [
+            {
+                "id": "_chatcommands",
+                "type": "module",
+                "manifest": "https://gitlab.com/woodentavern/foundryvtt-chat-command-lib/-/raw/master/src/module.json",
+                "compatibility": {
+                    "verified": "2.0.1"
+                }
+            }
+        ]
+    },
+    "packs": [],
+    "packFolders": [],
+    "socket": false,
+    "background": "systems/facets/assets/anvil-impact.png",
+    "primaryTokenAttribute": "health",
+    "secondaryTokenAttribute": "power"
 }

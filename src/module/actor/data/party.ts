@@ -1,53 +1,63 @@
-import type { ActorFacets } from "@actor/base";
-import type { AnyObject } from "fvtt-types/utils";
+import { ActorFacets } from "@actor/base";
+import { FacetsBaseActorData, type FacetsActorSchema, type FacetsBaseData, type FacetsDerivedData } from "./base";
+import { Logger } from "../../util/logger";
 
-type PartyDataSchema = ReturnType<typeof partySchema>
-
-type PartyBaseData = AnyObject;
-
-type PartyDerivedData = {
-    members: Map<string, PartyMember>
+interface PartyDataSchema extends FacetsActorSchema {
+    memberList: foundry.data.fields.SetField<foundry.data.fields.DocumentUUIDField<{ type: "Actor" }>>;
+    doom: foundry.data.fields.NumberField<{
+        initial: 0;
+    }>;
+    locked: foundry.data.fields.BooleanField<{
+        initial: false
+    }>
 }
 
-interface PartyMember {
-  actor: ActorFacets<'character'> | null;
-}
+type PartyBaseData = FacetsBaseData & {
+    members: Map<string, PartyMember>;
+};
 
+type PartyDerivedData = FacetsDerivedData;
+
+type PartyMember = {
+    actor: ActorFacets<"playerCharacter"> | null;
+};
 
 function partySchema() {
     return {
-        details: new foundry.data.fields.SchemaField({
-            members: new foundry.data.fields.ArrayField(
-                new foundry.data.fields.SchemaField({
-                    uuid: new foundry.data.fields.DocumentUUIDField({
-                        type: "Actor"
-                    })
-                })
-            )
-        }),
+        memberList: new foundry.data.fields.SetField(
+            new foundry.data.fields.DocumentUUIDField({
+                type: "Actor"
+            })
+        ),
         doom: new foundry.data.fields.NumberField({
-            initial: 0,
-            positive: true
+            initial: 0
+        }),
+        locked: new foundry.data.fields.BooleanField({
+            initial: false
         })
     };
 }
 
-class PartyData extends foundry.abstract.TypeDataModel<
-    PartyDataSchema,
-    ActorFacets,
-    PartyBaseData,
-    PartyDerivedData
-> {
+class PartyData extends FacetsBaseActorData<PartyDataSchema, PartyBaseData, PartyDerivedData> {
     static override defineSchema(): PartyDataSchema {
         return {
+            ...super.defineSchema(),
             ...partySchema()
         };
     }
 
-    override prepareDerivedData(): void {
-        super.prepareDerivedData();
+    override prepareBaseData(): void {
+        super.prepareBaseData();
         this.members = new Map<string, PartyMember>();
+        this.memberList.forEach(value => {
+            const result = fromUuidSync<Actor>(value);
+            if (result instanceof ActorFacets) {
+                this.members.set(result['uuid'] + "", { actor: result})
+            }
+        });
+        Logger.info(JSON.stringify(this.memberList))
     }
 }
 
-export { PartyData };
+export { PartyData, type PartyBaseData, type PartyDataSchema, type PartyDerivedData };
+

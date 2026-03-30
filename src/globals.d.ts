@@ -2,12 +2,14 @@ import { ActorFacets } from "@actor";
 import { ItemFacets } from "@item";
 
 import type { Quench } from "@ethaks/fvtt-quench";
+import type { PartyData } from "@actor/data/party";
+import type { PlayerCharacterData } from "@actor/data/player_character";
 
 declare global {
     interface Game {
         chatCommands: ChatCommands;
     }
-
+    
     interface SettingConfig {
         "facets.recentRolls": string[];
     }
@@ -19,7 +21,8 @@ declare global {
 
     interface DataModelConfig {
         Actor: {
-            character: typeof CharacterData;
+            playerCharacter: typeof PlayerCharacterData
+            party: typeof PartyData;
         };
     }
 

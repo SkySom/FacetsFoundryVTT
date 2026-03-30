@@ -1,26 +1,28 @@
+<header class="flexrow header">
+    <img src="{{actor.img}}" class="profile-img" data-edit="img" data-action="editImg" />
+    <div>
+        <input
+            type="text"
+            name="name"
+            class="name"
+            value="{{actor.name}}"
+            placeholder="{{localize 'Name'}}"
+            {{readonly actor.system.locked}}
+        />
+        <div style="padding-top: 5px; padding-bottom: 5px" class="doom form-group">
+            <label for="doom">Doom</label>
+            {{formInput systemFields.doom value=system.doom}}
+        </div>
 
-<header class='flexrow header'>
-  <img
-    src='{{actor.img}}'
-    class='profile-img'
-    data-edit='img'
-    data-action='editImg'
-  />
-  <input
-    type='text'
-    name='name'
-    class='name'
-    value='{{actor.name}}'
-    placeholder='{{localize "Name"}}'
-    {{readonly actor.system.locked}}
-  />
-  {{#if user.isGM}}
-    <button type='button' data-action='toggleLock' class='icon' data-tooltip='FACETS.Party.Sheet.Lock.Label'>
-      {{#if actor.system.locked}}
-        <i class='fa-solid fa-lock'></i>
-      {{else}}
-        <i class='fa-solid fa-lock-open'></i>
-      {{/if}}
-    </button>
-  {{/if}}
+    </div>
+
+    {{#if user.isGM}}
+        <button type="button" data-action="toggleLock" class="icon" data-tooltip="FACETS.Party.Sheet.Lock.Label">
+            {{#if actor.system.locked}}
+                <i class="fa-solid fa-lock"></i>
+            {{else}}
+                <i class="fa-solid fa-lock-open"></i>
+            {{/if}}
+        </button>
+    {{/if}}
 </header>

@@ -57,4 +57,37 @@
             align-self: self-start;
         }
     }
+
+    .member {
+        display: grid;
+        grid-template-areas:
+            'image name bennies controls'
+            'image identity identity identity'
+            'image stats stats stats';
+        column-gap: 1rem;
+        grid-template-columns: auto 1fr auto auto;
+        grid-template-rows: var(--input-height) auto auto;
+        &:not(:last-of-type) {
+            margin-bottom: 0.5rem;
+            border-bottom: 2px groove var(--color-fieldset-border);
+        }
+        &.broken * {
+            cursor: not-allowed;
+        }
+        .image {
+            --image-size: var(--font-size-64);
+            display: inline-grid;
+            height: var(--image-size);
+            width: var(--image-size);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            grid-area: image;
+            scale: 1;
+            &:hover {
+                text-shadow: none;
+                filter: drop-shadow(0 0 8px var(--color-shadow-primary));
+            }
+        }
+    }
 }
