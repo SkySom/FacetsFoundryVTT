@@ -37,6 +37,13 @@
             "RecentRolls": "Recent Rolls for Suggestions"
         },
         "Sheet": {
+            "Generic": {
+                "Description": {
+                    "Header": "Description"
+                },
+                "Doom": "Doom",
+                "PlotPoints": "Plot Points"
+            },
             "Actor": {
                 "Party": {
                     "Description": {
@@ -47,6 +54,9 @@
                         "Empty": "No Members",
                         "Header": "Members"
                     }
+                },
+                "PlayerCharacter": {
+                    "Label": "Player Character"
                 }
             }
         },

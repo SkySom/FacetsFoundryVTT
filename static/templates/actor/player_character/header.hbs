@@ -1,0 +1,16 @@
+<header class="flexrow header">
+    <img src="{{actor.img}}" class="profile-img" data-edit="img" data-action="editImg" />
+    <div>
+        <input
+            type="text"
+            name="name"
+            class="name"
+            value="{{actor.name}}"
+            placeholder="{{localize 'Name'}}"
+        />
+        <div style="padding-top: 5px; padding-bottom: 5px" class="doom form-group">
+            <label for="plotPoints">{{localize "FACETS.Sheet.Generic.PlotPoints"}}</label>
+            {{formInput systemFields.plotPoints value=system.plotPoints}}
+        </div>
+    </div>
+</header>
