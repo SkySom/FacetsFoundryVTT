@@ -26,6 +26,9 @@
                 "htmlFields": "description"
             }
         },
+        "ChatMessage": {
+            "rollResult": {}
+        },
         "Item": {
             "affinity": {}
         }

@@ -1,15 +1,18 @@
 import type { AnyObject } from "fvtt-types/utils";
+import { localize } from "../util/localize";
+import type { RollOptions } from "./roll_options";
+import { doom, plotPoints, RollResourceCost } from "./roll_resource";
 import { getRollTiers, type TierResult } from "./tier";
 import { RollValue } from "./value/roll_value";
 import type { RollValueCategory } from "./value/roll_value_category";
-import type { RollOptions } from "./roll_options";
-import { localize } from "../util/localize";
 
-export class FacetsRollResults {
+export class FacetsRollResult {
     constructor(
         readonly total: number,
         readonly tiers: TierResult,
-        readonly categories: Map<string, FacetsRollCategoryResult>
+        readonly categories: Map<string, FacetsRollCategoryResult>,
+        readonly spentResources: RollResourceCost[] = [],
+        readonly gainedResources: RollResourceCost[] = []
     ) {}
 
     toData(): AnyObject {
@@ -20,7 +23,7 @@ export class FacetsRollResults {
         };
     }
 
-    static fromRollValues(rollValues: RollValue[], rollOptions: RollOptions): FacetsRollResults {
+    static fromRollValues(rollValues: RollValue[], rollOptions: RollOptions): FacetsRollResult {
         const foundCategories = [...new Set(rollValues.map((rollValue) => rollValue.category()))];
         const categoryResults = new Map<string, FacetsRollCategoryResult>();
 
@@ -31,14 +34,38 @@ export class FacetsRollResults {
             );
         }
 
+        const spentResources = new Map<string, RollResourceCost>();
+
+        for (const rollValue of rollValues) {
+            for (const rollCost of rollValue.rollCost()) {
+                const existingCost = spentResources.get(rollCost.resource);
+                if (existingCost) {
+                    spentResources.set(existingCost.resource, existingCost.withAdditional(rollCost.total));
+                } else {
+                    spentResources.set(rollCost.resource, rollCost);
+                }
+            }
+        }
+
+        const onesCount = rollValues.filter((rollValue) => rollValue.value() === 1).length;
+
+        const gainedResources =
+            onesCount > 0 ? [new RollResourceCost(doom, onesCount), new RollResourceCost(plotPoints, 1)] : [];
+
         const total = categoryResults.values().reduce((a, b) => a + b.total, 0);
 
-        return new FacetsRollResults(total, getRollTiers(total), categoryResults);
+        return new FacetsRollResult(
+            total,
+            getRollTiers(total),
+            categoryResults,
+            [...spentResources.values()],
+            gainedResources
+        );
     }
 }
 
 export class FacetsRollCategoryResult {
-    readonly name: string
+    readonly name: string;
 
     constructor(
         readonly category: RollValueCategory,
@@ -46,7 +73,7 @@ export class FacetsRollCategoryResult {
         readonly formula: string,
         readonly diceResult: DiceResult[]
     ) {
-        this.name = localize(`Roll.Pools.${this.category.name}`)
+        this.name = localize(`Roll.Pools.${this.category.name}`);
     }
 
     static fromRollValues(

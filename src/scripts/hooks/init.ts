@@ -1,9 +1,11 @@
-import { preloadHandlebarsTemplates, registerCustomHelpers } from "@util";
-import type { Listener } from "./hooks.interface";
-import { PartyActorSheet } from "../../module/sheet/actor/party_sheet";
 import { PartyData } from "@actor/data/party";
 import { PlayerCharacterData } from "@actor/data/player_character";
+import { chatDataConfig } from "@data/chat";
+import { preloadHandlebarsTemplates, registerCustomHelpers } from "@util";
+import { registerSettings } from "../../module/settings";
+import { PartyActorSheet } from "../../module/sheet/actor/party_sheet";
 import { PlayerCharacterActorSheet } from "../../module/sheet/actor/player_character_sheet";
+import type { Listener } from "./hooks.interface";
 
 export class Init implements Listener {
     listen(): void {
@@ -12,6 +14,7 @@ export class Init implements Listener {
 
             registerCustomHelpers();
             preloadHandlebarsTemplates();
+
             registerSettings();
 
             this.registerActorSheets();
@@ -23,6 +26,8 @@ export class Init implements Listener {
             party: PartyData,
             playerCharacter: PlayerCharacterData
         });
+
+        CONFIG.ChatMessage.dataModels = chatDataConfig;
 
         foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
 

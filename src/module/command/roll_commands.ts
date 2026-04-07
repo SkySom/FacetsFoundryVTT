@@ -1,20 +1,25 @@
+import { PartyData } from "@actor/data/party";
+import { PlayerCharacterData } from "@actor/data/player_character";
 import { FacetsRollReader, RollReadFail, RollReadSuccess, type FacetsRollReadResult } from "@roll/facets_roll_reader";
-import { FacetsRollResults } from "@roll/facets_roll_result";
+import { FacetsRollResult } from "@roll/facets_roll_result";
 import { FacetsRoller } from "@roll/facets_roller";
+import { plotPoints, RollResourceResult } from "@roll/roll_resource";
 import { gameSettings, renderHandlebarsTemplate } from "@util";
 import type { AutocompleteMenu, ChatCommand, ChatCommands } from "commander";
+import { gameActors, gameUser } from "../util/game_getters";
 import { localize } from "../util/localize";
+import { Logger } from "../util/logger";
 import { Autocomplete } from "./autocomplete/autocomplete_types";
 import { getRollAutocomplete } from "./autocomplete/roll_autocomplete";
 
 export function registerRollCommands(commands: ChatCommands) {
     gameSettings().register<Array<string>>("facets", "recentRolls", {
-            name: localize("Settings.RecentRolls"),
-            scope: "client",
-            config: false,
-            type: Array<string>,
-            default: []
-        });
+        name: localize("Settings.RecentRolls"),
+        scope: "client",
+        config: false,
+        type: Array<string>,
+        default: []
+    });
 
     commands.register(roll2());
 }
@@ -57,13 +62,62 @@ function roll2(): ChatCommand {
     };
 }
 
-async function rollResultMessage(formula: string, result: FacetsRollResults) {
+async function rollResultMessage(formula: string, result: FacetsRollResult) {
+    const user = gameUser();
+
+    const spentResourceResults: RollResourceResult[] = [];
+    for (const spentResource of result.spentResources) {
+        if (spentResource.resource === plotPoints) {
+            if (user.isActiveGM) {
+                const activeParty = gameActors().get(gameSettings().get("facets", "activeParty"));
+                if (activeParty.system instanceof PartyData) {
+                    spentResourceResults.push(
+                        new RollResourceResult(
+                            spentResource.resource,
+                            spentResource.total,
+                            activeParty.system.doom ?? 0,
+                            (activeParty.system.doom ?? 0) - spentResource.total,
+                            "Doom",
+                            "Using " + spentResource.total + " Doom"
+                        )
+                    );
+                } else {
+                    Logger.warn("Active Party did not have PartyData");
+                }
+            } else {
+                const activeActor = user.character;
+                if (activeActor) {
+                    if (activeActor.system instanceof PlayerCharacterData) {
+                        spentResourceResults.push(
+                            new RollResourceResult(
+                                spentResource.resource,
+                                spentResource.total,
+                                activeActor.system.plotPoints ?? 0,
+                                (activeActor.system.plotPoints ?? 0) - spentResource.total,
+                                "Plot Points",
+                                "Using " + spentResource.total + " Plot Point(s)!"
+                            )
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    ChatMessage.create({
+        content: formula,
+        type: "rollResult",
+        system: {
+            formula: formula
+        }
+    });
+
     const content: string = await renderHandlebarsTemplate("roll_result", {
         quote: "A Quote be here",
         formula: formula,
-        result: result.toData()
+        result: result.toData(),
+        spentResources: spentResourceResults
     });
-
 
     return {
         content: content

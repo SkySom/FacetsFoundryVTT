@@ -1,9 +1,11 @@
 import { ActorFacets } from "@actor";
 import { ItemFacets } from "@item";
 
-import type { Quench } from "@ethaks/fvtt-quench";
 import type { PartyData } from "@actor/data/party";
 import type { PlayerCharacterData } from "@actor/data/player_character";
+import type { RollResultChatData } from "@data/chat/roll_result";
+import type { FacetsChatMessage } from "@documents/chat/chat_message";
+import type { Quench } from "@ethaks/fvtt-quench";
 
 declare global {
     interface Game {
@@ -18,13 +20,17 @@ declare global {
 
     interface DocumentClassConfig {
         Actor: typeof ActorFacets<Actor.SubType>;
+        ChatMessage: typeof FacetsChatMessage<ChatMessage.SubType>;
         Item: typeof ItemFacets;
     }
 
     interface DataModelConfig {
         Actor: {
-            playerCharacter: typeof PlayerCharacterData
+            playerCharacter: typeof PlayerCharacterData;
             party: typeof PartyData;
+        };
+        ChatMessage: {
+            rollResult: typeof RollResultChatData;
         };
     }
 

@@ -1,9 +1,13 @@
+import type { RollResourceCost as RollResourceCost } from "@roll/roll_resource";
 import type { FacetsDice } from "../dice/facets_dice";
 import { RollValue } from "./roll_value";
 import type { RollValueCategory } from "./roll_value_category";
 
 export class DiceValue extends RollValue {
-    constructor(readonly dice: FacetsDice, readonly type: string) {
+    constructor(
+        readonly dice: FacetsDice,
+        readonly type: string
+    ) {
         super();
     }
 
@@ -23,7 +27,11 @@ export class DiceValue extends RollValue {
         return this.dice.total();
     }
 
+    override rollCost(): RollResourceCost[] {
+        return this.dice.cost();
+    }
+
     override toFormula(): string {
-        return `${this.type}${this.maxValue()}`
+        return `${this.type}${this.maxValue()}`;
     }
 }

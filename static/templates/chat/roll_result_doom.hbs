@@ -1,0 +1,10 @@
+<div class="roll-doom">
+    {{#each spentResources}}
+        <h5>{{text}}</h5>
+        <div class="roll-resource-spend">{{label}}: {{original}} &#8594; {{current}}</div>
+    {{/each}}
+    {{#each gainedResources}}
+        {{#if text}}<div>{{text}}</div>{{/if}}
+        <div class="roll-resource-gain">{{label}}: {{original}} &#8594; {{current}}</div>
+    {{/each}}
+</div>

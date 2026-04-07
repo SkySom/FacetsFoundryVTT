@@ -1,4 +1,4 @@
-import { FacetsRollResults } from "./facets_roll_result";
+import { FacetsRollResult } from "./facets_roll_result";
 import type { RollOptions } from "./roll_options";
 import type { RollToken } from "./token/roll_token";
 import type { RollValue } from "./value/roll_value";
@@ -17,10 +17,10 @@ export class FacetsRoller {
         }
     }
 
-    async getResults(rollOptions: RollOptions): Promise<FacetsRollResults> {
+    async getResults(rollOptions: RollOptions): Promise<FacetsRollResult> {
         await this.evaluate();
 
-        return FacetsRollResults.fromRollValues(this.rollValues, rollOptions);
+        return FacetsRollResult.fromRollValues(this.rollValues, rollOptions);
     }
 
     static fromTokens(rollTokens: Array<RollToken>): FacetsRoller {
