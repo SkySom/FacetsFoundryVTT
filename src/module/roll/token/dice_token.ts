@@ -32,8 +32,6 @@ export class DiceRollTokenProvider implements RollTokenProvider<DiceRollToken> {
             } else {
                 return new DiceRollToken(diceCreator, typeString, facets, amount);
             }
-        } else {
-            console.log("No groups found");
         }
 
         return this.testPartial(token, suggest);

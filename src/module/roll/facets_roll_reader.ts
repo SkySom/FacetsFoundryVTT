@@ -2,16 +2,16 @@ import type { FacetsRollData } from "./facets_roll_data.ts";
 import { ErrorToken, type RollToken, RollTokenProviderRegistry, SuggestionToken } from "./token/roll_token.ts";
 
 export class FacetsRollReader {
-    private fomula: string;
+    private formula: string;
     private data: FacetsRollData<string>;
 
     constructor(fomula: string, data: FacetsRollData<string> = {}) {
-        this.fomula = fomula;
+        this.formula = fomula;
         this.data = data;
     }
 
     evaluate(suggest: boolean = false): FacetsRollReadResult {
-        const formulaTokens = this.fomula.split(" ");
+        const formulaTokens = this.formula.split(" ");
         const length = formulaTokens.length;
         const rollTokens: Array<RollToken> = [];
 
@@ -27,11 +27,11 @@ export class FacetsRollReader {
                     if (suggestToken) {
                         const suggestions: string[] = [];
                         for (const suggestion of generatedToken.suggestions) {
-                            const lastSpace = this.fomula.lastIndexOf(" ");
+                            const lastSpace = this.formula.lastIndexOf(" ");
                             if (lastSpace < 0) {
                                 suggestions.push(suggestion);
                             } else {
-                                suggestions.push(this.fomula.slice(0, lastSpace) + " " + suggestion);
+                                suggestions.push(this.formula.slice(0, lastSpace) + " " + suggestion);
                             }
                         }
                         return new RollReadSuggest(new Set(suggestions));

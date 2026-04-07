@@ -4,7 +4,7 @@ import { FacetsRollReader, RollReadFail, RollReadSuccess, type FacetsRollReadRes
 import { FacetsRollResult } from "@roll/facets_roll_result";
 import { FacetsRoller } from "@roll/facets_roller";
 import { plotPoints, RollResourceResult } from "@roll/roll_resource";
-import { gameSettings, renderHandlebarsTemplate } from "@util";
+import { gameSettings } from "@util";
 import type { AutocompleteMenu, ChatCommand, ChatCommands } from "commander";
 import { gameActors, gameUser } from "../util/game_getters";
 import { localize } from "../util/localize";
@@ -104,23 +104,13 @@ async function rollResultMessage(formula: string, result: FacetsRollResult) {
         }
     }
 
-    ChatMessage.create({
-        content: formula,
+    return {
+        content: "Failed to get rollResult template",
         type: "rollResult",
         system: {
-            formula: formula
+            formula: formula,
+            result: JSON.stringify(result.toData())
         }
-    });
-
-    const content: string = await renderHandlebarsTemplate("roll_result", {
-        quote: "A Quote be here",
-        formula: formula,
-        result: result.toData(),
-        spentResources: spentResourceResults
-    });
-
-    return {
-        content: content
     };
 }
 
