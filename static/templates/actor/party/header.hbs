@@ -1,6 +1,6 @@
 <header class="flexrow header">
     <img src="{{actor.img}}" class="profile-img" data-edit="img" data-action="editImg" />
-    <div>
+    <div style="flex 1 1 auto;">
         <input
             type="text"
             name="name"
@@ -17,12 +17,39 @@
     </div>
 
     {{#if user.isGM}}
-        <button type="button" data-action="toggleLock" class="icon" data-tooltip="FACETS.Party.Sheet.Lock.Label">
-            {{#if actor.system.locked}}
-                <i class="fa-solid fa-lock"></i>
+        <div style="flex: 0">
+            <button type="button" data-action="toggleLock" class="icon" data-tooltip="FACETS.Sheet.Actor.Party.Lock.Label">
+                {{#if actor.system.locked}}
+                    <i class="fa-solid fa-lock"></i>
+                {{else}}
+                    <i class="fa-solid fa-lock-open"></i>
+                {{/if}}
+            </button>
+
+            {{#if activeParty}}
+                <button
+                    type="button"
+                    class="icon"
+                    data-tooltip="FACETS.Sheet.Actor.Party.Check.AlreadyActive"
+                    style="margin-top: 5px;"
+                    aria-readonly="true"
+                    disabled="true"
+                >
+                    <i class="fa-solid fa-check"></i>
+                </button>
             {{else}}
-                <i class="fa-solid fa-lock-open"></i>
+                <button
+                    type="button"
+                    class="icon"
+                    data-action="setActiveParty"
+                    data-tooltip="FACETS.Sheet.Actor.Party.Check.Label"
+                    style="margin-top: 5px;"
+                    {{#if actor.system.locked}}disabled="true"{{/if}}
+                >
+                    <i class="fa-solid fa-check"></i>
+                </button>
             {{/if}}
-        </button>
+        </div>
+
     {{/if}}
 </header>

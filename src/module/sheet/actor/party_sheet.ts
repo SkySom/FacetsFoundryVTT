@@ -1,5 +1,5 @@
 import { ActorFacets } from "@actor";
-import { localize } from "@util";
+import { gameSettings, localize } from "@util";
 import type { DeepPartial } from "fvtt-types/utils";
 import { format, localizeFoundry } from "../../util/localize";
 import { Logger } from "../../util/logger";
@@ -49,7 +49,8 @@ export class PartyActorSheet<
             toggleLock: PartyActorSheet.toggleLock,
             deleteMember: PartyActorSheet.deleteMember,
             openMember: PartyActorSheet.openMember,
-            showMemberImage: PartyActorSheet.showMemberImage
+            showMemberImage: PartyActorSheet.showMemberImage,
+            setActiveParty: PartyActorSheet.setActiveParty
         },
         form: {
             submitOnChange: true
@@ -115,6 +116,7 @@ export class PartyActorSheet<
             flags: this.actor.flags,
             members: this._prepareMembers(),
             unlocked: !this.actor.system.locked,
+            activeParty: this.actor.id === gameSettings().get("facets", "activeParty"),
             // @ts-expect-error it thinks Document is unknown type??
             systemFields: this.document.system.schema.fields
         };
@@ -133,6 +135,13 @@ export class PartyActorSheet<
             default:
         }
         return context;
+    }
+
+    static setActiveParty(this: PartyActorSheet<PartyActorRenderContext>) {
+        if (this.actor.id) {
+            gameSettings().set("facets", "activeParty", this.actor.id);
+            this.render({ force: true });
+        }
     }
 
     static toggleLock(this: PartyActorSheet<PartyActorRenderContext>) {
@@ -255,7 +264,6 @@ export class PartyActorSheet<
             Logger.info("Added " + actor.name);
             // @ts-expect-error types are weird?
             this.actor.update({ "system.memberList": [...this.actor.system._source.memberList, actor.uuid] });
-            Logger.info("Member List = " + JSON.stringify(this.actor.system.memberList));
             return true;
         }
         return false;

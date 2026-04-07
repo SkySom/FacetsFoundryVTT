@@ -45,11 +45,23 @@
       "@command/*": [
         "./src/module/command/*"
       ],
+      "@data": [
+        "./src/module/data/index.ts"
+      ],
+      "@data/*": [
+        "./src/module/data/*"
+      ],
       "@dice": [
         "./src/module/roll/dice/index.ts"
       ],
       "@dice/*": [
         "./src/module/dice/roll/*"
+      ],
+      "@documents": [
+        "./src/module/documents/index.ts"
+      ],
+      "@documents/*": [
+        "./src/module/documents/*"
       ],
       "@interfaces": [
         "./src/interfaces/*"

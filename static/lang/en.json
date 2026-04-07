@@ -46,10 +46,17 @@
             },
             "Actor": {
                 "Party": {
+                    "Check": {
+                        "Label": "Set Active Party",
+                        "AlreadyActive": "Party is Active"
+                    },
                     "Description": {
                         "Header": "Description"
                     },
                     "Label": "Party",
+                    "Lock": {
+                        "Label": "Lock Sheet"
+                    },
                     "Members": {
                         "Empty": "No Members",
                         "Header": "Members"

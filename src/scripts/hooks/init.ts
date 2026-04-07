@@ -12,6 +12,7 @@ export class Init implements Listener {
 
             registerCustomHelpers();
             preloadHandlebarsTemplates();
+            registerSettings();
 
             this.registerActorSheets();
         });

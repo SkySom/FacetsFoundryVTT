@@ -1,6 +1,5 @@
 import { ActorFacets } from "@actor/base";
 import { FacetsBaseActorData, type FacetsActorSchema, type FacetsBaseData, type FacetsDerivedData } from "./base";
-import { Logger } from "../../util/logger";
 
 interface PartyDataSchema extends FacetsActorSchema {
     memberList: foundry.data.fields.SetField<foundry.data.fields.DocumentUUIDField<{ type: "Actor" }>>;
@@ -8,8 +7,8 @@ interface PartyDataSchema extends FacetsActorSchema {
         initial: 0;
     }>;
     locked: foundry.data.fields.BooleanField<{
-        initial: false
-    }>
+        initial: false;
+    }>;
 }
 
 type PartyBaseData = FacetsBaseData & {
@@ -49,13 +48,12 @@ class PartyData extends FacetsBaseActorData<PartyDataSchema, PartyBaseData, Part
     override prepareBaseData(): void {
         super.prepareBaseData();
         this.members = new Map<string, PartyMember>();
-        this.memberList.forEach(value => {
+        this.memberList.forEach((value) => {
             const result = fromUuidSync<Actor>(value);
             if (result instanceof ActorFacets) {
-                this.members.set(result['uuid'] + "", { actor: result})
+                this.members.set(result["uuid"] + "", { actor: result });
             }
         });
-        Logger.info(JSON.stringify(this.memberList))
     }
 }
 

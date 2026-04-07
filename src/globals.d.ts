@@ -9,9 +9,11 @@ declare global {
     interface Game {
         chatCommands: ChatCommands;
     }
-    
+
     interface SettingConfig {
         "facets.recentRolls": string[];
+        "facets.activeParty": string;
+        "facets.createdFirstParty": foundry.data.fields.BooleanField;
     }
 
     interface DocumentClassConfig {
