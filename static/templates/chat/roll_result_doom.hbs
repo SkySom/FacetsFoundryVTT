@@ -1,10 +1,16 @@
 <div class="roll-doom">
     {{#each spentResources}}
-        <h5>{{text}}</h5>
-        <div class="roll-resource-spend">{{label}}: {{original}} &#8594; {{current}}</div>
+        <hr style="background: black; margin: 5px"/>
+        <div style="font-weight: bold; text-decoration: underline; margin-bottom: 5px">{{text}}</div>
+        {{#each resources}}
+            <div class="roll-resource-spend">{{label}}: {{original}} &#8594; {{current}}</div>
+        {{/each}}
     {{/each}}
     {{#each gainedResources}}
-        {{#if text}}<div>{{text}}</div>{{/if}}
-        <div class="roll-resource-gain">{{label}}: {{original}} &#8594; {{current}}</div>
+        <hr style="background: black; margin: 5px"/>
+        <div style="font-weight: bold; text-decoration: underline; margin-bottom: 5px">{{text}}</div>
+        {{#each resources}}
+            <div class="roll-resource-gain">{{label}}: {{original}} &#8594; {{current}}</div>
+        {{/each}}
     {{/each}}
 </div>

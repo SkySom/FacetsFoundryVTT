@@ -38,7 +38,7 @@ export function getRollTiers(total: number): TierResult {
     return new TierResult(regular, extraodinary);
 }
 
-function getRollTier(total: number): RollTier | undefined {
+function getRollTier(total: number): RollTier {
     if (total < 3) {
         return RollTier.NONE;
     } else if (total < 7) {

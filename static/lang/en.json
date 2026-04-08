@@ -31,7 +31,11 @@
                 "IMPOSSIBLE": "Impossible (8)"
             },
             "Result": "{regular}",
-            "ExtraordinaryResult": "{regular} / Extraordinary {extraordinary}"
+            "ExtraordinaryResult": "{regular} / Extraordinary {extraordinary}",
+            "Extraordinary": "Extraordinary {extraordinary}",
+            "Opportunity": "An opportunity!",
+            "UsingDoom": "Using {Doom} Doom",
+            "UsingPlot": "Using {Plot} Plot Point(s)"
         },
         "Settings": {
             "RecentRolls": "Recent Rolls for Suggestions"

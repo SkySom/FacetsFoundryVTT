@@ -61,9 +61,9 @@
     .member {
         display: grid;
         grid-template-areas:
-            'image name bennies controls'
-            'image identity identity identity'
-            'image stats stats stats';
+            "image name bennies controls"
+            "image identity identity identity"
+            "image stats stats stats";
         column-gap: 1rem;
         grid-template-columns: auto 1fr auto auto;
         grid-template-rows: var(--input-height) auto auto;
@@ -90,4 +90,11 @@
             }
         }
     }
+}
+
+.facets.button-container {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    padding-top: 5px;
 }

@@ -1,0 +1,9 @@
+{{#if enhanceable}}
+    <div class="roll-enhanced">
+        <div class="flex-row facets button-container">
+            {{#each enhancer}}
+                <button class="facets" data-action="enhance" data-add="{{add}}">{{text}}</button>
+            {{/each}}
+        </div>
+    </div>
+{{/if}}

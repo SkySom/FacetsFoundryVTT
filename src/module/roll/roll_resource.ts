@@ -15,8 +15,14 @@ export class RollResourceResult {
         readonly total: number,
         readonly original: number,
         readonly current: number,
-        readonly label: string,
-        readonly text: string | undefined
+        readonly label: string
+    ) {}
+}
+
+export class RollResourceResultGroup {
+    constructor(
+        readonly text: string,
+        readonly resources: RollResourceResult[]
     ) {}
 }
 
