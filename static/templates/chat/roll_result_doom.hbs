@@ -1,16 +1,24 @@
 <div class="roll-doom">
     {{#each spentResources}}
-        <hr style="background: black; margin: 5px"/>
+        <hr style="background: black; margin: 5px" />
         <div style="font-weight: bold; text-decoration: underline; margin-bottom: 5px">{{text}}</div>
         {{#each resources}}
             <div class="roll-resource-spend">{{label}}: {{original}} &#8594; {{current}}</div>
         {{/each}}
     {{/each}}
     {{#each gainedResources}}
-        <hr style="background: black; margin: 5px"/>
+        <hr style="background: black; margin: 5px" />
         <div style="font-weight: bold; text-decoration: underline; margin-bottom: 5px">{{text}}</div>
         {{#each resources}}
             <div class="roll-resource-gain">{{label}}: {{original}} &#8594; {{current}}</div>
         {{/each}}
     {{/each}}
+    {{#if enhancedResult}}
+        <hr style="background: black; margin: 5px" />
+        <div style="font-weight: bold; text-decoration: underline; margin-bottom: 5px">{{localize "FACETS.Roll.Enhancing"}}</div>
+        {{#each enhancedResult.spent}}
+            <div class="roll-resource-spend">{{label}}: {{original}} &#8594; {{current}}</div>
+        {{/each}}
+    {{/if}}
+
 </div>

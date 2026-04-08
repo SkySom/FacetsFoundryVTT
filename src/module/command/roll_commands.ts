@@ -91,6 +91,10 @@ async function rollResultMessage(formula: string, result: FacetsRollResult) {
                             ]
                         )
                     );
+                    await activeParty.update({
+                        //@ts-expect-error update types
+                        "system.doom": (activeParty.system.doom ?? 0) - spentResource.total
+                    });
                 } else {
                     Logger.warn("Active Party did not have PartyData");
                 }
@@ -111,6 +115,10 @@ async function rollResultMessage(formula: string, result: FacetsRollResult) {
                                 ]
                             )
                         );
+                        await activeActor.update({
+                            //@ts-expect-error update types
+                            "system.plotPoints": (activeActor.system.plotPoints ?? 0) - spentResource.total
+                        });
                     }
                 }
             }
@@ -150,6 +158,10 @@ async function rollResultMessage(formula: string, result: FacetsRollResult) {
                     (actorParty.system.doom ?? 0) + gainedResource.total,
                     localize("Sheet.Generic.Doom")
                 );
+                await actorParty.update({
+                    //@ts-expect-error update types
+                    "system.doom": (actorParty.system.doom ?? 0) + gainedResource.total
+                });
             } else if (gainedResource.resource === plotPoints) {
                 if (activeActor.system instanceof PlayerCharacterData) {
                     plotPointResourceResult = new RollResourceResult(
@@ -159,6 +171,10 @@ async function rollResultMessage(formula: string, result: FacetsRollResult) {
                         (activeActor.system.plotPoints ?? 0) + gainedResource.total,
                         localize("Sheet.Generic.PlotPoints")
                     );
+                    await activeActor.update({
+                        //@ts-expect-error update types
+                        "system.plotPoints": (activeActor.system.plotPoints ?? 0) + gainedResource.total
+                    });
                 }
             }
         }

@@ -7,3 +7,9 @@
         </div>
     </div>
 {{/if}}
+{{#if enhancedResult}}
+    <div class="roll-enhanced">
+        <div style="font-weight: bold; text-decoration: underline; margin: 5px">Enhanced!</div>
+        <h4 class="facets-dice-total">{{enhancedResult.total}} - {{enhancedResult.tiers.localized}}</h4>
+    </div>
+{{/if}}

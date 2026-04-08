@@ -31,6 +31,8 @@
                 "IMPOSSIBLE": "Impossible (8)"
             },
             "Result": "{regular}",
+            "Enhancing": "Enhancing a roll!",
+            "EnhancedTotal": "Enhanced Total",
             "ExtraordinaryResult": "{regular} / Extraordinary {extraordinary}",
             "Extraordinary": "Extraordinary {extraordinary}",
             "Opportunity": "An opportunity!",
