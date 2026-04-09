@@ -22,16 +22,24 @@ export function registerRollCommands(commands: ChatCommands) {
         default: []
     });
 
-    commands.register(roll2());
+    for (let i = 1; i <= 5; i++) {
+        commands.register(roll(i));
+        commands.register(test(i));
+    }
 }
 
-function roll2(): ChatCommand {
+function roll(kept: number): ChatCommand {
+    const alias = ["~r" + kept];
+
+    if (kept === 2) {
+        alias.push("~r");
+    }
     return {
-        name: "/roll2",
+        name: "/roll" + kept,
         module: "Facets",
-        aliases: ["~r", "~r2"],
+        aliases: alias,
         icon: "<i class='fas fa-dice-two'></i>",
-        description: localize("Commands.Roll2.Description"),
+        description: localize("Commands.Roll" + kept + ".Description"),
         callback: (_chatLog: ChatLog, parameters: string) => {
             const rollResult: FacetsRollReadResult = new FacetsRollReader(parameters).evaluate();
             if (rollResult instanceof RollReadSuccess) {
@@ -49,7 +57,7 @@ function roll2(): ChatCommand {
 
                 const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
 
-                return roller.getResults({ kept: 2 }).then((results) => rollResultMessage(parameters, results));
+                return roller.getResults({ kept: kept }).then((results) => rollResultMessage(parameters, results, false));
             } else if (rollResult instanceof RollReadFail) {
                 return ChatMessage.create({
                     content: `Failed to read roll: ${rollResult.error}`
@@ -63,7 +71,71 @@ function roll2(): ChatCommand {
     };
 }
 
-async function rollResultMessage(formula: string, result: FacetsRollResult) {
+function test(kept: number): ChatCommand {
+    const alias = ["~t" + kept];
+
+    if (kept === 2) {
+        alias.push("~t");
+    }
+    return {
+        name: "/test" + kept,
+        module: "Facets",
+        aliases: alias,
+        icon: "<i class='fas fa-dice-two'></i>",
+        description: localize("Commands.Test" + kept + ".Description"),
+        callback: (_chatLog: ChatLog, parameters: string) => {
+            const rollResult: FacetsRollReadResult = new FacetsRollReader(parameters).evaluate();
+            if (rollResult instanceof RollReadSuccess) {
+                const recentRolls: string[] = gameSettings().get("facets", "recentRolls");
+                if (recentRolls != null) {
+                    const existingPosition = recentRolls.indexOf(parameters);
+                    if (existingPosition != -1) {
+                        recentRolls.splice(existingPosition, 1);
+                    }
+                    recentRolls.unshift(parameters);
+                    gameSettings().set("facets", "recentRolls", recentRolls);
+                } else {
+                    gameSettings().set("facets", "recentRolls", new Array<string>(parameters));
+                }
+
+                const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
+
+                return roller.getResults({ kept: kept }).then((results) => rollResultMessage(parameters, results, true));
+            } else if (rollResult instanceof RollReadFail) {
+                return ChatMessage.create({
+                    content: `Failed to read roll: ${rollResult.error}`
+                });
+            }
+            return ChatMessage.create({
+                content: "Failed to get Roll Result"
+            });
+        },
+        autocompleteCallback: rollAutocompleteCallback()
+    };
+}
+
+async function rollResultMessage(formula: string, result: FacetsRollResult, test: boolean) {
+    const resourceResultGroups = await handleResourceSpendAndGain(result, test);
+
+    return {
+        content: "Failed to get rollResult template",
+        type: "rollResult",
+        system: {
+            formula: formula,
+            total: result.total,
+            result: JSON.stringify(result.toData()),
+            spentResources: JSON.stringify(resourceResultGroups.spentResources),
+            gainedResources: JSON.stringify(resourceResultGroups.gainedResources),
+            enhanceable: resourceResultGroups.enhanceable
+        }
+    };
+}
+
+async function handleResourceSpendAndGain(result: FacetsRollResult, test: boolean): Promise<{
+    spentResources: RollResourceResultGroup[];
+    gainedResources: RollResourceResultGroup[];
+    enhanceable: boolean;
+}> {
     const user = gameUser();
     const activeParty = gameActors().get(gameSettings().get("facets", "activeParty"));
     const activeActor = user.character;
@@ -148,7 +220,7 @@ async function rollResultMessage(formula: string, result: FacetsRollResult) {
         }
     }
 
-    if (!user.isActiveGM && activeActor) {
+    if (!test && !user.isActiveGM && activeActor) {
         for (const gainedResource of result.gainedResources) {
             if (gainedResource.resource === doom) {
                 doomResourceResult = new RollResourceResult(
@@ -187,16 +259,9 @@ async function rollResultMessage(formula: string, result: FacetsRollResult) {
     }
 
     return {
-        content: "Failed to get rollResult template",
-        type: "rollResult",
-        system: {
-            formula: formula,
-            total: result.total,
-            result: JSON.stringify(result.toData()),
-            spentResources: JSON.stringify(spentResourceResults),
-            gainedResources: JSON.stringify(gainedResources),
-            enhanceable: enhanceable
-        }
+        spentResources: spentResourceResults,
+        gainedResources: gainedResources,
+        enhanceable: enhanceable
     };
 }
 

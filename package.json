@@ -6,7 +6,8 @@
   "scripts": {
     "watch:build": "npx vite build --watch --mode development",
     "watch:static": "npx copy-and-watch --watch static/** dist/facets/",
-    "watch:all": "npx concurrently --kill-others \"npm:watch:build\" \"npm:watch:static\""
+    "watch:all": "npx concurrently --kill-others \"npm:watch:build\" \"npm:watch:static\"",
+    "build": "npx vite build --mode production"
   },
   "author": "SkySom",
   "license": "MIT",

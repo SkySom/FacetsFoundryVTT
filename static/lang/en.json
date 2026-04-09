@@ -7,8 +7,35 @@
                 "DiceTypes": "Dice Types include: d, ad, cd, ed, pd, kd, sd",
                 "Suggestion": "Suggested Values"
             },
+            "Roll1": {
+                "Description": "Roll Dice and keep 1"
+            },
             "Roll2": {
                 "Description": "Roll Dice and keep 2"
+            },
+            "Roll3": {
+                "Description": "Roll Dice and keep 3"
+            },
+            "Roll4": {
+                "Description": "Roll Dice and keep 4"
+            },
+            "Roll5": {
+                "Description": "Roll Dice and keep 5"
+            },
+            "Test1": {
+                "Description": "Roll Dice and keep 1, generates no doom"
+            },
+            "Test2": {
+                "Description": "Roll Dice and keep 2, generates no doom"
+            },
+            "Test3": {
+                "Description": "Roll Dice and keep 3, generates no doom"
+            },
+            "Test4": {
+                "Description": "Roll Dice and keep 4, generates no doom"
+            },
+            "Test5": {
+                "Description": "Roll Dice and keep 5, generates no doom"
             }
         },
         "Roll": {
