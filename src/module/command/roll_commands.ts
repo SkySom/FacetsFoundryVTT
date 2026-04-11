@@ -1,7 +1,6 @@
+import { rollResultMessage } from "@data/chat/roll_result";
 import { FacetsRollReader, RollReadFail, RollReadSuccess, type FacetsRollReadResult } from "@roll/facets_roll_reader";
-import { FacetsRollResult } from "@roll/facets_roll_result";
 import { FacetsRoller } from "@roll/facets_roller";
-import { handleResourceSpendAndGain } from "@roll/roll_utils";
 import { gameSettings } from "@util";
 import type { AutocompleteMenu, ChatCommand, ChatCommands } from "commander";
 import { localize } from "../util/localize";
@@ -53,9 +52,14 @@ function roll(kept: number): ChatCommand {
 
                 const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
 
-                return roller
-                    .getResults({ kept: kept })
-                    .then((results) => rollResultMessage(parameters, results, kept, false));
+                return roller.getResults({ kept: kept }).then((results) =>
+                    foundry.utils.mergeObject(
+                        {
+                            content: "Failed to handle RollResultChatData"
+                        },
+                        rollResultMessage(parameters, results, kept, true)
+                    )
+                );
             } else if (rollResult instanceof RollReadFail) {
                 return ChatMessage.create({
                     content: `Failed to read roll: ${rollResult.error}`
@@ -98,9 +102,14 @@ function test(kept: number): ChatCommand {
 
                 const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
 
-                return roller
-                    .getResults({ kept: kept })
-                    .then((results) => rollResultMessage(parameters, results, kept, true));
+                return roller.getResults({ kept: kept }).then((results) =>
+                    foundry.utils.mergeObject(
+                        {
+                            content: "Failed to handle RollResultChatData"
+                        },
+                        rollResultMessage(parameters, results, kept, true)
+                    )
+                );
             } else if (rollResult instanceof RollReadFail) {
                 return ChatMessage.create({
                     content: `Failed to read roll: ${rollResult.error}`
@@ -111,24 +120,6 @@ function test(kept: number): ChatCommand {
             });
         },
         autocompleteCallback: rollAutocompleteCallback()
-    };
-}
-
-async function rollResultMessage(formula: string, result: FacetsRollResult, kept: number, test: boolean) {
-    const resourceResultGroups = await handleResourceSpendAndGain(result, test);
-
-    return {
-        content: "Failed to get rollResult template",
-        type: "rollResult",
-        system: {
-            formula: formula,
-            kept: kept,
-            result: result.toSchema(),
-            spentResources: resourceResultGroups.spentResources.map((resources) => resources.toSchema()),
-            gainedResources: resourceResultGroups.gainedResources.map((resources) => resources.toSchema()),
-            enhanceable: resourceResultGroups.enhanceable,
-            actorResourceChanges: resourceResultGroups.actorResourceChanges.map(changes => changes.toSchema())
-        }
     };
 }
 

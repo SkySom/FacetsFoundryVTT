@@ -1,4 +1,4 @@
-import type { FacetsRollData } from "../roll/facets_roll_data";
+import type { FacetsRollData, FacetsRollPool } from "../roll/facets_roll_data";
 import { FacetsBaseActorData } from "./data/base";
 
 export class ActorFacets<Subtype extends Actor.SubType = Actor.SubType> extends Actor<Subtype> {
@@ -10,6 +10,10 @@ export class ActorFacets<Subtype extends Actor.SubType = Actor.SubType> extends 
         if (this.system instanceof FacetsBaseActorData) {
             return this.system.getFacetsRollData();
         }
+        return {};
+    }
+
+    getFacetsRollPools(): Record<string, FacetsRollPool> {
         return {};
     }
 }

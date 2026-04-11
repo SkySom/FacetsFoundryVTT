@@ -6,7 +6,9 @@ import type { RollValue } from "./value/roll_value";
 export class FacetsRoller {
     evaluated: boolean = false;
 
-    constructor(readonly rollValues: Array<RollValue>) {}
+    constructor(
+        readonly rollValues: Array<RollValue>
+    ) {}
 
     async evaluate(): Promise<void> {
         if (this.evaluated) {

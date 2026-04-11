@@ -65,6 +65,7 @@ export class FacetsRollResult {
 
 export function createRollResultSchema() {
     return {
+
         total: new foundry.data.fields.NumberField({
             initial: 0,
             integer: true,

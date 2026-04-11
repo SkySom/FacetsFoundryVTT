@@ -1,8 +1,10 @@
 import { PartyData } from "@actor/data/party";
 import { PlayerCharacterData } from "@actor/data/player_character";
 import { FacetsBaseChatData, type ChatMetadata, type FacetsChatSchema } from "@data/chat/base";
+import { FacetsCombat } from "@documents/combat/combat";
+import { FacetsCombatant } from "@documents/combat/combatant";
 import { FacetsRollReader, RollReadSuccess } from "@roll/facets_roll_reader";
-import { createRollResultSchema } from "@roll/facets_roll_result";
+import { createRollResultSchema, FacetsRollResult } from "@roll/facets_roll_result";
 import { FacetsRoller } from "@roll/facets_roller";
 import {
     createActorResourceChangeSchema,
@@ -20,6 +22,10 @@ type RollResultChatSchema = FacetsChatSchema & ReturnType<typeof rollResultSchem
 
 function rollResultSchema() {
     return {
+        flavor: new foundry.data.fields.StringField({
+            required: false,
+            nullable: true
+        }),
         formula: new foundry.data.fields.StringField(),
         kept: new foundry.data.fields.NumberField({
             initial: 2,
@@ -83,7 +89,25 @@ function rollResultSchema() {
             label: "FACETS.Fields.RerolledResult",
             nullable: true,
             required: false
-        })
+        }),
+        combatSource: new foundry.data.fields.SchemaField(
+            {
+                combatId: new foundry.data.fields.ForeignDocumentField(FacetsCombat, {
+                    idOnly: true,
+                    nullable: false,
+                    required: true
+                }),
+                combatantId: new foundry.data.fields.ForeignDocumentField(FacetsCombatant, {
+                    idOnly: true,
+                    nullable: false,
+                    required: true
+                })
+            },
+            {
+                nullable: true,
+                required: false
+            }
+        )
     };
 }
 
@@ -114,8 +138,17 @@ export class RollResultChatData<
     override async _prepareContext() {
         const context = await super._prepareContext();
 
+        let isAuthor = this.parent.author === gameUser();
+
+        const combatActor = this.combatant?.actor;
+
+        if (combatActor?.type === "playerCharacter") {
+            isAuthor = gameUser().character == combatActor;
+        }
+
         return foundry.utils.mergeObject(context, {
-            isAuthor: this.parent.author === gameUser(),
+            isAuthor: isAuthor,
+            flavor: this.flavor,
             formula: this.formula,
             result: this.result,
             spentResources: this.spentResources,
@@ -163,6 +196,22 @@ export class RollResultChatData<
         } else {
             return [];
         }
+    }
+
+    get combat(): FacetsCombat<Combat.SubType> | undefined {
+        if (this.combatSource) {
+            return game.combats?.get(this.combatSource.combatId + "") as FacetsCombat<Combat.SubType>;
+        }
+        return undefined;
+    }
+
+    get combatant(): FacetsCombatant<Combatant.SubType> | undefined {
+        const combat = this.combat;
+        if (combat && this.combatSource) {
+            return combat.combatants.get(this.combatSource.combatantId + "");
+        }
+
+        return undefined;
     }
 
     static async #enhanceRoll(this: RollResultChatData, _event: PointerEvent, element: HTMLElement): Promise<void> {
@@ -220,6 +269,10 @@ export class RollResultChatData<
                     "system.enhanceable": false,
                     "system.canReroll": false
                 });
+
+                if (this.combatant) {
+                    await this.combatant.update({ initiative: newTotal });
+                }
             }
         }
     }
@@ -269,12 +322,38 @@ export class RollResultChatData<
                 ),
                 "system.canReroll": false
             });
+
+            if (this.combatant) {
+                await this.combatant.update({ initiative: result.total });
+            }
         } else {
             Logger.error("Failed to read " + this.formula + " and got " + JSON.stringify(rerolledResult), {
                 toast: true
             });
         }
     }
+}
+
+export async function rollResultMessage(
+    formula: string,
+    result: FacetsRollResult,
+    kept: number,
+    test: boolean
+): Promise<Partial<ChatMessage.CreateData>> {
+    const resourceResultGroups = await handleResourceSpendAndGain(result, test);
+
+    return {
+        type: "rollResult",
+        system: {
+            formula: formula,
+            kept: kept,
+            result: result.toSchema(),
+            spentResources: resourceResultGroups.spentResources.map((resources) => resources.toSchema()),
+            gainedResources: resourceResultGroups.gainedResources.map((resources) => resources.toSchema()),
+            enhanceable: resourceResultGroups.enhanceable,
+            actorResourceChanges: resourceResultGroups.actorResourceChanges.map((changes) => changes.toSchema())
+        }
+    };
 }
 
 type Enhancer = {

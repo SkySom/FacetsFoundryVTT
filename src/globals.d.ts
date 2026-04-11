@@ -7,6 +7,8 @@ import type { RollResultChatData } from "@data/chat/roll_result";
 import type { FacetsChatMessage } from "@documents/chat/chat_message";
 import type { Quench } from "@ethaks/fvtt-quench";
 import type { BackgroundCharacterData } from "@actor/data/background_character";
+import type { FacetsCombat } from "@documents/combat/combat";
+import type { FacetsCombatant } from "@documents/combat/combatant";
 
 declare global {
     interface Game {
@@ -22,6 +24,8 @@ declare global {
 
     interface DocumentClassConfig {
         Actor: typeof ActorFacets<Actor.SubType>;
+        Combat: typeof FacetsCombat<Combat.SubType>;
+        Combatant: typeof FacetsCombatant<Combatant.SubType>;
         ChatMessage: typeof FacetsChatMessage<ChatMessage.SubType>;
         Item: typeof ItemFacets;
     }

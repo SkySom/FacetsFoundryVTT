@@ -54,7 +54,7 @@ export function createRollResourceResultSchema() {
             label: "FACETS.Fields.Resource",
             nullable: false
         }),
-        total: new foundry.data.fields.StringField({
+        total: new foundry.data.fields.NumberField({
             label: "FACETS.Fields.Total"
         }),
         original: new foundry.data.fields.NumberField({
