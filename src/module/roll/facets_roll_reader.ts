@@ -5,8 +5,8 @@ export class FacetsRollReader {
     private formula: string;
     private data: FacetsRollData<string>;
 
-    constructor(fomula: string, data: FacetsRollData<string> = {}) {
-        this.formula = fomula;
+    constructor(formula: string, data: FacetsRollData<string> = {}) {
+        this.formula = formula;
         this.data = data;
     }
 
