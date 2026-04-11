@@ -6,6 +6,7 @@ import { registerSettings } from "../../module/settings";
 import { PartyActorSheet } from "../../module/sheet/actor/party_sheet";
 import { PlayerCharacterActorSheet } from "../../module/sheet/actor/player_character_sheet";
 import type { Listener } from "./hooks.interface";
+import { BackgroundCharacterData } from "@actor/data/background_character";
 
 export class Init implements Listener {
     listen(): void {
@@ -23,6 +24,7 @@ export class Init implements Listener {
 
     registerActorSheets() {
         Object.assign(CONFIG.Actor.dataModels, {
+            backgroundCharacter: BackgroundCharacterData,
             party: PartyData,
             playerCharacter: PlayerCharacterData
         });

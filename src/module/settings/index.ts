@@ -19,4 +19,11 @@ export function registerSettings() {
         }
         */
     });
+
+    gameSettings().register("facets", "backgroundCharacterAutoSetup", {
+        name: "Setup Background Character Tokens", // Doesn't appear in any UI
+        scope: "world",
+        config: true,
+        type: new foundry.data.fields.BooleanField()
+    });
 }

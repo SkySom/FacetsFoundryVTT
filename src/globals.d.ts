@@ -6,6 +6,7 @@ import type { PlayerCharacterData } from "@actor/data/player_character";
 import type { RollResultChatData } from "@data/chat/roll_result";
 import type { FacetsChatMessage } from "@documents/chat/chat_message";
 import type { Quench } from "@ethaks/fvtt-quench";
+import type { BackgroundCharacterData } from "@actor/data/background_character";
 
 declare global {
     interface Game {
@@ -16,6 +17,7 @@ declare global {
         "facets.recentRolls": string[];
         "facets.activeParty": string;
         "facets.createdFirstParty": foundry.data.fields.BooleanField;
+        "facets.backgroundCharacterAutoSetup": foundry.data.fields.BooleanField;
     }
 
     interface DocumentClassConfig {
@@ -26,6 +28,7 @@ declare global {
 
     interface DataModelConfig {
         Actor: {
+            backgroundCharacter: typeof BackgroundCharacterData;
             playerCharacter: typeof PlayerCharacterData;
             party: typeof PartyData;
         };
