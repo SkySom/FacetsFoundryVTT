@@ -35,7 +35,6 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
                 targets: [
                     { src: "CHANGELOG.md", dest: "." },
                     { src: "README.md", dest: "." },
-                    { src: "CONTRIBUTING.md", dest: "." }
                 ]
             })
         );
@@ -75,13 +74,7 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
         publicDir: "static",
         define: {
             SYSTEM_ID: JSON.stringify("facets"),
-            BUILD_MODE: JSON.stringify(buildMode),
-            fa: "foundry.applications",
-            fav1: "foundry.appv1",
-            fc: "foundry.canvas",
-            fd: "foundry.documents",
-            fh: "foundry.helpers",
-            fu: "foundry.utils"
+            BUILD_MODE: JSON.stringify(buildMode)
         },
         esbuild: { keepNames: true },
         build: {
