@@ -104,6 +104,28 @@
             "Message": "A Message"
         }
     },
+    "TOKEN": {
+        "Adjectives": {
+            "aware": "Aware",
+            "blame": "Blamed",
+            "content": "Content",
+            "cringing": "Cringing",
+            "conflicted": "Conflicted",
+            "despair": "Despairing",
+            "desperation": "Desperate",
+            "enervated": "Enervated",
+            "inspired": "Inspired",
+            "joyful": "Joyful",
+            "mocked": "Mocked",
+            "morose": "Morose",
+            "patient": "Patient",
+            "stubborn": "Stubborn",
+            "sorrow": "Sorrowful",
+            "twitchy": "Twitchy",
+            "unhelpful": "Unhelpful",
+            "unnerved": "Unnerved"
+        }
+    },
     "TYPES": {
         "Actor": {
             "backgroundCharacter": "Background Character",
