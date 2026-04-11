@@ -103,5 +103,38 @@ export function createRollResourceResultGroupSchema() {
     };
 }
 
+export class ActorResourceChange {
+    constructor(
+        readonly actor: string,
+        readonly resource: string,
+        readonly change: number
+    ) {}
+
+    toSchema() {
+        return {
+            actor: this.actor,
+            resource: this.resource,
+            change: this.change
+        }
+    }
+}
+
+export function createActorResourceChangeSchema() {
+    return {
+        actor: new foundry.data.fields.DocumentUUIDField({
+            type: "Actor",
+            nullable: false
+        }),
+        resource: new foundry.data.fields.StringField({
+            nullable: false
+        }),
+        change: new foundry.data.fields.NumberField({
+            initial: 0,
+            integer: true,
+            nullable: false
+        })
+    };
+}
+
 export const doom = "doom";
 export const plotPoints = "plotPoints";

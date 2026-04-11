@@ -1,17 +1,33 @@
+import { PartyData } from "@actor/data/party";
 import { PlayerCharacterData } from "@actor/data/player_character";
 import { FacetsBaseChatData, type ChatMetadata, type FacetsChatSchema } from "@data/chat/base";
+import { FacetsRollReader, RollReadSuccess } from "@roll/facets_roll_reader";
 import { createRollResultSchema } from "@roll/facets_roll_result";
-import { createRollResourceResultGroupSchema } from "@roll/roll_resource";
-import { getRollTiers, RollTier } from "@roll/tier";
-import { localize } from "@util";
+import { FacetsRoller } from "@roll/facets_roller";
+import {
+    createActorResourceChangeSchema,
+    createRollResourceResultGroupSchema,
+    doom,
+    plotPoints
+} from "@roll/roll_resource";
+import { handleResourceSpendAndGain } from "@roll/roll_utils";
+import { createTierResultSchema, getRollTiers, RollTier } from "@roll/tier";
+import { localize, Logger } from "@util";
+import { gameActors, gameSettings, gameUser } from "../../util/game_getters";
 import { format } from "../../util/localize";
-import { gameUser } from "../../util/game_getters";
 
 type RollResultChatSchema = FacetsChatSchema & ReturnType<typeof rollResultSchema>;
 
 function rollResultSchema() {
     return {
         formula: new foundry.data.fields.StringField(),
+        kept: new foundry.data.fields.NumberField({
+            initial: 2,
+            integer: true,
+            nullable: false,
+            positive: true
+        }),
+        test: new foundry.data.fields.BooleanField(),
         result: new foundry.data.fields.SchemaField(createRollResultSchema(), { label: "FACETS.Fields.Result" }),
         spentResources: new foundry.data.fields.ArrayField(
             new foundry.data.fields.SchemaField(createRollResourceResultGroupSchema()),
@@ -26,7 +42,48 @@ function rollResultSchema() {
             }
         ),
         enhanceable: new foundry.data.fields.BooleanField(),
-        enhancedResult: new foundry.data.fields.StringField()
+        enhancedResult: new foundry.data.fields.SchemaField(
+            {
+                total: new foundry.data.fields.NumberField({
+                    initial: 0,
+                    integer: true,
+                    nullable: false
+                }),
+                tiers: new foundry.data.fields.SchemaField(createTierResultSchema()),
+                spent: new foundry.data.fields.ArrayField(
+                    new foundry.data.fields.SchemaField({
+                        label: new foundry.data.fields.StringField(),
+                        original: new foundry.data.fields.NumberField({
+                            initial: 0,
+                            integer: true,
+                            nullable: false
+                        }),
+                        current: new foundry.data.fields.NumberField({
+                            initial: 0,
+                            integer: true,
+                            nullable: false
+                        })
+                    })
+                )
+            },
+            {
+                initial: null,
+                nullable: true,
+                required: false
+            }
+        ),
+        actorResourceChanges: new foundry.data.fields.ArrayField(
+            new foundry.data.fields.SchemaField(createActorResourceChangeSchema())
+        ),
+        canReroll: new foundry.data.fields.BooleanField({
+            initial: true,
+            nullable: false
+        }),
+        rerolledResult: new foundry.data.fields.SchemaField(createRollResultSchema(), {
+            label: "FACETS.Fields.RerolledResult",
+            nullable: true,
+            required: false
+        })
     };
 }
 
@@ -45,7 +102,8 @@ export class RollResultChatData<
             super.metadata,
             {
                 actions: {
-                    enhance: RollResultChatData.#enhanceRoll
+                    enhance: RollResultChatData.#enhanceRoll,
+                    reroll: RollResultChatData.#reroll
                 },
                 template: "roll_result"
             },
@@ -64,19 +122,24 @@ export class RollResultChatData<
             gainedResources: this.gainedResources,
             enhanceable: this.enhanceable ?? true,
             enhancer: this._gatherEnhancers(),
-            enhancedResult: this.enhancedResult ? JSON.parse(this.enhancedResult ?? "{}") : undefined
+            enhancedResult: this.enhancedResult,
+            canReroll: this.canReroll,
+            rerolledResult: this.rerolledResult
         });
     }
 
     _gatherEnhancers(): Enhancer[] {
         if (this.enhanceable) {
             const enhancers: Enhancer[] = [];
+
+            const total = (this.rerolledResult ? this.rerolledResult.total : this.result.total) ?? 0;
+
             for (let i = 1; i < 5; i++) {
                 let tier: RollTier | undefined = undefined;
                 let text = "+" + i;
 
-                const oldTiers = getRollTiers((this.result.total ?? 0) + i - 1);
-                const newTiers = getRollTiers((this.result.total ?? 0) + i);
+                const oldTiers = getRollTiers(total + i - 1);
+                const newTiers = getRollTiers(total + i);
 
                 if (oldTiers.regular != newTiers.regular) {
                     tier = newTiers.regular;
@@ -106,18 +169,20 @@ export class RollResultChatData<
         if (this.parent.author == gameUser() && element.dataset.add) {
             const additional: number = parseInt(element.dataset.add);
 
+            const total = (this.rerolledResult ? this.rerolledResult.total : this.result.total) ?? 0;
             if (additional > 0) {
-                const newTotal = (this.result.total ?? 0) + additional;
+                const newTotal = total + additional;
                 const newTiers = getRollTiers(newTotal);
 
                 const spent: { label: string; original: number; current: number }[] = [];
+
                 if (this.parent.speakerActor?.system instanceof PlayerCharacterData) {
                     const actor = this.parent.speakerActor;
                     const system: PlayerCharacterData = this.parent.speakerActor.system;
 
                     spent.push({
                         label: localize("Roll.EnhancedTotal"),
-                        original: this.result.total ?? 0,
+                        original: total,
                         current: newTotal
                     });
                     spent.push({
@@ -128,14 +193,86 @@ export class RollResultChatData<
 
                     //@ts-expect-error update types
                     await actor.update({ "system.plotPoints": (system.plotPoints ?? 0) - additional });
+                } else if (gameUser().isActiveGM) {
+                    const activeParty = gameActors().get(gameSettings().get("facets", "activeParty"));
+                    if (activeParty.system instanceof PartyData) {
+                        spent.push({
+                            label: localize("Roll.EnhancedTotal"),
+                            original: total,
+                            current: newTotal
+                        });
+                        spent.push({
+                            label: localize("Sheet.Generic.Doom"),
+                            original: activeParty.system.doom ?? 0,
+                            current: (activeParty.system.doom ?? 0) - additional
+                        });
+
+                        await activeParty.update({
+                            //@ts-expect-error update types
+                            "system.doom": (activeParty.system.doom ?? 0) - additional
+                        });
+                    }
                 }
 
                 await this.parent.update({
                     //@ts-expect-error update types are weird?
-                    "system.enhancedResult": JSON.stringify({ total: newTotal, tiers: newTiers, spent: spent }),
-                    "system.enhanceable": false
+                    "system.enhancedResult": { total: newTotal, tiers: newTiers.toSchema(), spent: spent },
+                    "system.enhanceable": false,
+                    "system.canReroll": false
                 });
             }
+        }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static async #reroll(this: RollResultChatData, _event: PointerEvent, _element: HTMLElement): Promise<void> {
+        for (const actorResourceChange of this.actorResourceChanges) {
+            try {
+                const actor = fromUuidSync<Actor>(actorResourceChange.actor);
+                if (actor) {
+                    if (actorResourceChange.resource === doom && actor.system instanceof PartyData) {
+                        // @ts-expect-error update types
+                        await actor.update({
+                            "system.doom": (actor.system.doom ?? 0) - (actorResourceChange.change ?? 0)
+                        });
+                    }
+                    if (actorResourceChange.resource === plotPoints && actor.system instanceof PlayerCharacterData) {
+                        // @ts-expect-error update types
+                        await actor.update({
+                            "system.plotPoints": (actor.system.plotPoints ?? 0) - (actorResourceChange.change ?? 0)
+                        });
+                    }
+                } else {
+                    Logger.error("Failed to find Actor during reroll ", { toast: true });
+                }
+            } catch (error) {
+                Logger.error("Failed to find Actor during reroll " + error);
+            }
+        }
+
+        const rerolledResult = new FacetsRollReader(this.formula ?? "").evaluate();
+
+        if (rerolledResult instanceof RollReadSuccess) {
+            const result = await FacetsRoller.fromTokens(rerolledResult.rollTokens).getResults({
+                kept: this.kept ?? 2
+            });
+
+            const resourceResultGroups = await handleResourceSpendAndGain(result, this.test ?? false);
+
+            await this.parent.update({
+                //@ts-expect-error update types
+                "system.rerolledResult": result.toSchema(),
+                "system.spentResources": resourceResultGroups.spentResources.map((resources) => resources.toSchema()),
+                "system.gainedResources": resourceResultGroups.gainedResources.map((resources) => resources.toSchema()),
+                "system.actorResourceChanges": resourceResultGroups.actorResourceChanges.map((changes) =>
+                    changes.toSchema()
+                ),
+                "system.canReroll": false
+            });
+        } else {
+            Logger.error("Failed to read " + this.formula + " and got " + JSON.stringify(rerolledResult), {
+                toast: true
+            });
         }
     }
 }

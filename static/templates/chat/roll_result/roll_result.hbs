@@ -1,10 +1,32 @@
 <div class="dice-roll" data-action="expandRoll">
     <div class="dice-result">
         <div class="dice-formula">{{formula}}</div>
+        {{#with result}}
         {{> facets.roll_result_pools }}
+        {{/with}}
         <h4 class="facets-dice-total">{{result.total}} - {{result.tiers.localized}}</h4>
-        {{> facets.roll_result_enhanced}}
-        {{> facets.roll_result_doom }}
     </div>
 </div>
+{{#if rerolledResult}}
+<div class="dice-roll" data-action="expandRoll">
+    <div class="dice-result">
+        <div style="font-weight: bold; text-decoration: underline; margin-bottom: 5px">Rerolled!</div>
+        <div class="dice-formula">{{formula}}</div>
+        {{#with rerolledResult}}
+        {{> facets.roll_result_pools }}
+        {{/with}}
+        <h4 class="facets-dice-total">{{rerolledResult.total}} - {{rerolledResult.tiers.localized}}</h4>
+    </div>
+</div>
+{{/if}}
+{{> facets.roll_result_enhanced}}
+{{> facets.roll_result_doom }}
+{{#unless rerolledResult}}
+<hr style="background: black; margin: 5px" />
+<div class="reroll">
+    <div class="flex-row button-container">
+        <button data-action="reroll" {{disabledNot isAuthor}}>Reroll</button>
+    </div>
+</div>
+{{/unless}}
 
