@@ -250,7 +250,8 @@ export class PartyActorSheet<
     }
 
     protected async _onDropActor(_event: DragEvent, data: object): Promise<object | boolean> {
-        //if (!this.actor.isOwner || this.actor.system.locked) return false;
+        if (!this.actor.isOwner || this.actor.system.locked) return false;
+        
         const actor = await getDocumentClass("Actor").fromDropData(data);
         if (actor != undefined) {
             if (actor.type !== "playerCharacter") {

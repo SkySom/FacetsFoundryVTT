@@ -30,17 +30,46 @@ export class TierResult {
             });
         }
     }
+
+    toSchema() {
+        return {
+            regular: this.regular,
+            extraordinary: this.extraordinary,
+            localized: this.localized
+        }
+    }
+}
+
+export function createTierResultSchema() {
+    return {
+        regular: new foundry.data.fields.StringField({
+            label: "FACETS.Fields.TierResult.Regular",
+            nullable: false
+        }),
+        extraordinary: new foundry.data.fields.StringField({
+            label: "FACETS.Fields.TierResult.Extraordinary",
+            nullable: true
+        }),
+        localized: new foundry.data.fields.StringField({
+            label: "FACETS.Fields.Localized",
+            nullable: false
+        })
+    }
 }
 
 export function getRollTiers(total: number): TierResult {
     const regular = getRollTier(total) ?? RollTier.NONE;
-    const extraodinary = getRollTier(total - 7);
+    const extraodinary = getRollTier(total - 7, true);
     return new TierResult(regular, extraodinary);
 }
 
-function getRollTier(total: number): RollTier {
+function getRollTier(total: number, extraodinary: boolean = false): RollTier | undefined {
     if (total < 3) {
-        return RollTier.NONE;
+        if (extraodinary) {
+            return undefined;
+        } else {
+            return RollTier.NONE;
+        }
     } else if (total < 7) {
         return RollTier.EASY;
     } else if (total < 11) {

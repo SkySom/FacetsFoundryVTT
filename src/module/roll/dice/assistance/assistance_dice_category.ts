@@ -9,6 +9,8 @@ export class AssistanceRollValueCategory implements RollValueCategory {
 
     name: string = "assistance_dice";
 
+    priority: number = 80;
+
     pickValues(categoryDice: Array<RollValue>): Array<RollValue> {
         return categoryDice.sort((a, b) => b.value() - a.value()).slice(0, 1);
     }

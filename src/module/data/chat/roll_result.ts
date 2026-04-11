@@ -1,18 +1,34 @@
-import { FacetsBaseChatData, type ChatMetadata } from "@data/chat/base";
+import { PlayerCharacterData } from "@actor/data/player_character";
+import { FacetsBaseChatData, type ChatMetadata, type FacetsChatSchema } from "@data/chat/base";
+import { createRollResultSchema } from "@roll/facets_roll_result";
+import { createRollResourceResultGroupSchema } from "@roll/roll_resource";
 import { getRollTiers, RollTier } from "@roll/tier";
 import { localize } from "@util";
 import { format } from "../../util/localize";
-import { PlayerCharacterData } from "@actor/data/player_character";
+import { gameUser } from "../../util/game_getters";
 
-type RollResultChatSchema = {
-    formula: foundry.data.fields.StringField;
-    total: foundry.data.fields.NumberField;
-    result: foundry.data.fields.StringField;
-    spentResources: foundry.data.fields.StringField;
-    gainedResources: foundry.data.fields.StringField;
-    enhanceable: foundry.data.fields.BooleanField;
-    enhancedResult: foundry.data.fields.StringField;
-};
+type RollResultChatSchema = FacetsChatSchema & ReturnType<typeof rollResultSchema>;
+
+function rollResultSchema() {
+    return {
+        formula: new foundry.data.fields.StringField(),
+        result: new foundry.data.fields.SchemaField(createRollResultSchema(), { label: "FACETS.Fields.Result" }),
+        spentResources: new foundry.data.fields.ArrayField(
+            new foundry.data.fields.SchemaField(createRollResourceResultGroupSchema()),
+            {
+                label: "FACETS.Fields.SpentResources"
+            }
+        ),
+        gainedResources: new foundry.data.fields.ArrayField(
+            new foundry.data.fields.SchemaField(createRollResourceResultGroupSchema()),
+            {
+                label: "FACETS.Fields.GainedResources"
+            }
+        ),
+        enhanceable: new foundry.data.fields.BooleanField(),
+        enhancedResult: new foundry.data.fields.StringField()
+    };
+}
 
 export class RollResultChatData<
     Schema extends RollResultChatSchema = RollResultChatSchema
@@ -20,13 +36,7 @@ export class RollResultChatData<
     static override defineSchema(): RollResultChatSchema {
         return {
             ...super.defineSchema(),
-            formula: new foundry.data.fields.StringField(),
-            total: new foundry.data.fields.NumberField(),
-            result: new foundry.data.fields.StringField(),
-            spentResources: new foundry.data.fields.StringField(),
-            gainedResources: new foundry.data.fields.StringField(),
-            enhanceable: new foundry.data.fields.BooleanField(),
-            enhancedResult: new foundry.data.fields.StringField()
+            ...rollResultSchema()
         };
     }
 
@@ -47,10 +57,11 @@ export class RollResultChatData<
         const context = await super._prepareContext();
 
         return foundry.utils.mergeObject(context, {
+            isAuthor: this.parent.author === gameUser(),
             formula: this.formula,
-            result: JSON.parse(this.result ?? "{}"),
-            spentResources: JSON.parse(this.spentResources ?? "[]"),
-            gainedResources: JSON.parse(this.gainedResources ?? "[]"),
+            result: this.result,
+            spentResources: this.spentResources,
+            gainedResources: this.gainedResources,
             enhanceable: this.enhanceable ?? true,
             enhancer: this._gatherEnhancers(),
             enhancedResult: this.enhancedResult ? JSON.parse(this.enhancedResult ?? "{}") : undefined
@@ -64,8 +75,8 @@ export class RollResultChatData<
                 let tier: RollTier | undefined = undefined;
                 let text = "+" + i;
 
-                const oldTiers = getRollTiers((this.total ?? 0) + i - 1);
-                const newTiers = getRollTiers((this.total ?? 0) + i);
+                const oldTiers = getRollTiers((this.result.total ?? 0) + i - 1);
+                const newTiers = getRollTiers((this.result.total ?? 0) + i);
 
                 if (oldTiers.regular != newTiers.regular) {
                     tier = newTiers.regular;
@@ -92,11 +103,11 @@ export class RollResultChatData<
     }
 
     static async #enhanceRoll(this: RollResultChatData, _event: PointerEvent, element: HTMLElement): Promise<void> {
-        if (element.dataset.add) {
+        if (this.parent.author == gameUser() && element.dataset.add) {
             const additional: number = parseInt(element.dataset.add);
 
             if (additional > 0) {
-                const newTotal = (this.total ?? 0) + additional;
+                const newTotal = (this.result.total ?? 0) + additional;
                 const newTiers = getRollTiers(newTotal);
 
                 const spent: { label: string; original: number; current: number }[] = [];
@@ -106,9 +117,9 @@ export class RollResultChatData<
 
                     spent.push({
                         label: localize("Roll.EnhancedTotal"),
-                        original: this.total ?? 0,
+                        original: this.result.total ?? 0,
                         current: newTotal
-                    })
+                    });
                     spent.push({
                         label: localize("Sheet.Generic.PlotPoints"),
                         original: system.plotPoints ?? 0,

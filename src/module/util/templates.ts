@@ -1,17 +1,20 @@
+import { Logger } from "@util";
 import type { AnyObject } from "fvtt-types/utils";
 
 const templatePaths: Record<string, string> = {
-    "facets.roll_result_flat": "systems/facets/templates/chat/roll_result_flat.hbs",
-    "facets.roll_result_dice": "systems/facets/templates/chat/roll_result_dice.hbs",
-    "facets.roll_result_pools": "systems/facets/templates/chat/roll_result_pools.hbs",
-    "facets.roll_result_doom": "systems/facets/templates/chat/roll_result_doom.hbs",
-    "facets.roll_result_enhanced": "systems/facets/templates/chat/roll_result_enhanced.hbs",
-    "facets.roll_result": "systems/facets/templates/chat/roll_result.hbs"
+    "facets.roll_result_dice": "systems/facets/templates/chat/roll_result/roll_result_dice.hbs",
+    "facets.roll_result_pools": "systems/facets/templates/chat/roll_result/roll_result_pools.hbs",
+    "facets.roll_result_doom": "systems/facets/templates/chat/roll_result/roll_result_doom.hbs",
+    "facets.roll_result_enhanced": "systems/facets/templates/chat/roll_result/roll_result_enhanced.hbs",
+    "facets.roll_result": "systems/facets/templates/chat/roll_result/roll_result.hbs"
 };
 
 export function registerCustomHelpers() {
     Handlebars.registerHelper({
-        readonly: (val) => (val ? "readonly" : "")
+        readonly: (val) => (val ? "readonly" : ""),
+        readonlyNot: (val) => (val ? "" : "readonly"),
+        disabled: (val) => (val ? "disabled" : ""),
+        disabledNot: (val) => (val ? "" : "disabled"),
     });
 }
 
@@ -32,7 +35,7 @@ export async function renderHandlebarsTemplate(key: string, data: AnyObject, rep
         }
         return content;
     } catch (error) {
-        console.log(error);
+        Logger.error(error);
         return `<div>${error}</div>`;
     }
 }

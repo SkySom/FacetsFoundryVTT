@@ -9,6 +9,8 @@ export class KeptRollValueCategory implements RollValueCategory {
 
     name: string = "kept_dice";
 
+    priority: number = 60;
+
     pickValues(categoryDice: Array<RollValue>): Array<RollValue> {
         return categoryDice;
     }

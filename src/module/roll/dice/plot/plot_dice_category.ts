@@ -37,6 +37,8 @@ export class PlotRollValueCategory implements RollValueCategory {
 
     name: string = "plot_dice";
 
+    priority: number = 40;
+
     pickValues(categoryDice: Array<RollValue>): Array<RollValue> {
         if (categoryDice.length == 1) {
             const rollValue = categoryDice[0];

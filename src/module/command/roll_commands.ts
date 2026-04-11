@@ -13,6 +13,15 @@ import { Autocomplete } from "./autocomplete/autocomplete_types";
 import { getRollAutocomplete } from "./autocomplete/roll_autocomplete";
 import { ActorFacets } from "@actor";
 
+
+const numberToWords = [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six"
+]
 export function registerRollCommands(commands: ChatCommands) {
     gameSettings().register<Array<string>>("facets", "recentRolls", {
         name: localize("Settings.RecentRolls"),
@@ -38,7 +47,7 @@ function roll(kept: number): ChatCommand {
         name: "/roll" + kept,
         module: "Facets",
         aliases: alias,
-        icon: "<i class='fas fa-dice-two'></i>",
+        icon: "<i class='fas fa-dice-" + numberToWords[kept - 1] + "'></i>",
         description: localize("Commands.Roll" + kept + ".Description"),
         callback: (_chatLog: ChatLog, parameters: string) => {
             const rollResult: FacetsRollReadResult = new FacetsRollReader(parameters).evaluate();
@@ -81,7 +90,7 @@ function test(kept: number): ChatCommand {
         name: "/test" + kept,
         module: "Facets",
         aliases: alias,
-        icon: "<i class='fas fa-dice-two'></i>",
+        icon: "<i class='fas fa-dice-" + numberToWords[kept - 1] + "'></i>",
         description: localize("Commands.Test" + kept + ".Description"),
         callback: (_chatLog: ChatLog, parameters: string) => {
             const rollResult: FacetsRollReadResult = new FacetsRollReader(parameters).evaluate();
@@ -100,7 +109,9 @@ function test(kept: number): ChatCommand {
 
                 const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
 
-                return roller.getResults({ kept: kept }).then((results) => rollResultMessage(parameters, results, true));
+                return roller
+                    .getResults({ kept: kept })
+                    .then((results) => rollResultMessage(parameters, results, true));
             } else if (rollResult instanceof RollReadFail) {
                 return ChatMessage.create({
                     content: `Failed to read roll: ${rollResult.error}`
@@ -122,10 +133,9 @@ async function rollResultMessage(formula: string, result: FacetsRollResult, test
         type: "rollResult",
         system: {
             formula: formula,
-            total: result.total,
-            result: JSON.stringify(result.toData()),
-            spentResources: JSON.stringify(resourceResultGroups.spentResources),
-            gainedResources: JSON.stringify(resourceResultGroups.gainedResources),
+            result: result.toSchema(),
+            spentResources: resourceResultGroups.spentResources.map(resources => resources.toSchema()),
+            gainedResources: resourceResultGroups.gainedResources.map(resources => resources.toSchema()),
             enhanceable: resourceResultGroups.enhanceable
         }
     };

@@ -10,6 +10,8 @@ export class RegularRollValueCategory implements RollValueCategory {
 
     name: string = "regular_dice";
 
+    priority: number = 20;
+
     pickValues(categoryDice: Array<RollValue>, rollOptions?: RollOptions): Array<RollValue> {
         const positive = categoryDice
             .filter((val) => val.value() > 0)

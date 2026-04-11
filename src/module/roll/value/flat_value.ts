@@ -33,6 +33,8 @@ export class FlatRollValueCategory implements RollValueCategory {
 
     name: string = "flat_modifiers";
 
+    priority: number = 100;
+
     pickValues(categoryValues: Array<RollValue>): Array<RollValue> {
         return categoryValues;
     }
