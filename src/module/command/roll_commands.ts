@@ -52,12 +52,12 @@ function roll(kept: number): ChatCommand {
 
                 const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
 
-                return roller.getResults({ kept: kept }).then((results) =>
+                return roller.getResults({ kept: kept }).then(async (results) =>
                     foundry.utils.mergeObject(
                         {
                             content: "Failed to handle RollResultChatData"
                         },
-                        rollResultMessage(parameters, results, kept, true)
+                        await rollResultMessage(parameters, results, kept, true)
                     )
                 );
             } else if (rollResult instanceof RollReadFail) {
@@ -102,12 +102,12 @@ function test(kept: number): ChatCommand {
 
                 const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
 
-                return roller.getResults({ kept: kept }).then((results) =>
+                return roller.getResults({ kept: kept }).then(async (results) =>
                     foundry.utils.mergeObject(
                         {
                             content: "Failed to handle RollResultChatData"
                         },
-                        rollResultMessage(parameters, results, kept, true)
+                        await rollResultMessage(parameters, results, kept, true)
                     )
                 );
             } else if (rollResult instanceof RollReadFail) {
