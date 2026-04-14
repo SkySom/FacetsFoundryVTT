@@ -11,7 +11,6 @@ async function createFirstParty(): Promise<void> {
     if (!gameActors().some((a) => a.type === "party")) {
         await ActorFacets.create(
             {
-                _id: "xxxFacetsxxxFirstPartyxxx",
                 type: "party",
                 name: "First Party"
             },

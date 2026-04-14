@@ -9,6 +9,7 @@ import type { Quench } from "@ethaks/fvtt-quench";
 import type { BackgroundCharacterData } from "@actor/data/background_character";
 import type { FacetsCombat } from "@documents/combat/combat";
 import type { FacetsCombatant } from "@documents/combat/combatant";
+import type { FacetsBaseActorData } from "@actor/data/base";
 
 declare global {
     interface Game {
@@ -32,6 +33,7 @@ declare global {
 
     interface DataModelConfig {
         Actor: {
+            base: typeof FacetsBaseActorData;
             backgroundCharacter: typeof BackgroundCharacterData;
             playerCharacter: typeof PlayerCharacterData;
             party: typeof PartyData;

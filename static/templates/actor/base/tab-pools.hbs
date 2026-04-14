@@ -1,0 +1,32 @@
+<section class="tab {{tab.cssClass}}" data-group="primary" data-tab="pools">
+    <section class="pools-tab">
+        <header class="pools-header flexrow">
+            <span class="pools-name">{{localize "FACETS.Fields.Name"}}</span>
+            <span class="pools-kept">{{localize "FACETS.Fields.Roll.KeptDice"}}</span>
+            <span class="pools-formula">{{localize "FACETS.Fields.Roll.Formula"}}</span>
+            <a class="pools-control" data-action="createPool"><i class="fas fa-plus"></i></a>
+        </header>
+
+        <ol class="pools-list">
+            {{#each pools as |pool|}}
+            <li class="pool flexrow" data-attribute="pool" data-id={{pool.id}}>
+                <div class="pools-col flexrow">
+                    <input class="pool-value" type="text" name="poolFields.{{pool.id}}.name" value="{{pool.name}}" {{readonly pool.standard}}/>
+                </div>
+                <div class="pools-col flexrow">
+                    <input class="pool-value" type="number" name="poolFields.{{pool.id}}.keptDice" value="{{pool.keptDice}}" data-dtype="Number" min="1" max="5"/>
+                </div>
+                <div class="pools-col flexrow">
+                    <input class="pool-value" type="text" name="poolFields.{{pool.id}}.formula" value="{{pool.formula}}" />
+                </div>
+                <input class="pool-hidden-value" type="hidden" data-dtype="Boolean" name="poolFields.{{pool.id}}.standard" value="{{pool.standard}}" />
+                <a class="pools-control" {{#unless pool.standard}} data-action="deletePool" data-id={{pool.id}} {{/unless}}>
+                    {{#unless pool.standard}}
+                    <i class="fas fa-trash"></i>
+                    {{/unless}}
+                </a>
+            </li>
+            {{/each}}
+        </ol>
+    </section>
+</section>
