@@ -1,9 +1,7 @@
 import type { AnyObject } from "fvtt-types/utils";
 import { FacetsBaseActorData, type FacetsActorSchema } from "./base";
 
-interface PlayerCharacterSchema extends FacetsActorSchema {
-    plotPoints: foundry.data.fields.NumberField<{ initial: 0 }>;
-}
+type PlayerCharacterSchema = FacetsActorSchema & ReturnType<typeof playerCharacterSchema>;
 
 type PlayerCharacterBaseData = AnyObject;
 

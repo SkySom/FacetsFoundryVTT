@@ -14,6 +14,10 @@ export class ActorFacets<Subtype extends Actor.SubType = Actor.SubType> extends 
     }
 
     getFacetsRollPools(): Record<string, FacetsRollPool> {
+        if (this.system instanceof FacetsBaseActorData) {
+            return this.system.getFacetsRollPools();
+        }
+
         return {};
     }
 }

@@ -38,6 +38,13 @@
                 "Description": "Roll Dice and keep 5, generates no doom"
             }
         },
+        "Fields": {
+            "Name": "Name",
+            "Roll": {
+                "KeptDice": "KeptDice",
+                "Formula": "Formula"
+            }
+        },
         "Roll": {
             "Pools": {
                 "regular_dice": "Regular/Chaos Dice",
@@ -97,6 +104,11 @@
                 },
                 "PlayerCharacter": {
                     "Label": "Player Character"
+                }
+            },
+            "Tab": {
+                "Pools": {
+                    "Header": "Roll Pools"
                 }
             }
         },

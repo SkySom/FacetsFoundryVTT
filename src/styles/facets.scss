@@ -98,3 +98,64 @@
     flex-wrap: wrap;
     padding-top: 5px;
 }
+
+.facets {
+    .pools {
+        position: relative;
+
+        .pools-tab {
+            border-top: 1px solid #aaa;
+            border-bottom: 1px solid #aaa;
+        }
+
+        .pools-control {
+            flex: 0 0 20px;
+            text-align: center;
+            line-height: 28px;
+            border: none;
+        }
+
+        .pools-roll {
+            flex: 0 0 20px;
+            text-align: center;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pools-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            align-items: center;
+            padding: 0 5px;
+            margin: 5px 0;
+            background: #cfcdc2;
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .pools-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li > * {
+                margin: 0 3px;
+                background: transparent;
+                border: none;
+                border-radius: 0;
+                border-bottom: 1px solid #aaa;
+            }
+
+            .pools-col {
+                input {
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

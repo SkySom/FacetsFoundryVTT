@@ -38,7 +38,10 @@ export class PlayerCharacterActorSheet<
         classes: ["actor", "playerCharacter", "facets", "standard-form"],
         position: { height: 700, width: 700 },
         window: { resizable: true },
-        actions: {},
+        actions: {
+            createPool: PlayerCharacterActorSheet.#createPool,
+            deletePool: PlayerCharacterActorSheet.#deletePool
+        },
         form: {
             submitOnChange: true
         }
@@ -53,6 +56,9 @@ export class PlayerCharacterActorSheet<
         },
         description: {
             template: "systems/facets/templates/actor/player_character/tab-description.hbs"
+        },
+        pools: {
+            template: "systems/facets/templates/actor/player_character/tab-pools.hbs"
         }
     };
 
@@ -63,6 +69,11 @@ export class PlayerCharacterActorSheet<
                     id: "description",
                     cssClass: "description",
                     label: "FACETS.Sheet.Generic.Description.Header"
+                },
+                {
+                    id: "pools",
+                    cssClass: "pools",
+                    label: "FACETS.Sheet.Tab.Pools.Header"
                 }
             ],
             initial: "description"
@@ -83,7 +94,8 @@ export class PlayerCharacterActorSheet<
             system: this.actor.system,
             flags: this.actor.flags,
             // @ts-expect-error it thinks Document is unknown type??
-            systemFields: this.document.system.schema.fields
+            systemFields: this.document.system.schema.fields,
+            pools: this.actor.system.pools
         };
         return {
             ...superContext,
@@ -94,10 +106,77 @@ export class PlayerCharacterActorSheet<
     override async _preparePartContext(partId, context) {
         switch (partId) {
             case "description":
+            case "pools":
                 context.tab = context.tabs[partId];
                 break;
             default:
         }
         return context;
+    }
+
+    protected override _prepareSubmitData(
+        event: SubmitEvent,
+        form: HTMLFormElement,
+        formData: FormDataExtended,
+        updateData?: unknown
+    ): object {
+        //@ts-expect-error magical errors?
+        const { poolFields, ...submitData } = this._processFormData(event, form, formData);
+        if (poolFields) {
+            const poolsToUpdate: object[] = [];
+            if (poolFields instanceof Object) {
+                for (const id of Object.keys(poolFields)) {
+                    const submittedPool = poolFields[id];
+                    poolsToUpdate.push({
+                        id: id,
+                        name: submittedPool["name"],
+                        keptDice: submittedPool["keptDice"],
+                        formula: submittedPool["formula"],
+                        standard: submittedPool["standard"]
+                    });
+                }
+            }
+            if (submitData["system"]) {
+                submitData["system"]["pools"] = poolsToUpdate;
+            } else {
+                submitData["system"] = {
+                    pools: poolsToUpdate
+                };
+            }
+        }
+        if (updateData) {
+            foundry.utils.mergeObject(submitData, updateData, { performDeletions: true });
+            foundry.utils.mergeObject(submitData, updateData, { performDeletions: false });
+        }
+        this.document.validate({ changes: submitData, clean: true, fallback: false });
+        return submitData;
+    }
+
+    static #createPool(this: PlayerCharacterActorSheet): void {
+        const pools = this.actor.system.pools;
+
+        pools.push({
+            id: crypto.randomUUID().toString(),
+            name: "Name",
+            keptDice: 2,
+            formula: "2d6",
+            standard: false
+        });
+
+        this.actor.update({
+            // @ts-expect-error update types
+            "system.pools": pools
+        });
+    }
+
+    static #deletePool(this: PlayerCharacterActorSheet, _event: PointerEvent, target: HTMLElement): void {
+        if (target.dataset.id) {
+            const pools = this.actor.system.pools;
+
+            this.actor.update({
+                // @ts-expect-error update types
+                "system.pools": pools.filter((pool) => pool.id !== target.dataset.id)
+            });
+        }
     }
 }

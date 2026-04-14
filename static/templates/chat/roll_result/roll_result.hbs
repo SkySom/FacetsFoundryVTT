@@ -24,12 +24,12 @@
 {{/if}}
 {{> facets.roll_result_enhanced}}
 {{> facets.roll_result_doom }}
-{{#unless rerolledResult}}
+{{#if canReroll}}
 <hr style="background: black; margin: 5px" />
 <div class="reroll">
     <div class="flex-row button-container">
         <button data-action="reroll" {{disabledNot isAuthor}}>Reroll</button>
     </div>
 </div>
-{{/unless}}
+{{/if}}
 
