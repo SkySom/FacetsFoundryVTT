@@ -8,7 +8,7 @@
         </header>
 
         <ol class="pools-list">
-            {{#each pools as |pool|}}
+            {{#each system.pools as |pool|}}
             <li class="pool flexrow" data-attribute="pool" data-id={{pool.id}}>
                 <div class="pools-col flexrow">
                     <input class="pool-value" type="text" name="poolFields.{{pool.id}}.name" value="{{pool.name}}" {{readonly pool.standard}}/>

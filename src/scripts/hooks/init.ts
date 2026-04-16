@@ -1,12 +1,17 @@
 import { PartyData } from "@actor/data/party";
 import { PlayerCharacterData } from "@actor/data/player_character";
-import { chatDataConfig } from "@data/chat";
+import { RollResultChatData } from "@data/chat";
 import { preloadHandlebarsTemplates, registerCustomHelpers } from "@util";
 import { registerSettings } from "../../module/settings";
-import { PartyActorSheet } from "../../module/sheet/actor/party_sheet";
-import { PlayerCharacterActorSheet } from "../../module/sheet/actor/player_character_sheet";
 import type { Listener } from "./hooks.interface";
-import { BackgroundCharacterData } from "@actor/data/background_character";
+import { BackgroundCharacterData, ForegroundCharacterData, SpotlightCharacterData } from "@data/actor";
+import {
+    BackgroundCharacterActorSheet,
+    ForegroundCharacterActorSheet,
+    PartyActorSheet,
+    PlayerCharacterActorSheet,
+    SpotlightCharacterActorSheet
+} from "@sheets/actor";
 
 export class Init implements Listener {
     listen(): void {
@@ -17,7 +22,9 @@ export class Init implements Listener {
             preloadHandlebarsTemplates();
 
             registerSettings();
+        });
 
+        Hooks.once("init", () => {
             this.registerActorSheets();
         });
     }
@@ -25,24 +32,45 @@ export class Init implements Listener {
     registerActorSheets() {
         Object.assign(CONFIG.Actor.dataModels, {
             backgroundCharacter: BackgroundCharacterData,
+            foregroundCharacter: ForegroundCharacterData,
             party: PartyData,
-            playerCharacter: PlayerCharacterData
+            playerCharacter: PlayerCharacterData,
+            spotlightCharacterData: SpotlightCharacterData
         });
 
-        CONFIG.ChatMessage.dataModels = chatDataConfig;
+        CONFIG.ChatMessage.dataModels = {
+            rollResult: RollResultChatData
+        };
 
         foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
 
-        foundry.documents.collections.Actors.registerSheet("facets", PartyActorSheet, {
-            types: ["party"],
+        foundry.documents.collections.Actors.registerSheet("facets", BackgroundCharacterActorSheet, {
+            types: ["backgroundCharacter"],
             makeDefault: true,
-            label: "FACETS.Sheet.Actor.Party.Label"
+            label: "FACETS.Sheet.Actor.BackgroundCharacter.Label"
+        });
+
+        foundry.documents.collections.Actors.registerSheet("facets", ForegroundCharacterActorSheet, {
+            types: ["foregroundCharacter"],
+            makeDefault: true,
+            label: "FACETS.Sheet.Actor.ForegroundCharacter.Label"
         });
 
         foundry.documents.collections.Actors.registerSheet("facets", PlayerCharacterActorSheet, {
             types: ["playerCharacter"],
             makeDefault: true,
             label: "FACETS.Sheet.Actor.PlayerCharacter.Label"
+        });
+        foundry.documents.collections.Actors.registerSheet("facets", PartyActorSheet, {
+            types: ["party"],
+            makeDefault: true,
+            label: "FACETS.Sheet.Actor.Party.Label"
+        });
+
+        foundry.documents.collections.Actors.registerSheet("facets", SpotlightCharacterActorSheet, {
+            types: ["spotlightCharacter"],
+            makeDefault: true,
+            label: "FACETS.Sheet.Actor.SpotlightCharacter.Label"
         });
     }
 }

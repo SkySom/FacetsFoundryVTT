@@ -90,9 +90,6 @@
                         "Label": "Set Active Party",
                         "AlreadyActive": "Party is Active"
                     },
-                    "Description": {
-                        "Header": "Description"
-                    },
                     "Label": "Party",
                     "Lock": {
                         "Label": "Lock Sheet"
@@ -107,6 +104,9 @@
                 }
             },
             "Tab": {
+                "Description": {
+                    "Header": "Description"
+                },
                 "Pools": {
                     "Header": "Roll Pools"
                 }

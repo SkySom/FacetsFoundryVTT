@@ -1,20 +1,13 @@
 import { ActorFacets } from "@actor";
+import type { PartyData } from "@actor/data/party";
 import { gameSettings, localize } from "@util";
 import type { DeepPartial } from "fvtt-types/utils";
 import { format, localizeFoundry } from "../../util/localize";
 import { Logger } from "../../util/logger";
+import { FacetsActorSheet, type FacetsActorRenderContext } from "./actor_sheet";
 
-const ActorSheetV2 = foundry.applications.sheets.ActorSheetV2;
-
-export interface PartyActorRenderContext extends foundry.applications.sheets.ActorSheetV2.RenderContext {
-    user: User;
-    owner: boolean;
-    limited: boolean;
-    actor: ActorFacets<"party">;
-    system: ActorFacets["system"];
-    flags: ActorFacets["flags"];
+export interface PartyActorRenderContext extends FacetsActorRenderContext {
     members: RenderedMember[];
-    systemFields;
 }
 
 export interface PartyActorConfiguration extends foundry.applications.sheets.ActorSheetV2.Configuration {
@@ -26,11 +19,7 @@ export class PartyActorSheet<
     Configuration extends PartyActorConfiguration = PartyActorConfiguration,
     RenderOptions extends
         foundry.applications.sheets.ActorSheetV2.RenderOptions = foundry.applications.sheets.ActorSheetV2.RenderOptions
-> extends foundry.applications.api.HandlebarsApplicationMixin(ActorSheetV2)<
-    RenderContext,
-    Configuration,
-    RenderOptions
-> {
+> extends FacetsActorSheet<PartyData, RenderContext, Configuration, RenderOptions> {
     override get actor(): ActorFacets<"party"> {
         const superActor = super.actor;
         if (superActor.type === "party") {
@@ -41,21 +30,20 @@ export class PartyActorSheet<
         }
     }
 
-    static override DEFAULT_OPTIONS = {
-        classes: ["actor", "party", "facets", "standard-form"],
-        position: { height: 700, width: 700 },
-        window: { resizable: true },
-        actions: {
-            toggleLock: PartyActorSheet.toggleLock,
-            deleteMember: PartyActorSheet.deleteMember,
-            openMember: PartyActorSheet.openMember,
-            showMemberImage: PartyActorSheet.showMemberImage,
-            setActiveParty: PartyActorSheet.setActiveParty
+    static override DEFAULT_OPTIONS = foundry.utils.mergeObject(
+        {
+            classes: ["party", ...super.DEFAULT_OPTIONS.classes],
+            actions: {
+                toggleLock: PartyActorSheet.toggleLock,
+                deleteMember: PartyActorSheet.deleteMember,
+                openMember: PartyActorSheet.openMember,
+                showMemberImage: PartyActorSheet.showMemberImage,
+                setActiveParty: PartyActorSheet.setActiveParty
+            }
         },
-        form: {
-            submitOnChange: true
-        }
-    };
+        super.DEFAULT_OPTIONS,
+        { recursive: true }
+    );
 
     static override PARTS = {
         header: {
@@ -68,7 +56,10 @@ export class PartyActorSheet<
             template: "systems/facets/templates/actor/party/tab-members.hbs"
         },
         description: {
-            template: "systems/facets/templates/actor/party/tab-description.hbs"
+            template: "systems/facets/templates/actor/base/tab-description.hbs"
+        },
+        pools: {
+            template: "systems/facets/templates/actor/base/tab-pools.hbs"
         }
     };
 
@@ -83,7 +74,12 @@ export class PartyActorSheet<
                 {
                     id: "description",
                     cssClass: "description",
-                    label: "FACETS.Sheet.Actor.Party.Description.Header"
+                    label: "FACETS.Sheet.Tab.Description.Header"
+                },
+                {
+                    id: "pools",
+                    cssClass: "pools",
+                    label: "FACETS.Sheet.Tab.Pools.Header"
                 }
             ],
             initial: "members"
@@ -101,24 +97,18 @@ export class PartyActorSheet<
         this.#dragDrop = this.#createDragDropHandlers();
     }
 
+    override get system(): PartyData {
+        return this.actor.system
+    }
+
     override async _prepareContext(
         options: DeepPartial<RenderOptions> & { isFirstRender: boolean }
     ): Promise<RenderContext> {
-        const superContext = super._prepareContext(options);
+        const superContext = await super._prepareContext(options);
         const context = {
-            tabs: this._prepareTabs("primary"),
-            user: game?.user,
-            editable: this.isEditable,
-            owner: this.document.isOwner,
-            limited: this.document.limited,
-            actor: this.actor,
-            system: this.actor.system,
-            flags: this.actor.flags,
             members: this._prepareMembers(),
             unlocked: !this.actor.system.locked,
-            activeParty: this.actor.id === gameSettings().get("facets", "activeParty"),
-            // @ts-expect-error it thinks Document is unknown type??
-            systemFields: this.document.system.schema.fields
+            activeParty: this.actor.id === gameSettings().get("facets", "activeParty")
         };
         return {
             ...superContext,
@@ -129,12 +119,11 @@ export class PartyActorSheet<
     override async _preparePartContext(partId, context) {
         switch (partId) {
             case "members":
-            case "description":
                 context.tab = context.tabs[partId];
                 break;
             default:
         }
-        return context;
+        return super._preparePartContext(partId, context);
     }
 
     static setActiveParty(this: PartyActorSheet<PartyActorRenderContext>) {
@@ -251,7 +240,7 @@ export class PartyActorSheet<
 
     protected async _onDropActor(_event: DragEvent, data: object): Promise<object | boolean> {
         if (!this.actor.isOwner || this.actor.system.locked) return false;
-        
+
         const actor = await getDocumentClass("Actor").fromDropData(data);
         if (actor != undefined) {
             if (actor.type !== "playerCharacter") {

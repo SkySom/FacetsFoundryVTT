@@ -57,7 +57,7 @@ export abstract class FacetsActorSheet<
                 {
                     id: "description",
                     cssClass: "description",
-                    label: "FACETS.Sheet.Actor.Party.Description.Header"
+                    label: "FACETS.Sheet.Tab.Description.Header"
                 },
                 {
                     id: "pools",
@@ -72,7 +72,7 @@ export abstract class FacetsActorSheet<
     override async _prepareContext(
         options: DeepPartial<RenderOptions> & { isFirstRender: boolean }
     ): Promise<RenderContext> {
-        const superContext = super._prepareContext(options);
+        const superContext = await super._prepareContext(options);
         const context = {
             tabs: this._prepareTabs("primary"),
             user: game?.user,
@@ -80,7 +80,7 @@ export abstract class FacetsActorSheet<
             owner: this.document.isOwner,
             limited: this.document.limited,
             actor: this.actor,
-            system: this.actor.system,
+            system: this.system,
             flags: this.actor.flags,
             // @ts-expect-error it thinks Document is unknown type??
             systemFields: this.document.system.schema.fields

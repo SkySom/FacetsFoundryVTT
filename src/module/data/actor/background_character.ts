@@ -1,20 +1,14 @@
 import type { AnyObject } from "fvtt-types/utils";
-import { FacetsBaseActorData, type FacetsActorSchema } from "./base";
+import { FacetsBaseActorData, type FacetsActorSchema } from "../../actor/data/base";
 
-interface BackgroundCharacterSchema extends FacetsActorSchema {
-    plotPoints: foundry.data.fields.NumberField<{ initial: 0 }>;
-}
+type BackgroundCharacterSchema = FacetsActorSchema;
 
 type BackgroundCharacterBaseData = AnyObject;
 
 type BackgroundCharacterDerivedData = AnyObject;
 
 function backgroundCharacterSchema() {
-    return {
-        plotPoints: new foundry.data.fields.NumberField({
-            initial: 0
-        })
-    };
+    return {};
 }
 
 class BackgroundCharacterData extends FacetsBaseActorData<
@@ -40,4 +34,3 @@ export {
     type BackgroundCharacterDerivedData,
     type BackgroundCharacterSchema
 };
-

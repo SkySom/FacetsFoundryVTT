@@ -81,6 +81,12 @@
       "@scripts/*": [
         "./src/scripts/*"
       ],
+      "@sheets": [
+        "./src/module/sheets/index.ts"
+      ],
+      "@sheets/*": [
+        "./src/module/sheets/*"
+      ],
       "@setup": [
         "./src/module/setup/index.ts"
       ],
