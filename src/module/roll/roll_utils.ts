@@ -1,6 +1,6 @@
 import { ActorFacets } from "@actor";
-import { PartyData } from "@actor/data/party";
-import { PlayerCharacterData } from "@actor/data/player_character";
+import { PartyData } from "@data/actor/party";
+import { PlayerCharacterData } from "@data/actor/player_character";
 import { gameSettings, localize, Logger } from "@util";
 import { gameActors, gameUser } from "../util/game_getters";
 import { format } from "../util/localize";

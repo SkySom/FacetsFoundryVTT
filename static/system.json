@@ -13,6 +13,9 @@
             "backgroundCharacter": {
                 "htmlFields": "description"
             },
+            "companion": {
+                "htmlFields": "description"
+            },
             "foregroundCharacter": {
                 "htmlFields": "description"
             },

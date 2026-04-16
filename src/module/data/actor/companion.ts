@@ -1,5 +1,5 @@
 import type { AnyObject } from "fvtt-types/utils";
-import { FacetsBaseActorData, type FacetsActorSchema } from "../../actor/data/base";
+import { FacetsBaseActorData, type FacetsActorSchema } from "./base";
 
 type CompanionSchema = FacetsActorSchema;
 
@@ -11,11 +11,7 @@ function companionSchema() {
     return {};
 }
 
-class CompanionData extends FacetsBaseActorData<
-    CompanionSchema,
-    CompanionBaseData,
-    CompanionDerivedData
-> {
+class CompanionData extends FacetsBaseActorData<CompanionSchema, CompanionBaseData, CompanionDerivedData> {
     static override defineSchema(): CompanionSchema {
         return {
             ...super.defineSchema(),
@@ -28,9 +24,4 @@ class CompanionData extends FacetsBaseActorData<
     }
 }
 
-export {
-    CompanionData,
-    type CompanionBaseData,
-    type CompanionDerivedData,
-    type CompanionSchema
-};
+export { CompanionData, type CompanionBaseData, type CompanionDerivedData, type CompanionSchema };

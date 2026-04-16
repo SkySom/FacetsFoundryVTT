@@ -1,5 +1,5 @@
-import { PartyData } from "@actor/data/party";
-import { PlayerCharacterData } from "@actor/data/player_character";
+import { PartyData } from "@data/actor/party";
+import { PlayerCharacterData } from "@data/actor/player_character";
 import { FacetsBaseChatData, type ChatMetadata, type FacetsChatSchema } from "@data/chat/base";
 import { FacetsCombat } from "@documents/combat/combat";
 import { FacetsCombatant } from "@documents/combat/combatant";

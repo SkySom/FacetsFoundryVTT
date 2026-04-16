@@ -1,4 +1,4 @@
-import { FacetsBaseActorData, type FacetsActorSchema } from "@actor/data/base";
+import { FacetsBaseActorData, type FacetsActorSchema } from "@data/actor/base";
 import type { AnyObject } from "fvtt-types/utils";
 
 type SpotlightCharacterSchema = FacetsActorSchema;
@@ -34,4 +34,3 @@ export {
     type SpotlightCharacterDerivedData,
     type SpotlightCharacterSchema
 };
-

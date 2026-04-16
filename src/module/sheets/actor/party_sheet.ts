@@ -1,5 +1,5 @@
 import { ActorFacets } from "@actor";
-import type { PartyData } from "@actor/data/party";
+import type { PartyData } from "@data/actor/party";
 import { gameSettings, localize } from "@util";
 import type { DeepPartial } from "fvtt-types/utils";
 import { format, localizeFoundry } from "../../util/localize";
@@ -98,7 +98,7 @@ export class PartyActorSheet<
     }
 
     override get system(): PartyData {
-        return this.actor.system
+        return this.actor.system;
     }
 
     override async _prepareContext(

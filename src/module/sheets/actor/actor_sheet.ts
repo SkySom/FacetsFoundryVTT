@@ -1,5 +1,5 @@
 import { ActorFacets } from "@actor";
-import { FacetsBaseActorData } from "@actor/data/base";
+import { FacetsBaseActorData } from "@data/actor/base";
 import type { DeepPartial } from "fvtt-types/utils";
 
 const ActorSheetV2 = foundry.applications.sheets.ActorSheetV2;

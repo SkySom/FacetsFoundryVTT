@@ -1,5 +1,5 @@
 import type { AnyObject } from "fvtt-types/utils";
-import { FacetsBaseActorData, type FacetsActorSchema } from "../../actor/data/base";
+import { FacetsBaseActorData, type FacetsActorSchema } from "./base";
 
 type BackgroundCharacterSchema = FacetsActorSchema;
 

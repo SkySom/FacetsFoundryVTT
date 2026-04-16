@@ -1,5 +1,6 @@
 export * from "./actor_sheet"
 export * from "./background_character_sheet"
+export * from "./companion_sheet"
 export * from "./foreground_character_sheet"
 export * from "./party_sheet"
 export * from "./player_character_sheet"

@@ -1,17 +1,19 @@
-import { PartyData } from "@actor/data/party";
-import { PlayerCharacterData } from "@actor/data/player_character";
-import { RollResultChatData } from "@data/chat";
-import { preloadHandlebarsTemplates, registerCustomHelpers } from "@util";
-import { registerSettings } from "../../module/settings";
-import type { Listener } from "./hooks.interface";
+import { PartyData } from "@data/actor/party";
+import { PlayerCharacterData } from "@data/actor/player_character";
 import { BackgroundCharacterData, ForegroundCharacterData, SpotlightCharacterData } from "@data/actor";
+import { CompanionData } from "@data/actor/companion";
+import { RollResultChatData } from "@data/chat";
 import {
     BackgroundCharacterActorSheet,
+    CompanionActorSheet,
     ForegroundCharacterActorSheet,
     PartyActorSheet,
     PlayerCharacterActorSheet,
     SpotlightCharacterActorSheet
 } from "@sheets/actor";
+import { preloadHandlebarsTemplates, registerCustomHelpers } from "@util";
+import { registerSettings } from "../../module/settings";
+import type { Listener } from "./hooks.interface";
 
 export class Init implements Listener {
     listen(): void {
@@ -32,6 +34,7 @@ export class Init implements Listener {
     registerActorSheets() {
         Object.assign(CONFIG.Actor.dataModels, {
             backgroundCharacter: BackgroundCharacterData,
+            companion: CompanionData,
             foregroundCharacter: ForegroundCharacterData,
             party: PartyData,
             playerCharacter: PlayerCharacterData,
@@ -48,6 +51,12 @@ export class Init implements Listener {
             types: ["backgroundCharacter"],
             makeDefault: true,
             label: "FACETS.Sheet.Actor.BackgroundCharacter.Label"
+        });
+
+        foundry.documents.collections.Actors.registerSheet("facets", CompanionActorSheet, {
+            types: ["companion"],
+            makeDefault: true,
+            label: "FACETS.Sheet.Actor.Companion.Label"
         });
 
         foundry.documents.collections.Actors.registerSheet("facets", ForegroundCharacterActorSheet, {

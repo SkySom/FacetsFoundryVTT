@@ -1,16 +1,17 @@
 import { ActorFacets } from "@actor";
 import { ItemFacets } from "@item";
 
-import type { PartyData } from "@actor/data/party";
-import type { PlayerCharacterData } from "@actor/data/player_character";
+import type { PartyData } from "@data/actor/party";
+import type { PlayerCharacterData } from "@data/actor/player_character";
 import type { RollResultChatData } from "@data/chat/roll_result";
 import type { FacetsChatMessage } from "@documents/chat/chat_message";
 import type { Quench } from "@ethaks/fvtt-quench";
 import type { BackgroundCharacterData } from "@data/actor/background_character";
 import type { FacetsCombat } from "@documents/combat/combat";
 import type { FacetsCombatant } from "@documents/combat/combatant";
-import type { FacetsBaseActorData } from "@actor/data/base";
+import type { FacetsBaseActorData } from "@data/actor/base";
 import type { ForegroundCharacterData, SpotlightCharacterData } from "@data/actor";
+import type { CompanionData } from "@data/actor/companion";
 
 declare global {
     interface Game {
@@ -36,6 +37,7 @@ declare global {
         Actor: {
             base: typeof FacetsBaseActorData;
             backgroundCharacter: typeof BackgroundCharacterData;
+            companion: typeof CompanionData;
             foregroundCharacter: typeof ForegroundCharacterData;
             party: typeof PartyData;
             playerCharacter: typeof PlayerCharacterData;
