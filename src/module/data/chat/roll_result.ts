@@ -344,6 +344,7 @@ export async function rollResultMessage(
 
     return {
         type: "rollResult",
+        sound: CONFIG.sounds.dice,
         system: {
             formula: formula,
             kept: kept,

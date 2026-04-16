@@ -11,9 +11,12 @@
             {{#each system.pools as |pool|}}
             <li class="pool flexrow" data-attribute="pool" data-id={{pool.id}}>
                 <div class="pools-col flexrow">
+                    {{#if ../owner}}
+                    <a class="pools-roll" data-id="{{pool.id}}" data-action="rollPool"><i class="fas fa-dice-d20"></i></a>
+                    {{/if}}
                     <input class="pool-value" type="text" name="poolFields.{{pool.id}}.name" value="{{pool.name}}" {{readonly pool.standard}}/>
                 </div>
-                <div class="pools-col flexrow">
+                <div class="pools-kept flexrow">
                     <input class="pool-value" type="number" name="poolFields.{{pool.id}}.keptDice" value="{{pool.keptDice}}" data-dtype="Number" min="1" max="5"/>
                 </div>
                 <div class="pools-col flexrow">

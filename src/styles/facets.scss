@@ -113,6 +113,7 @@
             text-align: center;
             line-height: 28px;
             border: none;
+            border-bottom: none;
         }
 
         .pools-roll {
@@ -156,6 +157,19 @@
                     text-align: center;
                 }
             }
+        }
+
+        .pools-kept {
+            flex: 0 0 60px;
+        }
+
+        .pools-roll {
+            flex: 0 0 30px;
+            text-align: center;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 }

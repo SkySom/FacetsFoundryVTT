@@ -1,7 +1,12 @@
 import { ActorFacets } from "@actor";
 import { FacetsBaseActorData } from "@data/actor/base";
+import { rollResultMessage } from "@data/chat";
+import { FacetsRollReader, RollReadSuccess, type FacetsRollReadResult } from "@roll/facets_roll_reader";
+import { FacetsRoller } from "@roll/facets_roller";
+import { Logger } from "@util";
 import type { DeepPartial } from "fvtt-types/utils";
 import { getAdjective } from "../../util/words";
+import { format } from "../../util/localize";
 
 const ActorSheetV2 = foundry.applications.sheets.ActorSheetV2;
 
@@ -33,7 +38,8 @@ export abstract class FacetsActorSheet<
         window: { resizable: true },
         actions: {
             createPool: FacetsActorSheet.#createPool,
-            deletePool: FacetsActorSheet.#deletePool
+            deletePool: FacetsActorSheet.#deletePool,
+            rollPool: FacetsActorSheet.#rollPool
         },
         form: {
             submitOnChange: true
@@ -168,6 +174,39 @@ export abstract class FacetsActorSheet<
                 // @ts-expect-error update types
                 "system.pools": pools.filter((pool) => pool.id !== target.dataset.id)
             });
+        }
+    }
+
+    static async #rollPool(this: FacetsActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        if (target.dataset.id) {
+            const foundPool = this.system.pools.find((pool) => pool.id === target.dataset.id);
+
+            if (foundPool) {
+                const rollResult: FacetsRollReadResult = new FacetsRollReader(foundPool.formula).evaluate();
+                if (rollResult instanceof RollReadSuccess) {
+                    const roller = FacetsRoller.fromTokens(rollResult.rollTokens);
+
+                    const flavor = format("Roll.Pool", {
+                        name: foundry.utils.escapeHTML(this.actor?.name ?? "Nobody"),
+                        pool: foundPool.name
+                    });
+                    const chatData = await roller.getResults({ kept: foundPool.keptDice ?? 2 }).then(async (results) =>
+                        foundry.utils.mergeObject(
+                            {
+                                speaker: ChatMessage.getSpeaker({
+                                    actor: this.actor
+                                }),
+                                flavor
+                            },
+                            await rollResultMessage(foundPool.formula, results, foundPool.keptDice ?? 2, true)
+                        )
+                    );
+
+                    await ChatMessage.implementation.create(chatData);
+                } else {
+                    Logger.error("Failed to read Formula: " + foundPool.formula, { toast: true });
+                }
+            }
         }
     }
 }

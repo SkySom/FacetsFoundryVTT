@@ -55,7 +55,8 @@ function roll(kept: number): ChatCommand {
                 return roller.getResults({ kept: kept }).then(async (results) =>
                     foundry.utils.mergeObject(
                         {
-                            content: "Failed to handle RollResultChatData"
+                            content: "Failed to handle RollResultChatData",
+                            sound: CONFIG.sounds.dice
                         },
                         await rollResultMessage(parameters, results, kept, true)
                     )
@@ -105,7 +106,8 @@ function test(kept: number): ChatCommand {
                 return roller.getResults({ kept: kept }).then(async (results) =>
                     foundry.utils.mergeObject(
                         {
-                            content: "Failed to handle RollResultChatData"
+                            content: "Failed to handle RollResultChatData",
+                            sound: CONFIG.sounds.dice
                         },
                         await rollResultMessage(parameters, results, kept, true)
                     )

@@ -38,7 +38,7 @@ export class Init implements Listener {
             foregroundCharacter: ForegroundCharacterData,
             party: PartyData,
             playerCharacter: PlayerCharacterData,
-            spotlightCharacterData: SpotlightCharacterData
+            spotlightCharacter: SpotlightCharacterData
         });
 
         CONFIG.ChatMessage.dataModels = {
@@ -70,6 +70,7 @@ export class Init implements Listener {
             makeDefault: true,
             label: "FACETS.Sheet.Actor.PlayerCharacter.Label"
         });
+
         foundry.documents.collections.Actors.registerSheet("facets", PartyActorSheet, {
             types: ["party"],
             makeDefault: true,

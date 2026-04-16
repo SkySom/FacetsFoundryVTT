@@ -46,6 +46,7 @@
             }
         },
         "Roll": {
+            "Pool": "{name} has rolled the pool: {pool}",
             "Pools": {
                 "regular_dice": "Regular/Chaos Dice",
                 "plot_dice": "Plot Dice",
@@ -141,6 +142,7 @@
     "TYPES": {
         "Actor": {
             "backgroundCharacter": "Background Character",
+            "companion": "Companion",
             "foregroundCharacter": "Foreground Character",
             "playerCharacter": "Player Character",
             "spotlightCharacter": "Spotlight Character",
