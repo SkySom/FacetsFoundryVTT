@@ -89,7 +89,7 @@ class FacetsBaseActorData<
         const poolsData = this.pools;
         for (let i = 0; i < poolsData.length; i++) {
             const poolData = poolsData[i];
-            transformedPools[poolData.name.toLocaleLowerCase()] = {
+            transformedPools[poolData.name.toLocaleLowerCase().replace(" ", "_")] = {
                 formula: poolData.formula,
                 keptDice: poolData.keptDice
             };

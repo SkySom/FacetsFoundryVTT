@@ -1,6 +1,7 @@
 import { ActorFacets } from "@actor";
 import { FacetsBaseActorData } from "@data/actor/base";
 import type { DeepPartial } from "fvtt-types/utils";
+import { getAdjective } from "../../util/words";
 
 const ActorSheetV2 = foundry.applications.sheets.ActorSheetV2;
 
@@ -147,7 +148,7 @@ export abstract class FacetsActorSheet<
 
         pools.push({
             id: crypto.randomUUID().toString(),
-            name: "Name",
+            name: getAdjective() + " Roll",
             keptDice: 2,
             formula: "2d6",
             standard: false
