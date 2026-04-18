@@ -198,7 +198,7 @@ export abstract class FacetsActorSheet<
                                 }),
                                 flavor
                             },
-                            await rollResultMessage(foundPool.formula, results, foundPool.keptDice ?? 2, true)
+                            await rollResultMessage(foundPool.formula, results, foundPool.keptDice ?? 2, false)
                         )
                     );
 

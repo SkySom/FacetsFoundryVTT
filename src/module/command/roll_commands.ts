@@ -58,7 +58,7 @@ function roll(kept: number): ChatCommand {
                             content: "Failed to handle RollResultChatData",
                             sound: CONFIG.sounds.dice
                         },
-                        await rollResultMessage(parameters, results, kept, true)
+                        await rollResultMessage(parameters, results, kept, false)
                     )
                 );
             } else if (rollResult instanceof RollReadFail) {
