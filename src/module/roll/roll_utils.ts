@@ -108,18 +108,31 @@ export async function handleResourceSpendAndGain(
     if (!test && !user.isActiveGM && activeActor) {
         for (const gainedResource of result.gainedResources) {
             if (gainedResource.resource === doom) {
-                doomResourceResult = new RollResourceResult(
-                    gainedResource.resource,
-                    gainedResource.total,
-                    actorParty.system.doom ?? 0,
-                    (actorParty.system.doom ?? 0) + gainedResource.total,
-                    localize("Sheet.Generic.Doom")
-                );
-                actorResourceChanges.push(new ActorResourceChange(actorParty.uuid, doom, gainedResource.total));
-                await actorParty.update({
-                    //@ts-expect-error update types
-                    "system.doom": (actorParty.system.doom ?? 0) + gainedResource.total
-                });
+                const startingDoom = actorParty.system.doom ?? 0;
+                try {
+                    await actorParty.update({
+                        system: {
+                            doom: (actorParty.system.doom ?? 0) + gainedResource.total
+                        }
+                    });
+                    doomResourceResult = new RollResourceResult(
+                        gainedResource.resource,
+                        gainedResource.total,
+                        startingDoom,
+                        startingDoom + gainedResource.total,
+                        localize("Sheet.Generic.Doom")
+                    );
+                    actorResourceChanges.push(new ActorResourceChange(actorParty.uuid, doom, gainedResource.total));
+                } catch (error) {
+                    doomResourceResult = new RollResourceResult(
+                        gainedResource.resource,
+                        gainedResource.total,
+                        0,
+                        0,
+                        localize("Roll.Doom.Error")
+                    );
+                    Logger.error("Failed to update doom: " + error, { toast: true });
+                }
             } else if (gainedResource.resource === plotPoints) {
                 if (activeActor.system instanceof PlayerCharacterData) {
                     plotPointResourceResult = new RollResourceResult(
@@ -141,10 +154,15 @@ export async function handleResourceSpendAndGain(
         }
     }
 
-    if (doomResourceResult && plotPointResourceResult) {
-        gainedResources.push(
-            new RollResourceResultGroup(localize("Roll.Opportunity"), [plotPointResourceResult, doomResourceResult])
-        );
+    const resourceResults: RollResourceResult[] = [];
+    if (plotPointResourceResult) {
+        resourceResults.push(plotPointResourceResult);
+    }
+    if (doomResourceResult) {
+        resourceResults.push(doomResourceResult);
+    }
+    if (resourceResults.length > 0) {
+        gainedResources.push(new RollResourceResultGroup(localize("Roll.Opportunity"), resourceResults));
     }
 
     return {

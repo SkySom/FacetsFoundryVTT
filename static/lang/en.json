@@ -46,6 +46,9 @@
             }
         },
         "Roll": {
+            "Doom": {
+                "Error": "DOOM ERROR"
+            },
             "Pool": "{name} has rolled the pool: {pool}",
             "Pools": {
                 "regular_dice": "Regular/Chaos Dice",
