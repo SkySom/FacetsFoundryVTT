@@ -1,5 +1,5 @@
 import { ActorFacets } from "@actor";
-import type { PartyData } from "@data/actor/party";
+import { PartyData } from "@data/actor/party";
 import { gameSettings, localize } from "@util";
 import type { DeepPartial } from "fvtt-types/utils";
 import { format, localizeFoundry } from "../../util/localize";
@@ -158,8 +158,21 @@ export class PartyActorSheet<
         });
         if (!proceed) return;
         existing.splice(index, 1);
-        // @ts-expect-error Update Types Weird
-        await this.actor.update({ "system.memberList": existing });
+
+        const ownership = this.actor.ownership;
+
+        const player = game?.users?.find((user) => user.character?.id === member?.id);
+
+        if (player) {
+            delete ownership[player.id];
+        }
+
+        await this.actor.update({
+            ownership: ownership,
+            system: {
+                memberList: existing
+            }
+        });
     }
 
     static openMember(this: PartyActorSheet, _event: PointerEvent, target: HTMLElement) {
@@ -241,19 +254,49 @@ export class PartyActorSheet<
     protected async _onDropActor(_event: DragEvent, data: object): Promise<object | boolean> {
         if (!this.actor.isOwner || this.actor.system.locked) return false;
 
-        const actor = await getDocumentClass("Actor").fromDropData(data);
-        if (actor != undefined) {
-            if (actor.type !== "playerCharacter") {
-                Logger.warn(`You cannot add ${localize("TYPES.Actor." + actor.type) ?? "ERROR"} Actors to a group!`, {
+        const droppedActor = await getDocumentClass("Actor").fromDropData(data);
+        if (droppedActor != undefined) {
+            if (droppedActor.type !== "playerCharacter") {
+                Logger.warn(`You cannot add ${localize("TYPES.Actor." + droppedActor.type) ?? "ERROR"} Actors to a group!`, {
                     toast: true,
                     localize: false
                 });
                 return false;
             }
 
-            Logger.info("Added " + actor.name);
-            // @ts-expect-error types are weird?
-            this.actor.update({ "system.memberList": [...this.actor.system._source.memberList, actor.uuid] });
+            Logger.info("Added " + droppedActor.name);
+            const player = game?.users?.find((user) => user.character?.id === droppedActor.id);
+            const parties = game?.actors?.filter((gameActor) => gameActor.type === "party") || [];
+            for (const party of parties) {
+                if (party.system instanceof PartyData) {
+                    if (party.system.members.has(droppedActor.uuid)) {
+                        const ownership = party.ownership;
+
+                        if (player) {
+                            delete ownership[player.id];
+                        }
+
+                        party.update({
+                            ownership: ownership,
+                            system: {
+                                memberList: party.system.memberList.filter((value) => this.actor.uuid !== value)
+                            }
+                        });
+                    }
+                }
+            }
+
+            const ownership = this.actor.ownership
+            if (player) {
+                ownership[player.id] = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+            }
+            
+            this.actor.update({
+                ownership: ownership,
+                system: {
+                    memberList: [...this.actor.system._source.memberList, droppedActor.uuid]
+                }
+            });
             return true;
         }
         return false;
