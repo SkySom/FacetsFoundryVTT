@@ -39,15 +39,19 @@ export async function handleResourceSpendAndGain(
                                     spentResource.total,
                                     activeParty.system.doom ?? 0,
                                     (activeParty.system.doom ?? 0) - spentResource.total,
-                                    localize("Sheet.Generic.Doom")
+                                    localize("Sheet.Generic.Doom"),
+                                    true
                                 )
                             ]
                         )
                     );
-                    actorResourceChanges.push(new ActorResourceChange(activeParty.uuid, doom, -spentResource.total));
+                    actorResourceChanges.push(
+                        new ActorResourceChange(activeParty.uuid, doom, -spentResource.total, true)
+                    );
                     await activeParty.update({
-                        //@ts-expect-error update types
-                        "system.doom": (activeParty.system.doom ?? 0) - spentResource.total
+                        system: {
+                            doom: (activeParty.system.doom ?? 0) - spentResource.total
+                        }
                     });
                 } else {
                     Logger.warn("Active Party did not have PartyData");
@@ -64,17 +68,19 @@ export async function handleResourceSpendAndGain(
                                         spentResource.total,
                                         activeActor.system.plotPoints ?? 0,
                                         (activeActor.system.plotPoints ?? 0) - spentResource.total,
-                                        localize("Sheet.Generic.PlotPoints")
+                                        localize("Sheet.Generic.PlotPoints"),
+                                        true
                                     )
                                 ]
                             )
                         );
                         actorResourceChanges.push(
-                            new ActorResourceChange(activeActor.uuid, plotPoints, -spentResource.total)
+                            new ActorResourceChange(activeActor.uuid, plotPoints, -spentResource.total, true)
                         );
                         await activeActor.update({
-                            //@ts-expect-error update types
-                            "system.plotPoints": (activeActor.system.plotPoints ?? 0) - spentResource.total
+                            system: {
+                                plotPoints: (activeActor.system.plotPoints ?? 0) - spentResource.total
+                            }
                         });
                     }
                 }
@@ -110,26 +116,26 @@ export async function handleResourceSpendAndGain(
             if (gainedResource.resource === doom) {
                 const startingDoom = actorParty.system.doom ?? 0;
                 try {
-                    await actorParty.update({
-                        system: {
-                            doom: (actorParty.system.doom ?? 0) + gainedResource.total
-                        }
-                    });
+                    const success = await actorParty.system.changeDoom(gainedResource.total, true);
                     doomResourceResult = new RollResourceResult(
                         gainedResource.resource,
                         gainedResource.total,
                         startingDoom,
                         startingDoom + gainedResource.total,
-                        localize("Sheet.Generic.Doom")
+                        localize("Sheet.Generic.Doom"),
+                        success
                     );
-                    actorResourceChanges.push(new ActorResourceChange(actorParty.uuid, doom, gainedResource.total));
+                    actorResourceChanges.push(
+                        new ActorResourceChange(actorParty.uuid, doom, gainedResource.total, success)
+                    );
                 } catch (error) {
                     doomResourceResult = new RollResourceResult(
                         gainedResource.resource,
                         gainedResource.total,
                         0,
                         0,
-                        localize("Roll.Doom.Error")
+                        localize("Roll.Doom.Error"),
+                        false
                     );
                     Logger.error("Failed to update doom: " + error, { toast: true });
                 }
@@ -140,14 +146,16 @@ export async function handleResourceSpendAndGain(
                         gainedResource.total,
                         activeActor.system.plotPoints ?? 0,
                         (activeActor.system.plotPoints ?? 0) + gainedResource.total,
-                        localize("Sheet.Generic.PlotPoints")
+                        localize("Sheet.Generic.PlotPoints"),
+                        true
                     );
                     actorResourceChanges.push(
-                        new ActorResourceChange(activeActor.uuid, plotPoints, gainedResource.total)
+                        new ActorResourceChange(activeActor.uuid, plotPoints, gainedResource.total, true)
                     );
                     await activeActor.update({
-                        //@ts-expect-error update types
-                        "system.plotPoints": (activeActor.system.plotPoints ?? 0) + gainedResource.total
+                        system: {
+                            plotPoints: (activeActor.system.plotPoints ?? 0) + gainedResource.total
+                        }
                     });
                 }
             }

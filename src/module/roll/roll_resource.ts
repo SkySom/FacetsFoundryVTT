@@ -34,7 +34,8 @@ export class RollResourceResult {
         readonly total: number,
         readonly original: number,
         readonly current: number,
-        readonly label: string
+        readonly label: string,
+        readonly applied: boolean
     ) {}
 
     toSchema() {
@@ -43,7 +44,8 @@ export class RollResourceResult {
             total: this.total,
             original: this.original,
             current: this.current,
-            label: this.label
+            label: this.label,
+            applied: this.applied
         };
     }
 }
@@ -69,6 +71,11 @@ export function createRollResourceResultSchema() {
         }),
         label: new foundry.data.fields.StringField({
             label: "FACETS.Fields.Label",
+            nullable: false
+        }),
+        applied: new foundry.data.fields.BooleanField({
+            initial: false,
+            label: "FACETS.Fields.Applied",
             nullable: false
         })
     };
@@ -107,14 +114,16 @@ export class ActorResourceChange {
     constructor(
         readonly actor: string,
         readonly resource: string,
-        readonly change: number
+        readonly change: number,
+        readonly applied: boolean
     ) {}
 
     toSchema() {
         return {
             actor: this.actor,
             resource: this.resource,
-            change: this.change
+            change: this.change,
+            applied: this.applied
         }
     }
 }
@@ -131,6 +140,9 @@ export function createActorResourceChangeSchema() {
         change: new foundry.data.fields.NumberField({
             initial: 0,
             integer: true,
+            nullable: false
+        }),
+        applied: new foundry.data.fields.BooleanField({
             nullable: false
         })
     };

@@ -93,6 +93,12 @@
       "@setup/*": [
         "./src/module/setup/*"
       ],
+      "@socket": [
+        "./src/module/socket/index.ts"
+      ],
+      "@socket/*": [
+        "./src/module/socket/*"
+      ],
       "@util": [
         "./src/module/util/index.ts"
       ]

@@ -1,9 +1,9 @@
 import { ActorFacets } from "@actor";
-import type { Listener } from "./hooks.interface";
 import { FacetsChatMessage } from "@documents/chat/chat_message";
-import { Logger } from "../../module/util/logger";
 import { FacetsCombat } from "@documents/combat/combat";
 import { FacetsCombatant } from "@documents/combat/combatant";
+import { Logger } from "../../module/util/logger";
+import type { Listener } from "./hooks.interface";
 
 export class Load implements Listener {
     listen(): void {

@@ -257,17 +257,23 @@ export class RollResultChatData<
                         });
 
                         await activeParty.update({
-                            //@ts-expect-error update types
-                            "system.doom": (activeParty.system.doom ?? 0) - additional
+                            system: {
+                                doom: (activeParty.system.doom ?? 0) - additional
+                            }
                         });
                     }
                 }
 
                 await this.parent.update({
-                    //@ts-expect-error update types are weird?
-                    "system.enhancedResult": { total: newTotal, tiers: newTiers.toSchema(), spent: spent },
-                    "system.enhanceable": false,
-                    "system.canReroll": false
+                    system: {
+                        enhancedResult: {
+                            total: newTotal,
+                            tiers: newTiers.toSchema(),
+                            spent: spent
+                        },
+                        enhanceable: false,
+                        canReroll: false
+                    }
                 });
 
                 if (this.combatant) {
@@ -281,18 +287,30 @@ export class RollResultChatData<
     static async #reroll(this: RollResultChatData, _event: PointerEvent, _element: HTMLElement): Promise<void> {
         for (const actorResourceChange of this.actorResourceChanges) {
             try {
-                const actor = fromUuidSync<Actor>(actorResourceChange.actor);
+                const actor: Actor = fromUuidSync<Actor>(actorResourceChange.actor) as Actor;
                 if (actor) {
-                    if (actorResourceChange.resource === doom && actor.system instanceof PartyData) {
-                        // @ts-expect-error update types
-                        await actor.update({
-                            "system.doom": (actor.system.doom ?? 0) - (actorResourceChange.change ?? 0)
-                        });
+                    if (
+                        actorResourceChange.resource === doom &&
+                        actor.system instanceof PartyData &&
+                        actorResourceChange.applied
+                    ) {
+                        const success = actor.system.changeDoom(-(actorResourceChange ?? 0), true);
+                        if (!success) {
+                            Logger.error(
+                                "Failed to remove " + actorResourceChange.change + " doom from " + actor.name,
+                                { toast: true }
+                            );
+                        }
                     }
-                    if (actorResourceChange.resource === plotPoints && actor.system instanceof PlayerCharacterData) {
-                        // @ts-expect-error update types
-                        await actor.update({
-                            "system.plotPoints": (actor.system.plotPoints ?? 0) - (actorResourceChange.change ?? 0)
+                    if (
+                        actorResourceChange.resource === plotPoints &&
+                        actor.system instanceof PlayerCharacterData &&
+                        actorResourceChange.applied
+                    ) {
+                        actor.update({
+                            system: {
+                                plotPoints: (actor.system.plotPoints ?? 0) - (actorResourceChange.change ?? 0)
+                            }
                         });
                     }
                 } else {

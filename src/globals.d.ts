@@ -9,12 +9,14 @@ import type { Quench } from "@ethaks/fvtt-quench";
 import type { BackgroundCharacterData } from "@data/actor/background_character";
 import type { FacetsCombat } from "@documents/combat/combat";
 import type { FacetsCombatant } from "@documents/combat/combatant";
-import type { FacetsBaseActorData } from "@data/actor/base";
 import type { ForegroundCharacterData, SpotlightCharacterData } from "@data/actor";
 import type { CompanionData } from "@data/actor/companion";
 
 declare global {
+    const socketlib: SocketLib;
+    
     interface Game {
+        facets: Facets;
         chatCommands: ChatCommands;
     }
 
@@ -35,7 +37,6 @@ declare global {
 
     interface DataModelConfig {
         Actor: {
-            base: typeof FacetsBaseActorData;
             backgroundCharacter: typeof BackgroundCharacterData;
             companion: typeof CompanionData;
             foregroundCharacter: typeof ForegroundCharacterData;
@@ -67,38 +68,9 @@ declare module "fvtt-types/configuration" {
         interface HookConfig {
             chatCommandsReady(chatCommands: ChatCommands): void;
             quenchReady(quench: Quench): void;
+            "socketlib.ready": () => void;
         }
     }
 }
 
-declare module "commander" {
-    interface ChatCommands {
-        register(command: ChatCommand, override: boolean = false): void;
-
-        createCommandElement(command: string, content: string): HTMLElement;
-
-        createInfoElement(content: string): HTMLElement;
-    }
-
-    interface ChatCommand {
-        name: string;
-        module: string;
-        aliases: string[];
-        description?: string;
-        icon?: string;
-        requiredRoles?: string;
-        autocompleteCallback?: (menu: AutocompleteMenu, alias: string, parameters: string) => string[] | HTMLElement[];
-        callback: (chatLog: ChatLog, parameters: string, messageData: MessageData) => object | Promise | null;
-        closeOnComplete?: boolean;
-    }
-
-    interface AutocompleteMenu {
-        visible: boolean;
-        container: HTMLElement;
-        chatInput: HTMLTextAreaElement;
-        suggestionArea: HTMLTextAreaElement;
-        maxEntries: number;
-        showFooter: boolean;
-        currentCommand?: ChatCommand;
-    }
-}
+export {};

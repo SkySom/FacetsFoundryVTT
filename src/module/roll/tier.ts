@@ -1,15 +1,15 @@
 import { localize, format } from "../util/localize";
 
 export enum RollTier {
-    NONE,
-    EASY,
-    AVERAGE,
-    HARD,
-    FORMIDABLE,
-    HEROIC,
-    INCREDIBLE,
-    RIDICULOUS,
-    IMPOSSIBLE
+    NONE = "NONE",
+    EASY = "EASY",
+    AVERAGE = "AVERAGE",
+    HARD = "HARD",
+    FORMIDABLE = "FORMIDABLE",
+    HEROIC = "HEROIC",
+    INCREDIBLE = "INCREDIBLE",
+    RIDICULOUS = "RIDICULOUS",
+    IMPOSSIBLE = "IMPOSSIBLE"
 }
 
 export class TierResult {

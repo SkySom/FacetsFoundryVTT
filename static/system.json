@@ -77,12 +77,20 @@
                 "compatibility": {
                     "verified": "2.0.1"
                 }
+            },
+            {
+                "id": "socketlib",
+                "type": "module",
+                "manifest": "https://github.com/farling42/foundryvtt-socketlib/releases/download/v1.1.4/module.json",
+                "compatibility": {
+                    "verified": "v1.1.4"
+                }
             }
         ]
     },
     "packs": [],
     "packFolders": [],
-    "socket": false,
+    "socket": true,
     "background": "systems/facets/assets/anvil-impact.png",
     "primaryTokenAttribute": "health",
     "secondaryTokenAttribute": "power"

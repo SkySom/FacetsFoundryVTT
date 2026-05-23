@@ -1,7 +1,7 @@
-import { PartyData } from "@data/actor/party";
-import { PlayerCharacterData } from "@data/actor/player_character";
 import { BackgroundCharacterData, ForegroundCharacterData, SpotlightCharacterData } from "@data/actor";
 import { CompanionData } from "@data/actor/companion";
+import { PartyData } from "@data/actor/party";
+import { PlayerCharacterData } from "@data/actor/player_character";
 import { RollResultChatData } from "@data/chat";
 import {
     BackgroundCharacterActorSheet,

@@ -265,19 +265,12 @@ export class PartyActorSheet<
             }
 
             Logger.info("Added " + droppedActor.name);
-            const player = game?.users?.find((user) => user.character?.id === droppedActor.id);
+
             const parties = game?.actors?.filter((gameActor) => gameActor.type === "party") || [];
             for (const party of parties) {
                 if (party.system instanceof PartyData) {
                     if (party.system.members.has(droppedActor.uuid)) {
-                        const ownership = party.ownership;
-
-                        if (player) {
-                            delete ownership[player.id];
-                        }
-
                         party.update({
-                            ownership: ownership,
                             system: {
                                 memberList: party.system.memberList.filter((value) => this.actor.uuid !== value)
                             }
@@ -285,14 +278,8 @@ export class PartyActorSheet<
                     }
                 }
             }
-
-            const ownership = this.actor.ownership
-            if (player) {
-                ownership[player.id] = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
-            }
             
             this.actor.update({
-                ownership: ownership,
                 system: {
                     memberList: [...this.actor.system._source.memberList, droppedActor.uuid]
                 }

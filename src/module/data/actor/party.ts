@@ -1,5 +1,7 @@
 import { ActorFacets } from "@actor/base";
 import { FacetsBaseActorData, type FacetsActorSchema, type FacetsBaseData, type FacetsDerivedData } from "./base";
+import { Logger } from "@util";
+import { gameUser } from "../../util/game_getters";
 
 interface PartyDataSchema extends FacetsActorSchema {
     memberList: foundry.data.fields.SetField<foundry.data.fields.DocumentUUIDField<{ type: "Actor" }>>;
@@ -55,7 +57,40 @@ class PartyData extends FacetsBaseActorData<PartyDataSchema, PartyBaseData, Part
             }
         });
     }
+
+    async changeDoom(change: number, tryOthers: boolean): Promise<boolean> {
+        if (this.parent.ownership[gameUser().id ?? ""] == CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
+            try {
+                this.parent.update({
+                    system: {
+                        doom: (this.doom ?? 0) + change
+                    }
+                });
+                return true;
+            } catch (err: unknown) {
+                Logger.error("Failed to update Doom: " + err, { toast: true });
+            }
+        }
+
+        if (tryOthers) {
+            if (game.users?.activeGM?.active) {
+                if (await game.facets.socketManager.sendChangeDoom(this.parent.id, change)) {
+                    return true;
+                }
+            }
+            for (const ownership in this.parent.ownership) {
+                if (this.parent.ownership[ownership] == CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
+                    if (game?.users?.get(ownership)?.active) {
+                        if (await game.facets.socketManager.sendChangeDoom(this.parent.id, change, ownership)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
 
 export { PartyData, type PartyBaseData, type PartyDataSchema, type PartyDerivedData };
-
