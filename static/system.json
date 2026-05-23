@@ -2,6 +2,8 @@
     "id": "facets",
     "title": "Facets",
     "description": "The Facets system for FoundryVTT!",
+    "manifest": "https://raw.githubusercontent.com/SkySom/FacetsFoundryVTT/main/static/system.json",
+    "download": "https://github.com/SkySom/FacetsFoundryVTT/releases/download/3.0.0/system.zip",
     "authors": [
         {
             "name": "Sky",
@@ -42,10 +44,10 @@
             "paths": ["styles", "lang", "templates"]
         }
     },
-    "url": "Replace this with a link to your public repository",
+    "url": "https://github.com/SkySom/FacetsFoundryVTT",
     "license": "LICENSE.txt",
     "readme": "README.md",
-    "bugs": "Replace this with a link to file issues or tickets",
+    "bugs": "https://github.com/SkySom/FacetsFoundryVTT/issues",
     "changelog": "CHANGELOG.md",
     "media": [
         {
@@ -56,8 +58,8 @@
     ],
     "version": "3.0.0",
     "compatibility": {
-        "minimum": "13.351",
-        "verified": "13.351"
+        "minimum": "14.361",
+        "verified": "14.361"
     },
     "esmodules": ["facets.mjs"],
     "styles": ["styles/facets.css"],
