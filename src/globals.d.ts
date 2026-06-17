@@ -14,7 +14,7 @@ import type { CompanionData } from "@data/actor/companion";
 
 declare global {
     const socketlib: SocketLib;
-    
+
     interface Game {
         facets: Facets;
         chatCommands: ChatCommands;
@@ -24,7 +24,7 @@ declare global {
         "facets.recentRolls": string[];
         "facets.activeParty": string;
         "facets.createdFirstParty": foundry.data.fields.BooleanField;
-        "facets.backgroundCharacterAutoSetup": foundry.data.fields.BooleanField;
+        "facets.backgroundCharacterAutoSetup": foundry.data.fields.BooleanField<{ initial: true }>;
     }
 
     interface DocumentClassConfig {
