@@ -39,7 +39,11 @@ export abstract class FacetsActorSheet<
         actions: {
             createPool: FacetsActorSheet.#createPool,
             deletePool: FacetsActorSheet.#deletePool,
-            rollPool: FacetsActorSheet.#rollPool
+            rollPool: FacetsActorSheet.#rollPool,
+            editImg: {
+                handler: FacetsActorSheet.#onEditImage,
+                buttons: [0, 2]
+            } 
         },
         form: {
             submitOnChange: true
@@ -145,6 +149,31 @@ export abstract class FacetsActorSheet<
         }
         this.document.validate({ changes: submitData, clean: true, fallback: false });
         return submitData;
+    }
+
+    static async #onEditImage(this: FacetsActorSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        Logger.warn("hello" + target.className);
+        if (!this.document.img) return;
+        if (event.button === 2) {
+            //ContextMenu event
+            new foundry.applications.apps.ImagePopout({
+                src: this.document.img,
+                uuid: this.document.uuid,
+                window: { title: this.document.name }
+            }).render({ force: true });
+        } else {
+            const { img } =
+                (this.document.constructor as Actor.ImplementationClass).getDefaultArtwork?.(
+                    this.document.toObject()
+                ) ?? {};
+            const fp = new foundry.applications.apps.FilePicker({
+                current: this.document.img,
+                type: "image",
+                redirectToRoot: img ? [img] : [],
+                callback: (path) => this.document.update({ img: path })
+            });
+            await fp.browse();
+        }
     }
 
     abstract get system(): ActorData;
