@@ -1,5 +1,6 @@
 import type { AnyObject } from "fvtt-types/utils";
 import { FacetsBaseActorData, type FacetsActorSchema } from "./base";
+import { Logger } from "@util";
 
 type PlayerCharacterSchema = FacetsActorSchema & ReturnType<typeof playerCharacterSchema>;
 
@@ -29,6 +30,12 @@ class PlayerCharacterData extends FacetsBaseActorData<
 
     override generatesDoom(): boolean {
         return true;
+    }
+
+    async alterPlotPoints(amount: number): Promise<void> {
+        Logger.info("Adding Plot Points");
+        this.plotPoints = (this.plotPoints ?? 0) + amount
+        return Promise.resolve()
     }
 }
 

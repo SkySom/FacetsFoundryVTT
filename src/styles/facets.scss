@@ -17,6 +17,30 @@
     font-weight: bold;
 }
 
+.application.facets {
+    &.standard-form {
+        gap: 0;
+    }
+    fieldset {
+        padding: 0.5rem;
+        .fieldset-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+    }
+}
+
+.application.facets.doom-and-plot-config {
+    .textfield {
+        margin: 0 3px;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        border-bottom: 1px solid #aaa;
+    }
+}
+
 .application.sheet.facets.actor {
     &.standard-form {
         gap: 0;

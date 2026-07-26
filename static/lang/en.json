@@ -78,7 +78,41 @@
             "UsingPlot": "Using {Plot} Plot Point(s)"
         },
         "Settings": {
-            "RecentRolls": "Recent Rolls for Suggestions"
+            "RecentRolls": "Recent Rolls for Suggestions",
+            "DoomAndPlot": {
+                "Label": "Doom and Plot Points",
+                "Name": "Doom and Plot Points",
+                "Hint": "Configuration for setting up Remote Doom and Plot Points to work with TwoDee",
+                "Constants": {
+                    "Location": {
+                        "Local": "Local",
+                        "Remote": "Remote"
+                    }
+                },
+                "Tab": {
+                    "Settings": {
+                        "Name": "Settings",
+                        "Location": {
+                            "Name": "Location"
+                        },
+                        "RemoteUrl": {
+                            "Name": "Remote URL"
+                        },
+                        "RemoteToken": {
+                            "Name": "Remote Token"
+                        }
+                    },
+                    "RemoteCharacters": {
+                        "Name": "Remote Characters"
+                    },
+                    "RemoteDoomPools": {
+                        "Name": "Remote Doom Pools"
+                    },
+                    "RemoteUsers": {
+                        "Name": "Remote Users"
+                    }
+                }
+            }
         },
         "Sheet": {
             "Generic": {

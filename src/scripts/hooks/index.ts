@@ -7,6 +7,7 @@ import { Quench } from "./quench";
 import { Ready } from "./ready";
 import { CreateDocument } from "./create_document";
 import { SocketLibListener } from "./socketlib";
+import { ContextMenus } from "./context_menu";
 
 export class HooksFacets implements Listener {
     listen(): void {
@@ -18,7 +19,8 @@ export class HooksFacets implements Listener {
             new Quench(),
             new Ready(),
             new CreateDocument(),
-            new SocketLibListener()
+            new SocketLibListener(),
+            new ContextMenus()
         ];
 
         for (const listener of listeners) {

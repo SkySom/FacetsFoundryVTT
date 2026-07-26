@@ -1,0 +1,15 @@
+<section class="tab remoteUsers {{tab.cssClass}}" data-group="primary" data-tab="remoteUsers">
+    <fieldset class="remote-users-container">
+        <legend>{{localize tabs.remoteUsers.label}}</legend>
+        {{#each users as |user|}}
+            <div class="form-group">
+                <label for={{user.id}}>{{user.name}}</label>
+                <div class="form-fields">
+                    <select id={{user.id}} name="remoteUser.{{user.id}}" {{#unless remoteValid}}disabled{{/unless}}>
+                        {{selectOptions @root.remoteUserOptions selected=user.remoteId}}
+                    </select>
+                </div>
+            </div>
+        {{/each}}
+    </fieldset>
+</section>
