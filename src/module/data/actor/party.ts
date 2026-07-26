@@ -8,6 +8,9 @@ interface PartyDataSchema extends FacetsActorSchema {
     doom: foundry.data.fields.NumberField<{
         initial: 0;
     }>;
+    remoteDoomId: foundry.data.fields.NumberField<{
+        initial: -1;
+    }>
     locked: foundry.data.fields.BooleanField<{
         initial: false;
     }>;
@@ -32,6 +35,9 @@ function partySchema() {
         ),
         doom: new foundry.data.fields.NumberField({
             initial: 0
+        }),
+        remoteDoomId: new foundry.data.fields.NumberField({
+            initial: -1
         }),
         locked: new foundry.data.fields.BooleanField({
             initial: false

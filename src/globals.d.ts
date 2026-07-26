@@ -1,18 +1,16 @@
 import { ActorFacets } from "@actor";
 import { ItemFacets } from "@item";
 
+import type { ForegroundCharacterData, SpotlightCharacterData } from "@data/actor";
+import type { BackgroundCharacterData } from "@data/actor/background_character";
+import type { CompanionData } from "@data/actor/companion";
 import type { PartyData } from "@data/actor/party";
 import type { PlayerCharacterData } from "@data/actor/player_character";
 import type { RollResultChatData } from "@data/chat/roll_result";
 import type { FacetsChatMessage } from "@documents/chat/chat_message";
-import type { Quench } from "@ethaks/fvtt-quench";
-import type { BackgroundCharacterData } from "@data/actor/background_character";
 import type { FacetsCombat } from "@documents/combat/combat";
 import type { FacetsCombatant } from "@documents/combat/combatant";
-import type { ForegroundCharacterData, SpotlightCharacterData } from "@data/actor";
-import type { CompanionData } from "@data/actor/companion";
-import type { ValueOf } from "fvtt-types/utils";
-import type { DOOM_AND_PLOT_CONSTANTS } from "./module/settings/doom_and_plot_settings";
+import type { Quench } from "@ethaks/fvtt-quench";
 
 declare global {
     const socketlib: SocketLib;
@@ -22,16 +20,29 @@ declare global {
         chatCommands: ChatCommands;
     }
 
+    interface FlagConfig {
+        User: {
+            "facets": {
+                remoteUserId: number
+            }
+        }
+    }
+
     interface SettingConfig {
         "facets.recentRolls": string[];
         "facets.activeParty": string;
         "facets.createdFirstParty": foundry.data.fields.BooleanField;
         "facets.backgroundCharacterAutoSetup": foundry.data.fields.BooleanField<{ initial: true }>;
-        "facets.DoomAndPlot": {
-            location: ValueOf<typeof DOOM_AND_PLOT_CONSTANTS.LOCATION>;
-            remoteToken: string;
-            remoteUrl: string;
-        };
+        "facets.doomAndPlotLocation": foundry.data.fields.StringField<{
+            initial: DOOM_AND_PLOT_CONSTANTS.LOCATION.LOCAL;
+            choices: [DOOM_AND_PLOT_CONSTANTS.LOCATION.LOCAL, DOOM_AND_PLOT_CONSTANTS.LOCATION.REMOTE];
+        }>;
+        "facets.doomAndPlotUrl": foundry.data.fields.StringField<{
+            initial: "";
+        }>;
+        "facets.doomAndPlotToken": foundry.data.fields.StringField<{
+            initial: "";
+        }>;
     }
 
     interface DocumentClassConfig {

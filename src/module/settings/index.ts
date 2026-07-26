@@ -1,5 +1,6 @@
 import { gameSettings } from "@util";
 import DoomAndPlotConfigurator from "../apps/doom_and_plot_configurator";
+import { DOOM_AND_PLOT_CONSTANTS } from "./doom_and_plot_settings";
 
 export function registerSettings() {
     gameSettings().register("facets", "createdFirstParty", {
@@ -30,11 +31,32 @@ export function registerSettings() {
         })
     });
 
-    gameSettings().register("facets", "DoomAndPlot", {
-        name: "FACETS.Settings.DoomAndPlot.Label",
+    gameSettings().register("facets", "doomAndPlotLocation", {
+        name: "Doom and Plot Location",
         scope: "world",
-        type: Object,
-        config: false
+        config: false,
+        type: new foundry.data.fields.StringField({
+            initial: DOOM_AND_PLOT_CONSTANTS.LOCATION.LOCAL,
+            choices: [DOOM_AND_PLOT_CONSTANTS.LOCATION.LOCAL, DOOM_AND_PLOT_CONSTANTS.LOCATION.REMOTE]
+        })
+    });
+
+    gameSettings().register("facets", "doomAndPlotUrl", {
+        name: "Doom and Plot Url",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField({
+            initial: ""
+        })
+    });
+
+    gameSettings().register("facets", "doomAndPlotToken", {
+        name: "Doom and Plot Token",
+        scope: "world",
+        config: false,
+        type: new foundry.data.fields.StringField({
+            initial: ""
+        })
     });
 
     gameSettings().registerMenu("facets", "doom-and-plot", {

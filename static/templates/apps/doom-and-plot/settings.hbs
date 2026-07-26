@@ -12,13 +12,13 @@
         <div class="form-group">
             <label for="remoteUrl">{{localize "FACETS.Settings.DoomAndPlot.Tab.Settings.RemoteUrl.Name"}}</label>
             <div class="form-fields">
-                <input id="remoteUrl" name="settings.remoteUrl" type="text" placeholder="http://localhost:8080"/>
+                <input id="remoteUrl" name="settings.remoteUrl" type="text" placeholder="http://localhost:8080" value={{settings.remoteUrl}} />
             </div>
         </div>
         <div class="form-group">
             <label for="remoteToken">{{localize "FACETS.Settings.DoomAndPlot.Tab.Settings.RemoteToken.Name"}}</label>
             <div class="form-fields">
-                <input id="remoteToken" name="settings.remoteToken" type="text" />
+                <input id="remoteToken" name="settings.remoteToken" type="text" value={{settings.remoteToken}} />
             </div>
         </div>
     </fieldset>

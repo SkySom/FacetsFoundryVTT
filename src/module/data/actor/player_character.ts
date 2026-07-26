@@ -12,6 +12,9 @@ function playerCharacterSchema() {
     return {
         plotPoints: new foundry.data.fields.NumberField({
             initial: 0
+        }),
+        remoteCharacterId: new foundry.data.fields.NumberField({
+            initial: -1
         })
     };
 }

@@ -5,8 +5,8 @@
             <div class="form-group">
                 <label for={{character.id}}>{{character.name}}</label>
                 <div class="form-fields">
-                    <select id={{character.id}} name="remoteCharacter.{{character.id}}" {{#unless remoteValid}}disabled{{/unless}}>
-                        {{selectOptions @root.remoteCharacterOptions selected=character.remoteId}}
+                    <select id={{character.id}} name="remoteCharacter.{{character.id}}" {{#unless @root.remoteValid}}disabled{{/unless}}>
+                        {{selectOptions @root.remoteCharacterOptions valueAttr="id" labelAttr="name" selected=character.remoteId}}
                     </select>
                 </div>
             </div>
