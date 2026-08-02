@@ -1,6 +1,6 @@
+import { PlayerCharacterData } from "@data/actor/player_character";
 import { Logger } from "@util";
 import type { Listener } from "./hooks.interface";
-import { PlayerCharacterData } from "@data/actor/player_character";
 
 export class ContextMenus implements Listener {
     listen(): void {
@@ -25,11 +25,8 @@ export class ContextMenus implements Listener {
                 callback: async (li: HTMLElement) => {
                     if (game.user?.isActiveGM) {
                         const user = game.users?.get(li.dataset.userId ?? "");
-                        if (user) {
-                            const data = user.character?.system;
-                            if (data instanceof PlayerCharacterData) {
-                                return data.alterPlotPoints(1);
-                            }
+                        if (user?.character?.system instanceof PlayerCharacterData) {
+                            return user.character.system.alterPlot(1);
                         }
                     }
 
@@ -59,11 +56,8 @@ export class ContextMenus implements Listener {
                 callback: async (li: HTMLElement) => {
                     if (game.user?.isActiveGM) {
                         const actor = game.actors?.get(li.dataset.entryId ?? "");
-                        if (actor) {
-                            const data = actor.system;
-                            if (data instanceof PlayerCharacterData) {
-                                return data.alterPlotPoints(1);
-                            }
+                        if (actor.system instanceof PlayerCharacterData) {
+                            return actor.system.alterPlot(1);
                         }
                     }
 

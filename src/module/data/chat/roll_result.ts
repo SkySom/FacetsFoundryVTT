@@ -17,6 +17,8 @@ import { createTierResultSchema, getRollTiers, RollTier } from "@roll/tier";
 import { localize, Logger } from "@util";
 import { gameActors, gameSettings, gameUser } from "../../util/game_getters";
 import { format } from "../../util/localize";
+import { getDoomAndPlotHandler } from "../../util/doom_and_plot_handler";
+import type { ActorFacets } from "@actor";
 
 type RollResultChatSchema = FacetsChatSchema & ReturnType<typeof rollResultSchema>;
 
@@ -240,10 +242,10 @@ export class RollResultChatData<
                         current: (system.plotPoints ?? 0) - additional
                     });
 
-                    //@ts-expect-error update types
-                    await actor.update({ "system.plotPoints": (system.plotPoints ?? 0) - additional });
+                    await getDoomAndPlotHandler()
+                    .alterCharacterPlot(actor, -additional)
                 } else if (gameUser().isActiveGM) {
-                    const activeParty = gameActors().get(gameSettings().get("facets", "activeParty"));
+                    const activeParty = gameActors().get(gameSettings().get("facets", "activeParty")) as ActorFacets;
                     if (activeParty.system instanceof PartyData) {
                         spent.push({
                             label: localize("Roll.EnhancedTotal"),
@@ -256,11 +258,8 @@ export class RollResultChatData<
                             current: (activeParty.system.doom ?? 0) - additional
                         });
 
-                        await activeParty.update({
-                            system: {
-                                doom: (activeParty.system.doom ?? 0) - additional
-                            }
-                        });
+                        await getDoomAndPlotHandler()
+                            .alterPartyDoom(activeParty, -additional)
                     }
                 }
 

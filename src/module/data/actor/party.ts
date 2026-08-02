@@ -64,6 +64,14 @@ class PartyData extends FacetsBaseActorData<PartyDataSchema, PartyBaseData, Part
         });
     }
 
+    async setRemoteDoomId(remoteDoomId: number): Promise<void> {
+        return this.parent.update({
+            system: {
+                remoteDoomId: remoteDoomId
+            }
+        }).then()
+    }
+
     async changeDoom(change: number, tryOthers: boolean): Promise<boolean> {
         if (this.parent.ownership[gameUser().id ?? ""] == CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
             try {

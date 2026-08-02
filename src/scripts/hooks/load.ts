@@ -4,6 +4,7 @@ import { FacetsCombat } from "@documents/combat/combat";
 import { FacetsCombatant } from "@documents/combat/combatant";
 import { Logger } from "../../module/util/logger";
 import type { Listener } from "./hooks.interface";
+import FacetsUser from "@documents/user/facets_user";
 
 export class Load implements Listener {
     listen(): void {
@@ -13,5 +14,6 @@ export class Load implements Listener {
         CONFIG.Combat.documentClass = FacetsCombat;
         CONFIG.Combatant.documentClass = FacetsCombatant;
         CONFIG.ChatMessage.documentClass = FacetsChatMessage;
+        CONFIG.User.documentClass = FacetsUser;
     }
 }

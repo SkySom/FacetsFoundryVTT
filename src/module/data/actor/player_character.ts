@@ -1,6 +1,7 @@
 import type { AnyObject } from "fvtt-types/utils";
 import { FacetsBaseActorData, type FacetsActorSchema } from "./base";
-import { Logger } from "@util";
+import { gameSettings } from "@util";
+import { DOOM_AND_PLOT_CONSTANTS } from "../../settings/doom_and_plot_settings";
 
 type PlayerCharacterSchema = FacetsActorSchema & ReturnType<typeof playerCharacterSchema>;
 
@@ -35,17 +36,41 @@ class PlayerCharacterData extends FacetsBaseActorData<
         return true;
     }
 
-    async alterPlotPoints(amount: number): Promise<void> {
-        Logger.info("Adding Plot Points");
-        this.plotPoints = (this.plotPoints ?? 0) + amount
-        return Promise.resolve()
+    async setRemoteCharacterId(remoteCharacterId: number): Promise<void> {
+        return this.parent.update({
+            system: {
+                remoteCharacterId: remoteCharacterId
+            }
+        }).then()
     }
+
+    async alterPlot(alter: number): Promise<PlotChange> {
+        if (gameSettings().get("facets", "doomAndPlotLocation") === DOOM_AND_PLOT_CONSTANTS.LOCATION.LOCAL) {
+            const original = this.plotPoints ?? 0;
+            return this.parent
+                .update({
+                    system: {
+                        plotPoints: original + alter
+                    }
+                })
+                .then(() => new PlotChange(original, original + alter));
+        } else {
+            return Promise.resolve(new PlotChange(0, 0));
+        }
+    }
+}
+
+class PlotChange {
+    constructor(
+        readonly old: number,
+        readonly current: number
+    ) {}
 }
 
 export {
     PlayerCharacterData,
     type PlayerCharacterBaseData,
     type PlayerCharacterDerivedData,
-    type PlayerCharacterSchema
+    type PlayerCharacterSchema,
+    type PlotChange
 };
-

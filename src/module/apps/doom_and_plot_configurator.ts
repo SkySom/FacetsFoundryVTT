@@ -1,8 +1,8 @@
+import { PartyData } from "@data/actor/party";
+import { PlayerCharacterData } from "@data/actor/player_character";
 import { gameSettings, localize, Logger } from "@util";
 import { DOOM_AND_PLOT_CONSTANTS } from "../settings/doom_and_plot_settings";
 import { gameActors } from "../util/game_getters";
-import { PartyData } from "@data/actor/party";
-import { PlayerCharacterData } from "@data/actor/player_character";
 
 export default class DoomAndPlotConfigurator extends foundry.applications.api.HandlebarsApplicationMixin(
     foundry.applications.api.ApplicationV2
@@ -285,13 +285,7 @@ export default class DoomAndPlotConfigurator extends foundry.applications.api.Ha
                 const value = remoteCharacterValues[key];
                 const actor = gameActors().get(key);
                 if (actor.system instanceof PlayerCharacterData) {
-                    promises.push(
-                        actor.update({
-                            system: {
-                                remoteCharacterId: value as number
-                            }
-                        })
-                    );
+                    promises.push(actor.system.setRemoteCharacterId(value));
                 }
             }
         }
@@ -301,13 +295,7 @@ export default class DoomAndPlotConfigurator extends foundry.applications.api.Ha
                 const value = remoteDoomPoolValues[key];
                 const actor = gameActors().get(key);
                 if (actor.system instanceof PartyData) {
-                    promises.push(
-                        actor.update({
-                            system: {
-                                remoteDoomId: value as number
-                            }
-                        })
-                    );
+                    promises.push(actor.system.setRemoteDoomId(value));
                 }
             }
         }
@@ -317,7 +305,7 @@ export default class DoomAndPlotConfigurator extends foundry.applications.api.Ha
                 const value = remoteUserValues[key];
                 const user = game.users?.get(key);
                 if (user) {
-                    promises.push(user.setFlag("facets", "remoteUserId", value as number));
+                    promises.push(user.setRemoteUserId(value as number));
                 }
             }
         }

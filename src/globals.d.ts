@@ -11,6 +11,7 @@ import type { FacetsChatMessage } from "@documents/chat/chat_message";
 import type { FacetsCombat } from "@documents/combat/combat";
 import type { FacetsCombatant } from "@documents/combat/combatant";
 import type { Quench } from "@ethaks/fvtt-quench";
+import type FacetsUser from "@documents/user/facets_user";
 
 declare global {
     const socketlib: SocketLib;
@@ -22,7 +23,7 @@ declare global {
 
     interface FlagConfig {
         User: {
-            "facets": {
+            facets: {
                 remoteUserId: number
             }
         }
@@ -51,6 +52,7 @@ declare global {
         Combatant: typeof FacetsCombatant<Combatant.SubType>;
         ChatMessage: typeof FacetsChatMessage<ChatMessage.SubType>;
         Item: typeof ItemFacets;
+        User: typeof FacetsUser;
     }
 
     interface DataModelConfig {
