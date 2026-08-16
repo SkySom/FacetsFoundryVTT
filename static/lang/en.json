@@ -49,6 +49,9 @@
             "Doom": {
                 "Error": "DOOM ERROR"
             },
+            "Roll": {
+                "Error": "PLOT ERROR"
+            },
             "Pool": "{name} has rolled the pool: {pool}",
             "Pools": {
                 "regular_dice": "Regular/Chaos Dice",

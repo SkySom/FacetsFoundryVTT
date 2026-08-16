@@ -48,40 +48,39 @@ export async function handleResourceSpendAndGain(
                     actorResourceChanges.push(
                         new ActorResourceChange(activeParty.uuid, doom, -spentResource.total, true)
                     );
-                    await activeParty.update({
-                        system: {
-                            doom: (activeParty.system.doom ?? 0) - spentResource.total
-                        }
-                    });
+                    await activeParty.system.alterDoom(-spentResource.total);
                 } else {
                     Logger.warn("Active Party did not have PartyData");
                 }
             } else {
                 if (activeActor) {
                     if (activeActor.system instanceof PlayerCharacterData) {
-                        spentResourceResults.push(
-                            new RollResourceResultGroup(
-                                format("Roll.UsingPlot", { Plot: spentResource.total.toString() }),
-                                [
-                                    new RollResourceResult(
-                                        spentResource.resource,
-                                        spentResource.total,
-                                        activeActor.system.plotPoints ?? 0,
-                                        (activeActor.system.plotPoints ?? 0) - spentResource.total,
-                                        localize("Sheet.Generic.PlotPoints"),
-                                        true
-                                    )
-                                ]
-                            )
-                        );
-                        actorResourceChanges.push(
-                            new ActorResourceChange(activeActor.uuid, plotPoints, -spentResource.total, true)
-                        );
-                        await activeActor.update({
-                            system: {
-                                plotPoints: (activeActor.system.plotPoints ?? 0) - spentResource.total
-                            }
-                        });
+                        try {
+                            await activeActor.system.alterPlot(-spentResource.total);
+                            spentResourceResults.push(
+                                new RollResourceResultGroup(
+                                    format("Roll.UsingPlot", { Plot: spentResource.total.toString() }),
+                                    [
+                                        new RollResourceResult(
+                                            spentResource.resource,
+                                            spentResource.total,
+                                            activeActor.system.plotPoints ?? 0,
+                                            (activeActor.system.plotPoints ?? 0) - spentResource.total,
+                                            localize("Sheet.Generic.PlotPoints"),
+                                            true
+                                        )
+                                    ]
+                                )
+                            );
+                            actorResourceChanges.push(
+                                new ActorResourceChange(activeActor.uuid, plotPoints, -spentResource.total, true)
+                            );
+                        } catch (error) {
+                            actorResourceChanges.push(
+                                new ActorResourceChange(activeActor.uuid, plotPoints, -spentResource.total, false)
+                            );
+                            Logger.error("Failed to update plot: " + error, { toast: true });
+                        }
                     }
                 }
             }
@@ -116,17 +115,17 @@ export async function handleResourceSpendAndGain(
             if (gainedResource.resource === doom) {
                 const startingDoom = actorParty.system.doom ?? 0;
                 try {
-                    const success = await actorParty.system.changeDoom(gainedResource.total, true);
+                    await actorParty.system.alterDoom(gainedResource.total);
                     doomResourceResult = new RollResourceResult(
                         gainedResource.resource,
                         gainedResource.total,
                         startingDoom,
                         startingDoom + gainedResource.total,
                         localize("Sheet.Generic.Doom"),
-                        success
+                        true
                     );
                     actorResourceChanges.push(
-                        new ActorResourceChange(actorParty.uuid, doom, gainedResource.total, success)
+                        new ActorResourceChange(actorParty.uuid, doom, gainedResource.total, true)
                     );
                 } catch (error) {
                     doomResourceResult = new RollResourceResult(
@@ -141,22 +140,33 @@ export async function handleResourceSpendAndGain(
                 }
             } else if (gainedResource.resource === plotPoints) {
                 if (activeActor.system instanceof PlayerCharacterData) {
-                    plotPointResourceResult = new RollResourceResult(
-                        gainedResource.resource,
-                        gainedResource.total,
-                        activeActor.system.plotPoints ?? 0,
-                        (activeActor.system.plotPoints ?? 0) + gainedResource.total,
-                        localize("Sheet.Generic.PlotPoints"),
-                        true
-                    );
-                    actorResourceChanges.push(
-                        new ActorResourceChange(activeActor.uuid, plotPoints, gainedResource.total, true)
-                    );
-                    await activeActor.update({
-                        system: {
-                            plotPoints: (activeActor.system.plotPoints ?? 0) + gainedResource.total
-                        }
-                    });
+                    try {
+                        await activeActor.system.alterPlot(gainedResource.total);
+                        plotPointResourceResult = new RollResourceResult(
+                            gainedResource.resource,
+                            gainedResource.total,
+                            activeActor.system.plotPoints ?? 0,
+                            (activeActor.system.plotPoints ?? 0) + gainedResource.total,
+                            localize("Sheet.Generic.PlotPoints"),
+                            true
+                        );
+                        actorResourceChanges.push(
+                            new ActorResourceChange(activeActor.uuid, plotPoints, gainedResource.total, true)
+                        );
+                    } catch (error) {
+                        plotPointResourceResult = new RollResourceResult(
+                            gainedResource.resource,
+                            gainedResource.total,
+                            activeActor.system.plotPoints ?? 0,
+                            (activeActor.system.plotPoints ?? 0) + gainedResource.total,
+                            localize("Roll.Plot.Error"),
+                            false
+                        );
+                        actorResourceChanges.push(
+                            new ActorResourceChange(activeActor.uuid, plotPoints, gainedResource.total, false)
+                        );
+                        Logger.error("Failed to update plot: " + error, { toast: true });
+                    }
                 }
             }
         }

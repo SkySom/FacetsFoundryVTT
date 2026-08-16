@@ -24,9 +24,10 @@ declare global {
     interface FlagConfig {
         User: {
             facets: {
-                remoteUserId: number
-            }
-        }
+                remoteUserId: number;
+                remoteToken: string;
+            };
+        };
     }
 
     interface SettingConfig {

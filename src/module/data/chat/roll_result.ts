@@ -1,3 +1,4 @@
+import type { ActorFacets } from "@actor";
 import { PartyData } from "@data/actor/party";
 import { PlayerCharacterData } from "@data/actor/player_character";
 import { FacetsBaseChatData, type ChatMetadata, type FacetsChatSchema } from "@data/chat/base";
@@ -17,8 +18,6 @@ import { createTierResultSchema, getRollTiers, RollTier } from "@roll/tier";
 import { localize, Logger } from "@util";
 import { gameActors, gameSettings, gameUser } from "../../util/game_getters";
 import { format } from "../../util/localize";
-import { getDoomAndPlotHandler } from "../../util/doom_and_plot_handler";
-import type { ActorFacets } from "@actor";
 
 type RollResultChatSchema = FacetsChatSchema & ReturnType<typeof rollResultSchema>;
 
@@ -228,9 +227,9 @@ export class RollResultChatData<
                 const spent: { label: string; original: number; current: number }[] = [];
 
                 if (this.parent.speakerActor?.system instanceof PlayerCharacterData) {
-                    const actor = this.parent.speakerActor;
                     const system: PlayerCharacterData = this.parent.speakerActor.system;
 
+                    const plotChange = await system.alterPlot(-additional);
                     spent.push({
                         label: localize("Roll.EnhancedTotal"),
                         original: total,
@@ -238,12 +237,9 @@ export class RollResultChatData<
                     });
                     spent.push({
                         label: localize("Sheet.Generic.PlotPoints"),
-                        original: system.plotPoints ?? 0,
-                        current: (system.plotPoints ?? 0) - additional
+                        original: plotChange.old,
+                        current: plotChange.current
                     });
-
-                    await getDoomAndPlotHandler()
-                    .alterCharacterPlot(actor, -additional)
                 } else if (gameUser().isActiveGM) {
                     const activeParty = gameActors().get(gameSettings().get("facets", "activeParty")) as ActorFacets;
                     if (activeParty.system instanceof PartyData) {
@@ -258,8 +254,7 @@ export class RollResultChatData<
                             current: (activeParty.system.doom ?? 0) - additional
                         });
 
-                        await getDoomAndPlotHandler()
-                            .alterPartyDoom(activeParty, -additional)
+                        await activeParty.system.alterDoom(-additional);
                     }
                 }
 
@@ -293,7 +288,7 @@ export class RollResultChatData<
                         actor.system instanceof PartyData &&
                         actorResourceChange.applied
                     ) {
-                        const success = actor.system.changeDoom(-(actorResourceChange ?? 0), true);
+                        const success = await actor.system.alterDoom(-(actorResourceChange ?? 0));
                         if (!success) {
                             Logger.error(
                                 "Failed to remove " + actorResourceChange.change + " doom from " + actor.name,
@@ -306,11 +301,7 @@ export class RollResultChatData<
                         actor.system instanceof PlayerCharacterData &&
                         actorResourceChange.applied
                     ) {
-                        actor.update({
-                            system: {
-                                plotPoints: (actor.system.plotPoints ?? 0) - (actorResourceChange.change ?? 0)
-                            }
-                        });
+                        await actor.system.alterPlot(-(actorResourceChange.change ?? 0));
                     }
                 } else {
                     Logger.error("Failed to find Actor during reroll ", { toast: true });

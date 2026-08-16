@@ -1,7 +1,8 @@
 import { ActorFacets } from "@actor/base";
+import { DOOM_AND_PLOT_CONSTANTS } from "../../settings/doom_and_plot_settings";
+import { gameSettings, gameUser } from "../../util/game_getters";
+import { RemoteCaller } from "../../util/remote_caller";
 import { FacetsBaseActorData, type FacetsActorSchema, type FacetsBaseData, type FacetsDerivedData } from "./base";
-import { Logger } from "@util";
-import { gameUser } from "../../util/game_getters";
 
 interface PartyDataSchema extends FacetsActorSchema {
     memberList: foundry.data.fields.SetField<foundry.data.fields.DocumentUUIDField<{ type: "Actor" }>>;
@@ -10,7 +11,7 @@ interface PartyDataSchema extends FacetsActorSchema {
     }>;
     remoteDoomId: foundry.data.fields.NumberField<{
         initial: -1;
-    }>
+    }>;
     locked: foundry.data.fields.BooleanField<{
         initial: false;
     }>;
@@ -65,46 +66,57 @@ class PartyData extends FacetsBaseActorData<PartyDataSchema, PartyBaseData, Part
     }
 
     async setRemoteDoomId(remoteDoomId: number): Promise<void> {
-        return this.parent.update({
-            system: {
-                remoteDoomId: remoteDoomId
-            }
-        }).then()
+        return this.parent
+            .update({
+                system: {
+                    remoteDoomId: remoteDoomId
+                }
+            })
+            .then();
     }
 
-    async changeDoom(change: number, tryOthers: boolean): Promise<boolean> {
-        if (this.parent.ownership[gameUser().id ?? ""] == CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
-            try {
-                this.parent.update({
+    getRemoteDoomId(): number {
+        return this.remoteDoomId ?? -1;
+    }
+
+    async alterDoom(amount: number, tryOthers: boolean = true): Promise<DoomChange> {
+        if (gameSettings().get("facets", "doomAndPlotLocation") == DOOM_AND_PLOT_CONSTANTS.LOCATION.LOCAL) {
+            if (this.parent.ownership[gameUser().id ?? ""] == CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
+                await this.parent.update({
                     system: {
-                        doom: (this.doom ?? 0) + change
+                        doom: (this.doom ?? 0) + amount
                     }
                 });
-                return true;
-            } catch (err: unknown) {
-                Logger.error("Failed to update Doom: " + err, { toast: true });
+                return Promise.resolve(new DoomChange(this.doom ?? 0, (this.doom ?? 0) + amount));
             }
-        }
 
-        if (tryOthers) {
-            if (game.users?.activeGM?.active) {
-                if (await game.facets.socketManager.sendChangeDoom(this.parent.id, change)) {
-                    return true;
+            if (tryOthers) {
+                if (game.users?.activeGM?.active) {
+                    return game.facets.socketManager.sendChangeDoom(this.parent.id, amount);
                 }
-            }
-            for (const ownership in this.parent.ownership) {
-                if (this.parent.ownership[ownership] == CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
-                    if (game?.users?.get(ownership)?.active) {
-                        if (await game.facets.socketManager.sendChangeDoom(this.parent.id, change, ownership)) {
-                            return true;
+                for (const ownership in this.parent.ownership) {
+                    if (this.parent.ownership[ownership] == CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) {
+                        if (game?.users?.get(ownership)?.active) {
+                            return await game.facets.socketManager.sendChangeDoom(this.parent.id, amount, ownership);
                         }
                     }
                 }
+                return Promise.reject(new Error("No one online can update this party"));
             }
-        }
 
-        return false;
+            return Promise.reject(new Error("This user cannot update the party"));
+        } else {
+            return RemoteCaller.alterDoom(this, amount);
+        }
     }
 }
 
-export { PartyData, type PartyBaseData, type PartyDataSchema, type PartyDerivedData };
+class DoomChange {
+    constructor(
+        readonly old: number,
+        readonly current: number
+    ) {}
+}
+
+export { DoomChange, PartyData, type PartyBaseData, type PartyDataSchema, type PartyDerivedData };
+
