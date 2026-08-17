@@ -2,6 +2,7 @@ import type { PartyData } from "@data/actor/party";
 import { PlayerCharacterData } from "@data/actor/player_character";
 import { gameSettings } from "@util";
 import { gameUser } from "./game_getters";
+import type FacetsUser from "@documents/user/facets_user";
 
 export class RemoteCaller {
     static async alterPlot(playerCharacter: PlayerCharacterData, amount: number): Promise<AlterPlotResponse> {

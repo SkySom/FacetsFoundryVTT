@@ -3,6 +3,7 @@ import { PlayerCharacterData } from "@data/actor/player_character";
 import { gameSettings, localize, Logger } from "@util";
 import { DOOM_AND_PLOT_CONSTANTS } from "../settings/doom_and_plot_settings";
 import { gameActors } from "../util/game_getters";
+import type { RemoteCharacter, RemoteDoomPool, RemoteUser } from "../util/remote_caller";
 
 export default class DoomAndPlotConfigurator extends foundry.applications.api.HandlebarsApplicationMixin(
     foundry.applications.api.ApplicationV2
